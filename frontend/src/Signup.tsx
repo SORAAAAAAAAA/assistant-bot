@@ -1,73 +1,121 @@
-import React from 'react';
-import Button from '../components/Button';
+import React, { useState } from 'react';
+import PasswordInput from '../components/PasswordInput';
+import EmailInput from '../components/EmailInput'; // Import the new component
+import CustomSelect from '../components/CustomSelect';
 
 interface SignupProps {
   onSwitchToLogin: () => void;
 }
 
 export default function Signup({ onSwitchToLogin }: SignupProps) {
-  // Reusable styles for the inputs and labels based on the image
-  const inputStyle = {
-    padding: '14px 16px', borderRadius: '12px', border: 'none',
-    backgroundColor: '#E5E7EB', fontSize: '14px', width: '100%',
-    boxSizing: 'border-box' as const, outline: 'none', color: '#111827'
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    department: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  const labelStyle = {
-    fontSize: '10px', color: '#6B7280', fontWeight: 'bold',
-    textTransform: 'uppercase' as const, marginBottom: '6px',
-    display: 'block', letterSpacing: '0.5px'
+
+  const handleDepartmentChange = (val: string) => {
+    setFormData((prev) => ({ ...prev, department: val }));
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    console.log('Signup account creation data:', formData);
+  };
+
+  const departmentOptions = ["MIS", "OJS", "HR", "OOS", "GA", "Finance"];
+
+  const inputClasses = "w-full rounded-xl bg-white/20 px-4 py-2.5 text-sm text-white placeholder-white/70 outline-none focus:bg-white/30 transition-colors";
+  const labelClasses = "text-[10px] font-semibold text-white/80 uppercase tracking-wider mb-1 block";
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      
-      {/* Tabs */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '50px', marginBottom: '8px' }}>
-        <span onClick={onSwitchToLogin} style={{ cursor: 'pointer', color: '#9CA3AF', fontSize: '14px', fontWeight: 'bold' }}>Sign In</span>
-        <span style={{ cursor: 'default', color: '#111827', fontSize: '14px', fontWeight: 'bold', borderBottom: '2px solid #111827', paddingBottom: '4px' }}>Sign Up</span>
+    <div className="flex flex-col text-white">
+      <div className="text-left mb-4">
+        <h2 className="text-3xl font-medium tracking-wide">Sign Up</h2>
+        <p className="text-xs text-white/80">Create an account to get started.</p>
       </div>
 
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '8px' }}>
-        <h2 style={{ color: '#C90016', margin: '0 0 6px 0', fontSize: '14px' }}>Create Account</h2>
-        <p style={{ color: '#6B7280', fontSize: '12px', margin: 0 }}>Join Seiwa Kaiun for intelligent logistics.</p>
-      </div>
-
-      {/* Form Fields */}
-      <form style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div>
-          <label style={labelStyle}>Full Name</label>
-          <input type="text" placeholder="John Doe" style={inputStyle} />
-        </div>
-        <div>
-          <label style={labelStyle}>Email Address</label>
-          <input type="email" placeholder="name@company.com" style={inputStyle} />
-        </div>
-        <div>
-          <label style={labelStyle}>Password</label>
-          <input type="password" placeholder="••••••••" style={inputStyle} />
-        </div>
-        <div>
-          <label style={labelStyle}>Confirm Password</label>
-          <input type="password" placeholder="••••••••" style={inputStyle} />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <label htmlFor="firstName" className={labelClasses}>First Name</label>
+            <input 
+              id="firstName" name="firstName" type="text" placeholder="John" 
+              className={inputClasses} value={formData.firstName} onChange={handleChange} required 
+            />
+          </div>
+          <div className="flex-1">
+            <label htmlFor="lastName" className={labelClasses}>Last Name</label>
+            <input 
+              id="lastName" name="lastName" type="text" placeholder="Doe" 
+              className={inputClasses} value={formData.lastName} onChange={handleChange} required 
+            />
+          </div>
         </div>
 
-        {/* Gray Button matching the design */}
-        <Button label="Sign Up" style={{ backgroundColor: '#E5E7EB', color: '#FFFFFF', marginTop: '8px' }} />
+        <div>
+          <label className={labelClasses}>Department</label>
+          <CustomSelect 
+            value={formData.department}
+            onChange={handleDepartmentChange}
+            options={departmentOptions}
+            placeholder="Select Department"
+          />
+        </div>
+
+        {/* Swapped to reusable EmailInput */}
+        <div>
+          <label htmlFor="email" className={labelClasses}>Email Address</label>
+          <EmailInput 
+            id="email" name="email" placeholder="name@company.com" 
+            className={inputClasses} value={formData.email} onChange={handleChange} required 
+          />
+        </div>
+
+        <div>
+          <label htmlFor="password" className={labelClasses}>Password</label>
+          <PasswordInput 
+            id="password" name="password" placeholder="••••••••" 
+            className={inputClasses} value={formData.password} onChange={handleChange} required 
+          />
+        </div>
+
+        <div>
+          <label htmlFor="confirmPassword" className={labelClasses}>Confirm Password</label>
+          <PasswordInput 
+            id="confirmPassword" name="confirmPassword" placeholder="••••••••" 
+            className={inputClasses} value={formData.confirmPassword} onChange={handleChange} required 
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          className="mt-2 rounded-full border border-white/50 bg-transparent py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
+        >
+          Create Account
+        </button>
       </form>
 
-      {/* Divider */}
-      <div style={{ textAlign: 'center', margin: '4px 0', fontSize: '10px', color: '#9CA3AF', textTransform: 'uppercase', fontWeight: 'bold' }}>
-        Or continue with
-      </div>
-
-      {/* Social Login Buttons */}
-      <div style={{ display: 'flex', gap: '12px' }}>
-        <button style={{ flex: 1, padding: '12px', borderRadius: '12px', border: 'none', backgroundColor: '#E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', color: '#374151' }}>
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="16" /> Google
-        </button>
-        <button style={{ flex: 1, padding: '12px', borderRadius: '12px', border: 'none', backgroundColor: '#E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', color: '#374151' }}>
-          <img src="https://www.svgrepo.com/show/475661/microsoft-color.svg" alt="Microsoft" width="16" /> Microsoft
+      <div className="mt-4 text-center text-xs text-white/90">
+        Already have an account?{' '}
+        <button 
+          onClick={onSwitchToLogin} 
+          className="font-medium underline decoration-white/50 underline-offset-2 transition-colors hover:text-white"
+        >
+          Log In
         </button>
       </div>
     </div>
