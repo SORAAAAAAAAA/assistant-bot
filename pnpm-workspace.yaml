@@ -2,5 +2,9 @@ packages:
   - "backend"
   - "frontend"
   - "shared"
+<<<<<<< HEAD
 allowBuilds:
   unrs-resolver: false
+=======
+
+>>>>>>> main

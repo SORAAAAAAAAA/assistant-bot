@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {  
+    id Int @id @default(autoincrement())
+    email String @unique
+    hashedPassword String
+    isApproved Boolean @default(false)
+    isAdmin Boolean @default(false)
+    createdAt DateTime @default(now())
+    chatHistory ChatHistory[]
+}
+
+
+model ChatHistory {
+    id Int @id @default(autoincrement())
+    userId Int
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    message String
+    answer String
+    sources String[]
+    createdAt DateTime @default(now())
+    @@index([userId])
+}
