@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-    Menu, MessageSquare, History, HelpCircle,
+    MessageSquare, History, HelpCircle,
     LifeBuoy, Settings, LogOut, Plus
 } from 'lucide-react';
 
@@ -25,27 +25,32 @@ export function Sidebar() {
         ${isOpen ? 'w-72 px-4' : 'w-20 px-3'}
       `}
         >
-            {/* 1. Header: Logo & Menu Toggle */}
-            <div className={`flex items-center mb-8 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'}`}>
+            {/* 1. Header: Clickable Logo Toggle */}
+            <div className={`flex items-center mb-8 transition-all duration-300 ${isOpen ? 'justify-start' : 'justify-center'}`}>
 
-                {/* Branding Area */}
-                <div className={`flex items-center overflow-hidden transition-all duration-300 ${isOpen ? 'w-auto opacity-100' : 'w-0 opacity-0 hidden'}`}>
-                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/20 shadow-sm overflow-hidden">
-                        {/* Placeholder for Seiwa Logo */}
-                        <span className="font-bold text-white text-xs">SK</span>
-                    </div>
-                    <span className="ml-3 font-semibold text-white tracking-wide text-[15px] whitespace-nowrap drop-shadow-md">
-                        Seiwa Kaiun
-                    </span>
-                </div>
-
-                {/* Toggle Button */}
+                {/* Branding Toggle Button */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="p-2.5 hover:bg-white/10 rounded-xl transition-all flex-shrink-0 text-red-200 hover:text-white"
+                    title={isOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+                    className={`flex items-center overflow-hidden transition-all duration-300 rounded-lg group hover:opacity-80 focus:outline-none
+                        ${isOpen ? 'p-1 -ml-1 w-full' : 'p-0 justify-center'}
+                    `}
                 >
-                    <Menu size={20} />
+                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/20 shadow-sm overflow-hidden group-hover:bg-white/20 transition-colors">
+                        <img
+                            src="../../images/Seiwa-Logo.png"
+                            alt="Seiwa Kaiun Logo"
+                            className="w-12 h-12 object-contain"
+                        />
+                    </div>
+
+                    <span className={`ml-3 font-semibold text-white tracking-wide text-[15px] whitespace-nowrap drop-shadow-md transition-all duration-300 
+                        ${isOpen ? 'opacity-100' : 'w-0 opacity-0 hidden'}
+                    `}>
+                        Seiwa Kaiun
+                    </span>
                 </button>
+
             </div>
 
             {/* 2. Glass "New Inquiry" Button */}
@@ -66,7 +71,6 @@ export function Sidebar() {
             </button>
 
             {/* 3. Main Navigation */}
-            {/* Kept overflow-x-hidden just as an extra safety measure */}
             <nav className="flex-1 overflow-y-auto overflow-x-hidden space-y-1.5 scrollbar-hide">
                 {topItems.map((item, index) => (
                     <NavItem
