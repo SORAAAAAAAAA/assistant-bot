@@ -1,4 +1,6 @@
 packages:
-- "backend"
-- "frontend"
-- "shared"
+  - "backend"
+  - "frontend"
+  - "shared"
+allowBuilds:
+  unrs-resolver: true
