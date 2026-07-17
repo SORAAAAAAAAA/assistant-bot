@@ -2,5 +2,3 @@ packages:
   - "backend"
   - "frontend"
   - "shared"
-allowBuilds:
-  unrs-resolver: true
