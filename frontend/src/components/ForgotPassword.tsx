@@ -19,7 +19,7 @@ export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
   const labelClasses = "text-[10px] font-bold text-slate-800 uppercase tracking-wider mb-1.5 block text-left ml-1";
 
   return (
-    <div className="flex flex-col text-slate-900">
+    <div className="flex flex-col text-slate-900 animate-view-change">
       <div className="text-left mb-4">
          <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Reset Password</h2>
         <p className="text-xs text-slate-600 mt-1">

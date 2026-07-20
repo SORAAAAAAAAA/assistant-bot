@@ -21,7 +21,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
   const labelClasses = "text-[10px] font-bold text-slate-800 uppercase tracking-wider mb-1.5 block text-left ml-1";
 
   return (
-    <div className="flex flex-col text-slate-900">
+    <div className="flex flex-col text-slate-900 animate-view-change">
      <div className="text-left mb-5">
   <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Log In</h2>
   <p className="mt-1 text-xs ">Welcome back. Please log in to your account.</p>

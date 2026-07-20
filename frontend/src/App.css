@@ -182,3 +182,19 @@
     border-right-color: var(--border);
   }
 }
+
+/* Custom smooth view transition */
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-view-change {
+  animation: viewFadeIn 0.35s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+}
