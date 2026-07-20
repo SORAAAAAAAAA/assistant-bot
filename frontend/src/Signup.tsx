@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import PasswordInput from '../components/PasswordInput';
-import EmailInput from '../components/EmailInput'; 
-import CustomSelect from '../components/CustomSelect'; 
+import PasswordInput from '@/components/PasswordInput';
+import EmailInput from '@/components/EmailInput';
+import CustomSelect from '@/components/CustomSelect';
+import { registerService } from '@/services/authService';
+import type { RegisterRequest, DepartmentType } from '@ai-assistant/shared';
 
 interface SignupProps {
   onSwitchToLogin: () => void;
@@ -32,7 +34,25 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
       alert("Passwords do not match!");
       return;
     }
-    console.log('Signup account creation data:', formData);
+
+    const registerData: RegisterRequest = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      department: formData.department as DepartmentType,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    };
+
+    const register = async () => {
+      try {
+        const result = await registerService(registerData);
+        alert(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    register();
   };
 
   const departmentOptions = ["MIS", "OJS", "HR", "OOS", "GA", "Finance"];
@@ -48,27 +68,27 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        
+
         <div className="flex gap-3">
           <div className="flex-1">
             <label htmlFor="firstName" className={labelClasses}>First Name</label>
-            <input 
-              id="firstName" name="firstName" type="text" placeholder="John" 
-              className={inputClasses} value={formData.firstName} onChange={handleChange} required 
+            <input
+              id="firstName" name="firstName" type="text" placeholder="John"
+              className={inputClasses} value={formData.firstName} onChange={handleChange} required
             />
           </div>
           <div className="flex-1">
             <label htmlFor="lastName" className={labelClasses}>Last Name</label>
-            <input 
-              id="lastName" name="lastName" type="text" placeholder="Doe" 
-              className={inputClasses} value={formData.lastName} onChange={handleChange} required 
+            <input
+              id="lastName" name="lastName" type="text" placeholder="Doe"
+              className={inputClasses} value={formData.lastName} onChange={handleChange} required
             />
           </div>
         </div>
 
         <div>
           <label className={labelClasses}>Department</label>
-          <CustomSelect 
+          <CustomSelect
             value={formData.department}
             onChange={handleDepartmentChange}
             options={departmentOptions}
@@ -78,30 +98,30 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
 
         <div>
           <label htmlFor="email" className={labelClasses}>Email Address</label>
-          <EmailInput 
-            id="email" name="email" placeholder="name@company.com" 
-            className={inputClasses} value={formData.email} onChange={handleChange} required 
+          <EmailInput
+            id="email" name="email" placeholder="name@company.com"
+            className={inputClasses} value={formData.email} onChange={handleChange} required
           />
         </div>
 
         <div>
           <label htmlFor="password" className={labelClasses}>Password</label>
-          <PasswordInput 
-            id="password" name="password" placeholder="••••••••" 
-            className={inputClasses} value={formData.password} onChange={handleChange} required 
+          <PasswordInput
+            id="password" name="password" placeholder="••••••••"
+            className={inputClasses} value={formData.password} onChange={handleChange} required
           />
         </div>
 
         <div>
           <label htmlFor="confirmPassword" className={labelClasses}>Confirm Password</label>
-          <PasswordInput 
-            id="confirmPassword" name="confirmPassword" placeholder="••••••••" 
-            className={inputClasses} value={formData.confirmPassword} onChange={handleChange} required 
+          <PasswordInput
+            id="confirmPassword" name="confirmPassword" placeholder="••••••••"
+            className={inputClasses} value={formData.confirmPassword} onChange={handleChange} required
           />
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-slate-800 active:bg-slate-950"
         >
           Create Account
@@ -110,8 +130,8 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
 
       <div className="mt-4 text-center text-xs text-slate-700">
         Already have an account?{' '}
-        <button 
-          onClick={onSwitchToLogin} 
+        <button
+          onClick={onSwitchToLogin}
           className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-slate-900"
         >
           Log In

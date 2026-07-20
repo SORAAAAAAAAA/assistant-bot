@@ -1,7 +1,8 @@
 export type DepartmentType = 'HR' | 'OJS' | 'Finance' | 'MIS' | 'GA' | 'OOS';
 
 export interface RegisterRequest {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     department: DepartmentType;
     password: string;

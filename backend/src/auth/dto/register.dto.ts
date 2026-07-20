@@ -3,9 +3,11 @@ import { RegisterRequest, type DepartmentType } from '@ai-assistant/shared';
 
 export class RegisterDto implements RegisterRequest {
     @IsNotEmpty()
-    fullName: string;
+    firstName: string;
 
     @IsNotEmpty()
+    lastName: string;
+
     @IsEmail()
     @Matches(/@seiwakaiun\.com\.ph$/, {
         message: 'Email must be from the @seiwakaiun.com.ph domain',
@@ -23,8 +25,5 @@ export class RegisterDto implements RegisterRequest {
     password: string;
 
     @IsNotEmpty()
-    @Matches(/{password}$/, {
-        message: 'Passwords do not match',
-    })
     confirmPassword: string;
 }
