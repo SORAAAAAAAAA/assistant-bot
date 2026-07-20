@@ -48,6 +48,8 @@ export class RagService {
             queryEmbeddings: [queryEmbedding],
             nResults: topK,
         });
-        return results.documents?.[0] ?? [];
+        const docs = results.documents?.[0] ?? [];
+
+        return docs.filter((doc): doc is string => doc !== null);
     }
 }
