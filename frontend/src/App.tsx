@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import './App.css';
 import Modal from '../components/Modal';
-import Login from './login';
-import Signup from './signup';
+import ForgotPassword from '../components/ForgotPassword';
+import Login from './Login';
+import Signup from './Signup';
+
+type ViewState = 'login' | 'signup' | 'forgotPassword';
 
 function App() {
-  // We only need to track if we are looking at Login or Signup
-  const [isLoginView, setIsLoginView] = useState(true);
+  const [currentView, setCurrentView] = useState<ViewState>('login');
 
   return (
     <div style={{ 
@@ -15,20 +17,30 @@ function App() {
       justifyContent: 'center', 
       alignItems: 'center', 
       height: '100vh', 
-      // Point this to where you saved the new white/orange/red blob image
-      backgroundImage: 'url("/bg-blobs.png")', 
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
       fontFamily: 'sans-serif'
     }}>
       
-      {/* The Modal loads instantly and cannot be closed */}
       <Modal isOpen={true} onClose={() => {}}>
-        {isLoginView ? (
-          <Login onSwitchToSignup={() => setIsLoginView(false)} />
-        ) : (
-          <Signup onSwitchToLogin={() => setIsLoginView(true)} />
+        
+        {currentView === 'login' && (
+          <Login 
+            onSwitchToSignup={() => setCurrentView('signup')} 
+            onSwitchToForgotPassword={() => setCurrentView('forgotPassword')}
+          />
         )}
+        
+        {currentView === 'signup' && (
+          <Signup 
+            onSwitchToLogin={() => setCurrentView('login')} 
+          />
+        )}
+        
+        {currentView === 'forgotPassword' && (
+          <ForgotPassword 
+            onBackToLogin={() => setCurrentView('login')} 
+          />
+        )}
+
       </Modal>
       
     </div>

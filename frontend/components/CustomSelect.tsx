@@ -11,7 +11,6 @@ export default function CustomSelect({ value, onChange, options, placeholder }: 
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close the dropdown if the user clicks outside of it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -24,19 +23,18 @@ export default function CustomSelect({ value, onChange, options, placeholder }: 
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      {/* Trigger Button - Matches the other form inputs exactly */}
+      
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-xl bg-white/20 px-4 py-2.5 text-sm outline-none transition-colors hover:bg-white/30 focus:bg-white/30"
+        className="flex w-full items-center justify-between rounded-xl border border-slate-900/10 bg-white/60 px-4 py-2.5 text-sm outline-none transition-all hover:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20"
       >
-        <span className={value ? 'text-white' : 'text-white/70'}>
+        <span className={value ? 'text-slate-900' : 'text-slate-500'}>
           {value || placeholder}
         </span>
         
-        {/* Chevron Icon */}
         <svg
-          className={`h-4 w-4 text-white/70 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -45,13 +43,9 @@ export default function CustomSelect({ value, onChange, options, placeholder }: 
         </svg>
       </button>
 
-      {/* 
-        Solid Grey Container Menu 
-        - bg-[#4A4A4A]: A solid, premium grey that mimics standard UI containers. It is 100% opaque to block out background text.
-        - border-white/20: Keeps the outline consistent with your glassmorphism theme.
-      */}
       {isOpen && (
-        <ul className="absolute z-50 mt-2 max-h-48 w-full overflow-y-auto rounded-xl border border-white/20 bg-[#4A4A4A] shadow-xl shadow-black/30">
+        <ul className="absolute z-50 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-900/10 bg-white/90 backdrop-blur-xl shadow-xl shadow-slate-900/10 py-0 scrollbar-thin scrollbar-thumb-slate-900/20">
+          
           {options.map((option) => (
             <li
               key={option}
@@ -59,13 +53,14 @@ export default function CustomSelect({ value, onChange, options, placeholder }: 
                 onChange(option);
                 setIsOpen(false);
               }}
-              className={`cursor-pointer px-4 py-2.5 text-sm text-white transition-colors hover:bg-white/10 ${
-                value === option ? 'bg-white/20 font-semibold' : ''
+              className={`cursor-pointer border-b border-slate-900/10 px-4 py-3 text-sm text-slate-700 transition-colors last:border-none hover:bg-slate-900/5 ${
+                value === option ? 'bg-slate-900/10 font-bold text-slate-900' : ''
               }`}
             >
               {option}
             </li>
           ))}
+          
         </ul>
       )}
     </div>
