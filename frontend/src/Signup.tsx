@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PasswordInput from './components/PasswordInput';
-import EmailInput from './components/EmailInput';
-import CustomSelect from './components/CustomSelect';
+import PasswordInput from '@/components/PasswordInput';
+import EmailInput from '@/components/EmailInput';
+import CustomSelect from '@/components/CustomSelect';
 
 interface SignupProps {
   onSwitchToLogin: () => void;

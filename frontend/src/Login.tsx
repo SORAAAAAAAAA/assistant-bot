@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import PasswordInput from './components/PasswordInput';
-import EmailInput from './components/EmailInput';
+import PasswordInput from '@/components/PasswordInput';
+import EmailInput from '@/components/EmailInput';
 
 interface LoginProps {
   onSwitchToSignup: () => void;
