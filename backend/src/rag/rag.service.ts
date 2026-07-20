@@ -3,7 +3,14 @@ import axios from 'axios';
 import { ChromaClient, Collection } from 'chromadb';
 @Injectable()
 export class RagService {
-    private client = new ChromaClient({ path: process.env.CHROMA_URL });
+    private client = new ChromaClient(
+        process.env.CHROMA_URL
+            ? {
+                host: new URL(process.env.CHROMA_URL).hostname,
+                port: Number(new URL(process.env.CHROMA_URL).port),
+            }
+            : {}
+    );
     private collection: Collection;
     private async getCollection(): Promise<Collection> {
         if (!this.collection) {

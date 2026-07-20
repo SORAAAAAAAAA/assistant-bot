@@ -22,17 +22,14 @@ export class AuthService {
         if (existing) throw new ConflictException('Email already registered');
         const hashedPassword = await bcrypt.hash(dto.password, 10);
         await this.prisma.user.create({
-            data: { email: dto.email, hashedPassword, isApproved: false },
+            data: { email: dto.email, hashedPassword },
         });
-        return { message: 'Registered. Awaiting admin approval.' };
+        return { message: 'Registered. You can now Log-in!' };
     }
     async login(dto: LoginDto): Promise<LoginResponse> {
         const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
         if (!user || !(await bcrypt.compare(dto.password, user.hashedPassword))) {
             throw new UnauthorizedException('Incorrect email or password');
-        }
-        if (!user.isApproved) {
-            throw new ForbiddenException('Account pending admin approval');
         }
         const token = this.jwt.sign({ sub: user.email });
         return { access_token: token, token_type: 'bearer' };
