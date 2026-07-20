@@ -1,20 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ChromaClient, Collection } from 'chromadb';
+import { DefaultEmbeddingFunction } from '@chroma-core/default-embed';
+
 @Injectable()
 export class RagService {
-    private client = new ChromaClient(
-        process.env.CHROMA_URL
-            ? {
-                host: new URL(process.env.CHROMA_URL).hostname,
-                port: Number(new URL(process.env.CHROMA_URL).port),
-            }
-            : {}
-    );
+    private embedder = new DefaultEmbeddingFunction();
+
+    private client = new ChromaClient({
+        ssl: false,
+        host: process.env.CHROMA_URL,
+        port: Number(process.env.CHROMA_PORT),
+    });
     private collection: Collection;
     private async getCollection(): Promise<Collection> {
         if (!this.collection) {
-            this.collection = await this.client.getOrCreateCollection({ name: 'procedures' });
+            this.collection = await this.client.getOrCreateCollection({
+                name: 'procedures',
+                embeddingFunction: this.embedder
+            });
         }
         return this.collection;
     }
