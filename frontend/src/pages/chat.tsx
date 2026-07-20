@@ -3,6 +3,8 @@ import { ChatHeader } from '../components/ChatHeader';
 import { MessageList } from '../components/MessageList';
 import { MessageComposer } from '../components/MessageComposer';
 import type { Message } from '../components/types';
+import { Sidebar } from '@/components/Sidebar/Sidebar';
+
 
 // ── Main Chat UI ─────────────────────────────────────────────────
 
@@ -30,13 +32,13 @@ export default function LogisticsChat() {
     const uId = Date.now();
     const aId = uId + 1;
 
-    const userMsg: Message = { 
-      id: uId, 
-      role: 'user', 
-      time: userTime, 
-      content: input, 
+    const userMsg: Message = {
+      id: uId,
+      role: 'user',
+      time: userTime,
+      content: input,
       files: attachedFiles.map(f => f.name),
-      relatedId: aId 
+      relatedId: aId
     };
 
     setMessages(prev => [...prev, userMsg]);
@@ -68,6 +70,7 @@ export default function LogisticsChat() {
 
   return (
     <div className="h-screen w-screen bg-[#F8F7F4] fixed top-0 left-0 overflow-hidden font-['Inter',system-ui,sans-serif]">
+      <Sidebar />
       <div className="absolute -top-[10%] left-[5%] w-[50vw] h-[50vw] bg-[#E23B4E]/[0.12] blur-[100px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[5%] right-0 w-[40vw] h-[40vw] bg-[#E08A1E]/[0.15] blur-[120px] rounded-full pointer-events-none" />
 
@@ -84,9 +87,9 @@ export default function LogisticsChat() {
 
         {/* LEFT COLUMN - User Messages */}
         <div className="flex flex-col min-h-0 pb-6 overflow-hidden px-5">
-          <ChatHeader 
-            title="Your Inquiries" 
-            subtitle="Track and manage your questions." 
+          <ChatHeader
+            title="Your Inquiries"
+            subtitle="Track and manage your questions."
           />
           <MessageList
             messages={messages.filter(m => m.role === 'user')}
@@ -108,9 +111,9 @@ export default function LogisticsChat() {
 
         {/* RIGHT COLUMN - Assistant Messages */}
         <div className="flex flex-col min-h-0 overflow-hidden px-5">
-          <ChatHeader 
-            title="AI Assistant" 
-            subtitle="Intelligent logistics support." 
+          <ChatHeader
+            title="AI Assistant"
+            subtitle="Intelligent logistics support."
             color="#1A1C1E"
           />
           <MessageList

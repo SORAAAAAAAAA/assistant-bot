@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './App.css';
-import Modal from './components/Modal';
-import ForgotPassword from './components/ForgotPassword';
-import Login from './Login';
-import Signup from './Signup';
+import Modal from '@/components/Modal';
+import ForgotPassword from '@/components/ForgotPassword';
+import Login from '@/Login';
+import Signup from '@/Signup';
 import { useAuth } from '@/context/authContext';
 import LogisticsChat from '@/pages/chat';
 

@@ -9,7 +9,11 @@ export default defineConfig({
 
   resolve: {
     alias: {
+<<<<<<< HEAD
       '@': path.resolve(__dirname, './src'),
+=======
+      '@': '/src',
+>>>>>>> sidebar
     }
   }
 })
