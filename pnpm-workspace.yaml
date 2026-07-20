@@ -2,4 +2,8 @@ packages:
   - "backend"
   - "frontend"
   - "shared"
-
+allowBuilds:
+  '@prisma/engines': true
+  prisma: true
+  unrs-resolver: true
+  
