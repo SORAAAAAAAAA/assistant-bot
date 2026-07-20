@@ -3,8 +3,10 @@ import {
     MessageSquare, History, HelpCircle,
     LifeBuoy, Settings, LogOut, Plus
 } from 'lucide-react';
+import { useAuth } from '@/context/authContext';
 
 export function Sidebar() {
+    const { logout } = useAuth();
     const [isOpen, setIsOpen] = useState(true);
 
     const topItems = [
@@ -17,6 +19,10 @@ export function Sidebar() {
         { icon: <LifeBuoy size={20} />, label: 'Support' },
         { icon: <Settings size={20} />, label: 'Settings' },
     ];
+
+    const handleLogout = () => {
+        logout();
+    }
 
     return (
         <aside
@@ -129,7 +135,7 @@ export function Sidebar() {
 
                     {/* Right Side: Log Out Icon */}
                     <button
-                        onClick={() => alert("Logging out...")}
+                        onClick={handleLogout}
                         className={`p-2 rounded-xl transition-all flex-shrink-0
                             ${isOpen
                                 ? 'text-red-300 hover:text-white hover:bg-red-500/50 mr-1'

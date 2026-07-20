@@ -33,7 +33,7 @@ export async function loginService(formData: LoginRequest): Promise<string> {
             body: JSON.stringify(formData),
         })
 
-        return loginResponse.text();
+        return ('Logged-in Sucessfully!');
 
     } catch (error) {
         throw new Error('Failed to log in', error);
