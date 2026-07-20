@@ -43,7 +43,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
         }`}
         onClick={() => inputRef.current?.focus()}
       >
-        <SwirlBorder active={isTyping} radius={16} />
+        <SwirlBorder active={isTyping}/>
         <input 
           type="file" 
           ref={fileInputRef} 
@@ -52,15 +52,29 @@ export const MessageComposer: FC<MessageComposerProps> = ({
           multiple 
         />
         
-        <span 
-          className={`text-xl mr-[18px] transition-all duration-300 ${attachedFiles.length > 0 ? 'text-[#E23B4E] opacity-100' : 'opacity-50'} cursor-pointer hover:scale-125`}
+        <button 
+          type="button"
+          className={`mr-[18px] transition-all duration-300 cursor-pointer outline-none ${
+            attachedFiles.length > 0 ? 'text-[#E23B4E] opacity-100' : 'text-[#1A1C1E] opacity-40'
+          } hover:scale-125 active:scale-95`}
           onClick={(e) => { 
             e.stopPropagation() 
             fileInputRef.current?.click() 
           }}
         >
-          📎
-        </span>
+          <svg 
+            viewBox="0 0 24 24" 
+            width="22" 
+            height="22" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.51a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+          </svg>
+        </button>
 
         <input
           ref={inputRef}

@@ -49,7 +49,7 @@ export default function LogisticsChat() {
         id: aId,
         role: 'assistant',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        content: "I received your message."
+        content: "I have received your message."
       };
       setMessages(prev => [...prev, reply]);
       setIsTyping(false);
@@ -78,6 +78,9 @@ export default function LogisticsChat() {
       `}</style>
 
       <div className="grid grid-cols-2 h-full w-full max-w-[1440px] mx-auto px-[60px] pt-10 pb-[160px] gap-[60px] relative z-[1] box-border">
+        {/* DIVIDER LINE */}
+        <div className="absolute top-3.5 bottom-35 w-px bg-[#1A1C1E] -translate-x-1/2" style={{ left: 'calc(50% - 30px)' }} />
+
         {/* LEFT COLUMN - User Messages */}
         <div className="flex flex-col min-h-0">
           <ChatHeader 
@@ -106,7 +109,7 @@ export default function LogisticsChat() {
             scrollRef={aiScrollRef}
           />
           {isTyping && (
-            <div className="text-xs text-[#6B7280] pl-2.5 font-semibold font-['JetBrains_Mono',monospace]">SYS_ANALYZING...</div>
+            <div className="text-xs text-[#6B7280] pl-2.5 font-semibold font-['JetBrains_Mono',monospace]">THINKING...</div>
           )}
         </div>
       </div>
