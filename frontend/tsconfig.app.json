@@ -27,6 +27,6 @@
   },
   "include": [
     "src",
-    "components/Sidebar"
+    "src/components/Sidebar"
   ]
 }
