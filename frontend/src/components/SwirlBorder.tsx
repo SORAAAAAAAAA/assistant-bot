@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 
 interface SwirlBorderProps {
   active: boolean
-  // We no longer need a single radius prop since the shape is fixed
 }
 
 export const SwirlBorder = ({ active }: SwirlBorderProps) => {
@@ -11,7 +10,6 @@ export const SwirlBorder = ({ active }: SwirlBorderProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
 
-  // Update size on mount and when active changes
   useEffect(() => {
     if (containerRef.current) {
       setRectSize({
@@ -21,7 +19,6 @@ export const SwirlBorder = ({ active }: SwirlBorderProps) => {
     }
   }, [active])
 
-  // Generate the path data for the asymmetrical bubble: [24, 24, 24, 4]
   const d = useMemo(() => {
     const { w, h } = rectSize
     if (w === 0 || h === 0) return ""
@@ -44,7 +41,6 @@ export const SwirlBorder = ({ active }: SwirlBorderProps) => {
     `
   }, [rectSize])
 
-  // Measure the exact length of the custom path for the animation
   useEffect(() => {
     if (pathRef.current) {
       setPathLength(pathRef.current.getTotalLength())

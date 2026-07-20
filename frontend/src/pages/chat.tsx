@@ -82,7 +82,7 @@ export default function LogisticsChat() {
         <div className="absolute top-3.5 bottom-10 w-px bg-[#1A1C1E] -translate-x-1/2" style={{ left: 'calc(50% - 30px)' }} />
 
         {/* LEFT COLUMN - User Messages */}
-        <div className="flex flex-col min-h-0 pb-6">
+        <div className="flex flex-col min-h-0 pb-6 overflow-hidden px-5">
           <ChatHeader 
             title="Your Inquiries" 
             subtitle="Track and manage your questions." 
@@ -106,7 +106,7 @@ export default function LogisticsChat() {
         </div>
 
         {/* RIGHT COLUMN - Assistant Messages */}
-        <div className="flex flex-col min-h-0">
+        <div className="flex flex-col min-h-0 overflow-hidden px-5">
           <ChatHeader 
             title="AI Assistant" 
             subtitle="Intelligent logistics support." 

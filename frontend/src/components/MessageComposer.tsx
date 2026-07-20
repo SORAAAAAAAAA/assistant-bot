@@ -1,6 +1,5 @@
 import type { FC, RefObject } from 'react'
 import { AttachmentPreview } from './AttachmentPreview'
-import { SwirlBorder } from './SwirlBorder'
 
 interface MessageComposerProps {
   input: string
@@ -38,12 +37,11 @@ export const MessageComposer: FC<MessageComposerProps> = ({
       />
 
       <div
-        className={`relative bg-white/50 backdrop-blur-[30px] px-10 py-5 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex items-center border cursor-text will-change-transform transition-[transform_0.4s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease,background_0.3s_ease] group-hover:-translate-y-[3px] group-hover:scale-[1.008] group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.08)] group-active:!translate-y-[-1px] group-active:!scale-[0.995] group-active:!duration-100 group-active:!ease-linear group-focus-within:-translate-y-[3px] group-focus-within:scale-[1.008] group-focus-within:shadow-[0_15px_35px_rgba(226,59,78,0.12)] ${
+        className={`relative bg-white/50 backdrop-blur-[30px] px-10 py-5 rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex items-center border cursor-text will-change-transform transition-[transform_0.4s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease,background_0.3s_ease] group-hover:-translate-y-[3px] group-hover:scale-[1.008] group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.08)] group-active:!translate-y-[-1px] group-active:!scale-[0.995] group-active:!duration-100 group-active:!ease-linear group-focus-within:-translate-y-[3px] group-focus-within:scale-[1.008] group-focus-within:shadow-[0_15px_35px_rgba(226,59,78,0.12)] ${
           isTyping ? 'border-transparent' : 'border-black/60'
         }`}
         onClick={() => inputRef.current?.focus()}
       >
-        <SwirlBorder active={isTyping}/>
         <input 
           type="file" 
           ref={fileInputRef} 
@@ -81,7 +79,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
           value={input}
           onChange={e => onInputChange(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && onSend()}
-          placeholder={attachedFiles.length > 0 ? "Press Enter to send document..." : "ENTER QUERY..."}
+          placeholder={attachedFiles.length > 0 ? "Press Enter to send document..." : "Enter Query..."}
           disabled={isTyping}
           className="flex-1 border-none bg-transparent outline-none text-[15px] text-[#1A1C1E] font-['JetBrains_Mono',monospace] tracking-wide"
         />

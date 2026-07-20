@@ -30,7 +30,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
           {message.files && message.files.length > 0 && (
             <div className="mt-3 pt-3 border-t border-white/20 flex flex-col gap-1">
               {message.files.map((name, i) => (
-                <div key={i} className="text-[11px] bg-white/20 px-2 py-1 rounded flex items-center gap-2">
+                <div key={i} className="text-[11px] bg-white/20 px-2 py-1 rounded flex items-center overflow-hidden gap-2">
                   <span>📄</span> {name}
                 </div>
               ))}
