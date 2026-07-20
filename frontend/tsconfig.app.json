@@ -18,12 +18,6 @@
     ],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    },
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -39,7 +33,7 @@
   },
   "include": [
     "src",
-    "services",
+    "src/services",
     "components"
   ]
 }
