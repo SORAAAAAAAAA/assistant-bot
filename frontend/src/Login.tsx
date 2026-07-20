@@ -74,8 +74,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
             </div>
             <span>Remember me</span>
           </label>
-<<<<<<< HEAD
-          
+
           <button 
   type="button"
   onClick={onSwitchToForgotPassword}
@@ -85,11 +84,11 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
 </button>
         </div>
 
-       <button 
+        <button 
   type="submit" 
-  className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
+  className="mt-4 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
 >
-  Create Account
+  Log In
 </button>
       </form>
 
@@ -102,35 +101,6 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
     Sign up
   </button>
 </div>
-=======
-
-          <button
-            type="button"
-            onClick={onSwitchToForgotPassword}
-            className="font-medium underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-slate-900"
-          >
-            Forgot password
-          </button>
-        </div>
-
-        <button
-          type="submit"
-          className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-slate-800 active:bg-slate-950"
-        >
-          Log In
-        </button>
-      </form>
-
-      <div className="mt-4 text-center text-xs text-slate-700">
-        Don't have an account?{' '}
-        <button
-          onClick={onSwitchToSignup}
-          className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-slate-900"
-        >
-          Sign up
-        </button>
-      </div>
->>>>>>> ed0f2ab1d4bcbfb1a619e282c8485838af61a5c8
     </div>
   );
 }
