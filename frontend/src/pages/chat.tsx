@@ -77,12 +77,12 @@ export default function LogisticsChat() {
         @keyframes popIn { 0% { opacity: 0; transform: translateY(12px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
       `}</style>
 
-      <div className="grid grid-cols-2 h-full w-full max-w-[1440px] mx-auto px-[60px] pt-10 pb-[160px] gap-[60px] relative z-[1] box-border">
+      <div className="grid grid-cols-2 h-full w-full max-w-[1440px] mx-auto px-[60px] pt-10 gap-[60px] relative z-[1] box-border">
         {/* DIVIDER LINE */}
-        <div className="absolute top-3.5 bottom-35 w-px bg-[#1A1C1E] -translate-x-1/2" style={{ left: 'calc(50% - 30px)' }} />
+        <div className="absolute top-3.5 bottom-10 w-px bg-[#1A1C1E] -translate-x-1/2" style={{ left: 'calc(50% - 30px)' }} />
 
         {/* LEFT COLUMN - User Messages */}
-        <div className="flex flex-col min-h-0">
+        <div className="flex flex-col min-h-0 pb-6">
           <ChatHeader 
             title="Your Inquiries" 
             subtitle="Track and manage your questions." 
@@ -92,6 +92,16 @@ export default function LogisticsChat() {
             variant="user"
             onJump={jumpToResponse}
             scrollRef={userScrollRef}
+          />
+          <MessageComposer
+            input={input}
+            attachedFiles={attachedFiles}
+            isTyping={isTyping}
+            onSend={handleSend}
+            onFileSelect={setAttachedFiles}
+            onInputChange={setInput}
+            fileInputRef={fileInputRef}
+            inputRef={composerInputRef}
           />
         </div>
 
@@ -109,21 +119,10 @@ export default function LogisticsChat() {
             scrollRef={aiScrollRef}
           />
           {isTyping && (
-            <div className="text-xs text-[#6B7280] pl-2.5 font-semibold font-['JetBrains_Mono',monospace]">THINKING...</div>
+            <div className="text-xs text-[#6B7280] py-5 pl-2.5 font-semibold font-['JetBrains_Mono',monospace]">THINKING...</div>
           )}
         </div>
       </div>
-
-      <MessageComposer
-        input={input}
-        attachedFiles={attachedFiles}
-        isTyping={isTyping}
-        onSend={handleSend}
-        onFileSelect={setAttachedFiles}
-        onInputChange={setInput}
-        fileInputRef={fileInputRef}
-        inputRef={composerInputRef}
-      />
     </div>
   );
 }

@@ -9,7 +9,7 @@ export const AttachmentPreview: FC<AttachmentPreviewProps> = ({ files, onClear }
   if (files.length === 0) return null
 
   return (
-    <div className="absolute -top-12 left-0 flex gap-2 animate-[popIn_0.3s_ease_forwards]">
+    <div className="absolute -top-12 left-0 left-auto flex gap-2 animate-[popIn_0.3s_ease_forwards]">
       {files.map((file, i) => (
         <div 
           key={i} 
@@ -18,7 +18,7 @@ export const AttachmentPreview: FC<AttachmentPreviewProps> = ({ files, onClear }
           <span className="font-bold text-[#E23B4E]">Attached:</span> {file.name}
           <button 
             onClick={onClear} 
-            className="hover:text-red-500 ml-1"
+            className="hover:text-red-500 ml-1 cursor-pointer"
           >
             ×
           </button>

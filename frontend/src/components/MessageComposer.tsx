@@ -31,7 +31,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
   }
 
   return (
-    <div className="group absolute bottom-[50px] left-1/2 -translate-x-1/2 w-3/5 max-w-[900px] z-[100]">
+    <div className="group w-[85%] relative mt-4 ml-auto px-8">
       <AttachmentPreview 
         files={attachedFiles} 
         onClear={() => onFileSelect([])} 
@@ -39,7 +39,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
 
       <div
         className={`relative bg-white/50 backdrop-blur-[30px] px-10 py-5 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex items-center border cursor-text will-change-transform transition-[transform_0.4s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease,background_0.3s_ease] group-hover:-translate-y-[3px] group-hover:scale-[1.008] group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.08)] group-active:!translate-y-[-1px] group-active:!scale-[0.995] group-active:!duration-100 group-active:!ease-linear group-focus-within:-translate-y-[3px] group-focus-within:scale-[1.008] group-focus-within:shadow-[0_15px_35px_rgba(226,59,78,0.12)] ${
-          isTyping ? 'border-transparent' : 'border-white/60'
+          isTyping ? 'border-transparent' : 'border-black/60'
         }`}
         onClick={() => inputRef.current?.focus()}
       >
