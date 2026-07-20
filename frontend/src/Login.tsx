@@ -22,10 +22,10 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
 
   return (
     <div className="flex flex-col text-slate-900">
-      <div className="text-left mb-4">
-        <h2 className="text-3xl font-medium tracking-wide text-red-500">Log In</h2>
-        <p className="text-xs text-slate-600 mt-1">Welcome back. Please log in to your account.</p>
-      </div>
+     <div className="text-left mb-5">
+  <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Log In</h2>
+  <p className="mt-1 text-xs ">Welcome back. Please log in to your account.</p>
+</div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div>
@@ -76,31 +76,31 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
           </label>
           
           <button 
-            type="button"
-            onClick={onSwitchToForgotPassword}
-            className="font-medium underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-slate-900"
-          >
-            Forgot password
-          </button>
+  type="button"
+  onClick={onSwitchToForgotPassword}
+  className="font-medium underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+>
+  Forgot password
+</button>
         </div>
 
-        <button 
-          type="submit" 
-          className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-slate-800 active:bg-slate-950"
-        >
-          Log In
-        </button>
+       <button 
+  type="submit" 
+  className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
+>
+  Create Account
+</button>
       </form>
 
-      <div className="mt-4 text-center text-xs text-slate-700">
-        Don't have an account?{' '}
-        <button 
-          onClick={onSwitchToSignup} 
-          className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-slate-900"
-        >
-          Sign up
-        </button>
-      </div>
+      <div className="mt-5 text-center text-xs text-slate-700">
+  Don't have an account?{' '}
+  <button 
+    onClick={onSwitchToSignup} 
+    className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+  >
+    Sign up
+  </button>
+</div>
     </div>
   );
 }

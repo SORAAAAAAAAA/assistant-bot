@@ -21,7 +21,7 @@ export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
   return (
     <div className="flex flex-col text-slate-900">
       <div className="text-left mb-4">
-        <h2 className="text-3xl font-medium tracking-wide">Reset Password</h2>
+         <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Reset Password</h2>
         <p className="text-xs text-slate-600 mt-1">
           {isSubmitted 
             ? "Check your email for instructions." 
@@ -43,12 +43,12 @@ export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
             />
           </div>
           
-          <button 
-            type="submit" 
-            className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-slate-800 active:bg-slate-950"
-          >
-            Send Reset Link
-          </button>
+         <button 
+  type="submit" 
+  className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
+>
+  Send Reset Link
+</button>
         </form>
       ) : (
         <div className="mt-2 rounded-xl bg-white/60 p-5 border border-slate-900/10 text-sm text-center shadow-sm">
@@ -58,14 +58,14 @@ export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
       )}
 
       <div className="mt-4 text-center text-xs text-slate-700">
-        Remember your password?{' '}
-        <button 
-          onClick={onBackToLogin} 
-          className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-slate-900"
-        >
-          Log In
-        </button>
-      </div>
+  Remember your password?{' '}
+  <button 
+    onClick={onBackToLogin} 
+    className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+  >
+    Log In
+  </button>
+</div>
     </div>
   );
 }
