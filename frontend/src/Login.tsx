@@ -3,6 +3,7 @@ import PasswordInput from '@/components/PasswordInput';
 import EmailInput from '@/components/EmailInput';
 import { loginService } from '@/services/authService';
 import type { LoginRequest } from '@ai-assistant/shared';
+import { useAuth } from '@/context/authContext';
 
 interface LoginProps {
   onSwitchToSignup: () => void;
@@ -13,6 +14,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const { login: contextLogin } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
       try {
         const result = await loginService(loginData);
         alert(result);
+        contextLogin(result);
       } catch (error) {
         console.error(error);
       }

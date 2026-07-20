@@ -4,11 +4,18 @@ import Modal from './components/Modal';
 import ForgotPassword from './components/ForgotPassword';
 import Login from './Login';
 import Signup from './Signup';
+import { useAuth } from '@/context/authContext';
+import LogisticsChat from '@/pages/chat';
 
 type ViewState = 'login' | 'signup' | 'forgotPassword';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('login');
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <LogisticsChat />;
+  }
 
   return (
     <div style={{
