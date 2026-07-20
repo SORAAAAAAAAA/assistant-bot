@@ -75,6 +75,7 @@ export default function LogisticsChat() {
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
         body { margin: 0; padding: 0; }
         @keyframes popIn { 0% { opacity: 0; transform: translateY(12px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes glowRed { 0% { box-shadow: 0 0 0 0 rgba(226, 59, 78, 0.4); } 50% { box-shadow: 0 0 20px 5px rgba(226, 59, 78, 0.6); } 100% { box-shadow: 0 0 0 0 rgba(226, 59, 78, 0); } }
       `}</style>
 
       <div className="grid grid-cols-2 h-full w-full max-w-[1440px] mx-auto px-[60px] pt-10 gap-[60px] relative z-[1] box-border">
