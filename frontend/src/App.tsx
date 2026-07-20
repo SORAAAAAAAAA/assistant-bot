@@ -11,38 +11,38 @@ function App() {
   const [currentView, setCurrentView] = useState<ViewState>('login');
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: '100vh', 
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
       fontFamily: 'sans-serif'
     }}>
-      
-      <Modal isOpen={true} onClose={() => {}}>
-        
+
+      <Modal isOpen={true} onClose={() => { }}>
+
         {currentView === 'login' && (
-          <Login 
-            onSwitchToSignup={() => setCurrentView('signup')} 
+          <Login
+            onSwitchToSignup={() => setCurrentView('signup')}
             onSwitchToForgotPassword={() => setCurrentView('forgotPassword')}
           />
         )}
-        
+
         {currentView === 'signup' && (
-          <Signup 
-            onSwitchToLogin={() => setCurrentView('login')} 
+          <Signup
+            onSwitchToLogin={() => setCurrentView('login')}
           />
         )}
-        
+
         {currentView === 'forgotPassword' && (
-          <ForgotPassword 
-            onBackToLogin={() => setCurrentView('login')} 
+          <ForgotPassword
+            onBackToLogin={() => setCurrentView('login')}
           />
         )}
 
       </Modal>
-      
+
     </div>
   );
 }
