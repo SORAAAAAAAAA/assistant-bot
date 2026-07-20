@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-import Modal from '../components/Modal';
-import ForgotPassword from '../components/ForgotPassword';
+import Modal from './components/Modal';
+import ForgotPassword from './components/ForgotPassword';
 import Login from './Login';
 import Signup from './Signup';
 

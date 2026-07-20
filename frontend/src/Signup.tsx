@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import PasswordInput from '@/components/PasswordInput';
 import EmailInput from '@/components/EmailInput';
 import CustomSelect from '@/components/CustomSelect';
+<<<<<<< HEAD
 import { registerService } from '@/services/authService';
 import type { RegisterRequest, DepartmentType } from '@ai-assistant/shared';
+=======
+>>>>>>> authpage
 
 interface SignupProps {
   onSwitchToLogin: () => void;
@@ -63,7 +66,7 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
   return (
     <div className="flex flex-col text-slate-900">
       <div className="text-left mb-4">
-        <h2 className="text-3xl font-medium tracking-wide">Sign Up</h2>
+       <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Sign Up</h2>
         <p className="text-xs text-slate-600 mt-1">Create an account to get started.</p>
       </div>
 
@@ -120,6 +123,7 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
           />
         </div>
 
+<<<<<<< HEAD
         <button
           type="submit"
           className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-slate-800 active:bg-slate-950"
@@ -137,6 +141,25 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
           Log In
         </button>
       </div>
+=======
+        <button 
+  type="submit" 
+  className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
+>
+  Create Account
+</button>
+      </form>
+
+      <div className="mt-4 text-center text-xs text-slate-700">
+  Already have an account?{' '}
+  <button 
+    onClick={onSwitchToLogin} 
+    className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+  >
+    Log In
+  </button>
+</div>
+>>>>>>> authpage
     </div>
   );
 }
