@@ -3,6 +3,10 @@ packages:
   - "frontend"
   - "shared"
 allowBuilds:
-  '@prisma/engines': false
-  prisma: false
-  unrs-resolver: false
+  '@prisma/engines': true
+  '@scarf/scarf': false
+  onnxruntime-node: true
+  prisma: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
