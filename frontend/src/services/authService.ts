@@ -1,49 +1,41 @@
-import { type RegisterRequest, type LoginRequest } from '@ai-assistant/shared';
+import type { RegisterRequest, LoginRequest, LoginResponse, RegisterResponse } from '@ai-assistant/shared';
 
-export async function registerService(formData: RegisterRequest): Promise<string> {
+const baseURL = import.meta.env.VITE_BASE_URL;
 
-    const baseURL = import.meta.env.VITE_BASE_URL;
+export async function registerService(formData: RegisterRequest): Promise<RegisterResponse> {
 
-    try {
-        const registerResponse = await fetch(baseURL + '/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
+    const registerResponse = await fetch(baseURL + '/auth/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
 
-        if (registerResponse.ok) {
-            return registerResponse.text();
-        } else {
-            throw new Error('Failed to register ' + registerResponse.status);
-        }
+    const data = await registerResponse.json();
 
-    } catch (error) {
-        throw new Error('Failed to register', error);
+    if (!registerResponse.ok) {
+        throw new Error(data.message);
     }
+
+    return data;
 }
 
-export async function loginService(formData: LoginRequest): Promise<string> {
+export async function loginService(formData: LoginRequest): Promise<LoginResponse> {
 
-    const baseURL = import.meta.env.VITE_BASE_URL;
+    const loginResponse = await fetch(baseURL + '/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
 
-    try {
-        const loginResponse = await fetch(baseURL + '/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
+    const data = await loginResponse.json();
 
-        if (loginResponse.ok) {
-            return await loginResponse.text();
-        } else {
-            throw new Error('Failed to log in' + loginResponse.status);
-        }
-
-    } catch (error) {
-        throw new Error('Failed to log in', error);
+    if (!loginResponse.ok) {
+        throw new Error(data.message);
     }
+
+    return data;
 }
