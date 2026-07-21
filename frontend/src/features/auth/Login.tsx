@@ -1,20 +1,50 @@
 import React, { useState } from 'react';
-import PasswordInput from '@/components/PasswordInput';
-import EmailInput from '@/components/EmailInput';
+import PasswordInput from '@/features/auth/PasswordInput';
+import EmailInput from '@/components/ui/EmailInput';
+import { loginService } from '@/services/authService';
+import type { LoginRequest } from '@ai-assistant/shared';
+import { useAuth } from '@/context/authContext';
 
 interface LoginProps {
   onSwitchToSignup: () => void;
   onSwitchToForgotPassword: () => void;
+  onShowToast: (message: string, type: 'success' | 'error') => void;
+  setIsLoading: (loading: boolean) => void;
 }
 
-export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: LoginProps) {
+export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onShowToast, setIsLoading }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const { login: contextLogin } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password, rememberMe });
+    const loginData: LoginRequest = {
+      email: email,
+      password: password,
+    };
+    const login = async () => {
+
+      setIsLoading(true);
+      try {
+        const result = await loginService(loginData);
+
+        setTimeout(() => {
+          setIsLoading(false);
+          contextLogin(result.access_token);
+        }, 1000);
+
+      } catch (error) {
+        setIsLoading(false);
+        if (error instanceof Error) {
+          onShowToast(error.message, 'error');
+        } else {
+          onShowToast('An unknown error occurred', 'error');
+        }
+      }
+    }
+    login();
   };
 
   const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-3 text-[13px] text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";

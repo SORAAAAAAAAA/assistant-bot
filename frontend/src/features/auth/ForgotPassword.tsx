@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EmailInput from './EmailInput'; 
+import EmailInput from '@/components/ui/EmailInput';
 
 interface ForgotPasswordProps {
   onBackToLogin: () => void;
@@ -33,9 +33,9 @@ export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label htmlFor="resetEmail" className={labelClasses}>Email Address</label>
-            <EmailInput 
+            <EmailInput
               id="resetEmail"
-              placeholder="name@company.com" 
+              placeholder="name@company.com"
               className={inputClasses}
               value={email}
               onChange={(e) => setEmail(e.target.value)}

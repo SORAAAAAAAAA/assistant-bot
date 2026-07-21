@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import PasswordInput from '@/components/PasswordInput';
-import EmailInput from '@/components/EmailInput';
-import CustomSelect from '@/components/CustomSelect';
+import PasswordInput from '@/features/auth/PasswordInput';
+import EmailInput from '@/components/ui/EmailInput';
+import CustomSelect from '@/features/chat/CustomSelect';
+import { registerService } from '@/services/authService';
+import type { RegisterRequest, DepartmentType } from '@ai-assistant/shared';
 
 interface SignupProps {
   onSwitchToLogin: () => void;
+  onShowToast: (message: string, type: 'success' | 'error') => void;
+  setIsLoading: (loading: boolean) => void;
 }
 
-export default function Signup({ onSwitchToLogin }: SignupProps) {
+export default function Signup({ onSwitchToLogin, onShowToast, setIsLoading }: SignupProps) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,6 +20,7 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
     password: '',
     confirmPassword: '',
   });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,7 +37,38 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
       alert("Passwords do not match!");
       return;
     }
-    console.log('Signup account creation data:', formData);
+
+    const registerData: RegisterRequest = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      department: formData.department as DepartmentType,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    };
+
+    const register = async () => {
+      setIsLoading(true);
+      try {
+        const result = await registerService(registerData);
+
+        onShowToast(result.message, 'success');
+
+        setTimeout(() => {
+          setIsLoading(false);
+          onSwitchToLogin();
+        }, 1200);
+
+      } catch (error) {
+        setIsLoading(false);
+        if (error instanceof Error) {
+          onShowToast(error.message, 'error');
+        } else {
+          onShowToast('An unknown error occurred', 'error');
+        }
+      }
+    }
+    register();
   };
 
   const departmentOptions = ["MIS", "OJS", "HR", "OOS", "GA", "Finance"];

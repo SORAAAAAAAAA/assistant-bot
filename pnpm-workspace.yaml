@@ -4,6 +4,9 @@ packages:
   - "shared"
 allowBuilds:
   '@prisma/engines': true
+  '@scarf/scarf': false
+  onnxruntime-node: true
   prisma: true
+  protobufjs: true
+  sharp: true
   unrs-resolver: true
-  
