@@ -4,11 +4,9 @@ import { MessageSquare, History, HelpCircle, Plus } from 'lucide-react';
 import { SidebarBackground } from './SidebarBackground';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
-import { useAuth } from '@/context/authContext';
 import { NavItem } from './NavItem';
 
 export default function Sidebar() {
-    const { logout } = useAuth();
     const [isOpen, setIsOpen] = useState(true);
 
     const topItems = [
@@ -16,10 +14,6 @@ export default function Sidebar() {
         { icon: <History size={20} />, label: 'History', path: '/history' },
         { icon: <HelpCircle size={20} />, label: 'FAQs', path: '/faqs' },
     ];
-
-    const handleLogout = () => {
-        logout();
-    }
 
     return (
         <aside
