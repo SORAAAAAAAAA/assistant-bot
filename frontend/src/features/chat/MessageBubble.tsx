@@ -9,8 +9,6 @@ interface MessageBubbleProps {
   onJump?: (relatedId?: number) => void
 }
 
-const TIME_STAMP_CLASSES = "text-right text-[8.5px] text-[#6B7280] mt-1.5 font-semibold font-['JetBrains_Mono',monospace] uppercase tracking-wider"
-
 const GLASS_STYLE = "backdrop-blur-xl border border-white/60 ring-1 ring-black/5 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
 
 export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highlighted = false, onJump }) => {
@@ -46,7 +44,6 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
             </div>
           )}
         </div>
-        <div className={TIME_STAMP_CLASSES}>{message.time}</div>
       </div>
     )
   }
@@ -72,7 +69,6 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
           {message.content}
         </div>
       </div>
-      <div className={TIME_STAMP_CLASSES}>{message.time}</div>
     </div>
   )
 }
