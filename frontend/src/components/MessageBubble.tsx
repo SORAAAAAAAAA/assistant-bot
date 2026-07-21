@@ -9,58 +9,70 @@ interface MessageBubbleProps {
   onJump?: (relatedId?: number) => void
 }
 
-const TIME_STAMP_CLASSES = "text-right text-[11px] text-[#6B7280] mt-2.5 font-semibold font-['JetBrains_Mono',monospace] uppercase tracking-wider"
+const TIME_STAMP_CLASSES = "text-right text-[8.5px] text-[#6B7280] mt-1.5 font-semibold font-['JetBrains_Mono',monospace] uppercase tracking-wider"
 
-export const MessageBubble: FC<MessageBubbleProps> = ({ 
-  message, 
-  variant, 
-  highlighted = false,
-  onJump 
-}) => {
+const GLASS_STYLE = "backdrop-blur-xl border border-white/60 ring-1 ring-black/5 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
+
+export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highlighted = false, onJump }) => {
   const isUser = variant === 'user'
 
   if (isUser) {
     return (
       <div className="w-[85%] shrink-0 animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]">
         <div
-          className="bg-[#E23B4E] text-white px-6 py-5 rounded-[24px_24px_4px_24px] text-[15px] shadow-[0_4px_15px_rgba(226,59,78,0.15)] leading-[1.4] cursor-pointer relative bill-change-transform transition-[transform_0.5s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease] hover:-translate-y-[10px] hover:scale-[1.03] hover:shadow-[0_25px_45px_rgba(0,0,0,0.12)] hover:z-50 active:!translate-y-[-4px] active:!scale-[0.96] active:!duration-100 active:!ease-linear break-words whitespace-normal"
+          className={`
+            ${GLASS_STYLE} 
+            bg-white/40 
+            px-4 py-3 
+            rounded-[16px_16px_3px_16px] 
+            cursor-pointer relative 
+            will-change-transform transition-all duration-300 
+            hover:-translate-y-1 hover:shadow-lg hover:bg-white/50 
+            active:scale-95 break-words whitespace-normal
+          `}
           onClick={() => onJump?.(message.relatedId)}
         >
-          {message.content}
+          <div className="text-[11px] text-[#1A1C1E] leading-[1.4] font-medium">
+            {message.content}
+          </div>
+          
           {message.files && message.files.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-white/20 flex flex-col gap-1">
+            <div className="mt-2 pt-2 border-t border-white/30 flex flex-col gap-1">
               {message.files.map((name, i) => (
-                <div key={i} className="text-[11px] bg-white/20 px-2 py-1 rounded flex items-center overflow-hidden gap-2">
-                  <span>📄</span> {name}
+                <div key={i} className="text-[9px] bg-white/30 px-2 py-0.5 rounded flex items-center overflow-hidden gap-1.5 border border-white/20">
+                  <span className="text-[#E23B4E]">📄</span> {name}
                 </div>
               ))}
             </div>
           )}
         </div>
-        <div className={TIME_STAMP_CLASSES}>
-          {message.time}
-        </div>
+        <div className={TIME_STAMP_CLASSES}>{message.time}</div>
       </div>
     )
   }
 
   // Assistant variant
   return (
-    <div 
-      id={`msg-${message.id}`} 
-      className="w-[90%] shrink-0 relative animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]"
-    >
+    <div id={`msg-${message.id}`} className="w-[90%] shrink-0 relative animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]">
       <div
-        className={`bg-white/45 backdrop-blur-[24px] p-7 rounded-[24px_24px_24px_4px] text-[15px] text-[#1A1C1E] shadow-[0_8px_32px_rgba(0,0,0,0.05)] leading-[1.6] relative border border-white/50 will-change-transform transition-[transform_0.5s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease] hover:-translate-y-[10px] hover:scale-[1.03] hover:shadow-[0_25px_45px_rgba(0,0,0,0.12)] hover:z-50 active:!translate-y-[-4px] active:!scale-[0.96] active:!duration-100 active:!ease-linear break-words whitespace-normal ${
-          highlighted ? 'border-transparent' : 'border-white/50'
-        }`}
+        className={`
+          ${GLASS_STYLE} 
+          bg-white/60 
+          p-5 
+          rounded-[16px_16px_16px_3px] 
+          relative 
+          will-change-transform transition-all duration-300 
+          hover:-translate-y-1 hover:shadow-lg 
+          break-words whitespace-normal
+          ${highlighted ? 'ring-2 ring-[#E23B4E]/40 border-transparent shadow-[0_0_20px_rgba(226,59,78,0.15)]' : ''}
+        `}
       >
-        <SwirlBorder active={highlighted}/>
-        {message.content}
+        <SwirlBorder active={highlighted} radii={[16, 16, 16, 3]} />
+        <div className="text-[11px] text-[#1A1C1E] leading-[1.6] font-medium">
+          {message.content}
+        </div>
       </div>
-      <div className={TIME_STAMP_CLASSES}>
-        {message.time}
-      </div>
+      <div className={TIME_STAMP_CLASSES}>{message.time}</div>
     </div>
   )
 }

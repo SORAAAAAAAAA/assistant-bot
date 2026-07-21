@@ -2,13 +2,18 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 
 interface SwirlBorderProps {
   active: boolean
+  // Add radii prop to match the MessageBubble's [16, 16, 16, 3]
+  radii?: [number, number, number, number] 
 }
 
-export const SwirlBorder = ({ active }: SwirlBorderProps) => {
+export const SwirlBorder = ({ active, radii = [16, 16, 16, 3] }: SwirlBorderProps) => {
   const [rectSize, setRectSize] = useState({ w: 0, h: 0 })
   const [pathLength, setPathLength] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
+
+  // Scale down stroke width from 3 to 2 for the 67% zoom look
+  const strokeWidth = 2
 
   useEffect(() => {
     if (containerRef.current) {
@@ -23,23 +28,23 @@ export const SwirlBorder = ({ active }: SwirlBorderProps) => {
     const { w, h } = rectSize
     if (w === 0 || h === 0) return ""
     
-    const rLarge = 24
-    const rSmall = 4
+    // Use the provided radii (defaulted to the scaled 16px/3px)
+    const [tl, tr, br, bl] = radii
 
-    // Drawing a path that matches rounded-[24px_24px_24px_4px]
+    // Accurate path for asymmetrical corners
     return `
-      M ${rLarge},0 
-      H ${w - rLarge} 
-      A ${rLarge},${rLarge} 0 0 1 ${w},${rLarge} 
-      V ${h - rLarge} 
-      A ${rLarge},${rLarge} 0 0 1 ${w - rLarge},${h} 
-      H ${rSmall} 
-      A ${rSmall},${rSmall} 0 0 1 0,${h - rSmall} 
-      V ${rLarge} 
-      A ${rLarge},${rLarge} 0 0 1 ${rLarge},0 
+      M ${tl},0 
+      H ${w - tr} 
+      A ${tr},${tr} 0 0 1 ${w},${tr} 
+      V ${h - br} 
+      A ${br},${br} 0 0 1 ${w - br},${h} 
+      H ${bl} 
+      A ${bl},${bl} 0 0 1 0,${h - bl} 
+      V ${tl} 
+      A ${tl},${tl} 0 0 1 ${tl},0 
       Z
     `
-  }, [rectSize])
+  }, [rectSize, radii])
 
   useEffect(() => {
     if (pathRef.current) {
@@ -65,14 +70,14 @@ export const SwirlBorder = ({ active }: SwirlBorderProps) => {
             ref={pathRef}
             d={d}
             fill="none"
-            stroke="#B31922"
-            strokeWidth="3"
+            stroke="#E23B4E" // Using brand red for consistency
+            strokeWidth={strokeWidth}
             strokeDasharray={pathLength}
             strokeDashoffset={active ? 0 : pathLength}
             className={
               active 
                 ? "[transition:stroke-dashoffset_0.8s_cubic-bezier(0.4,0,0.2,1)]" 
-                : "[transition:stroke-dashoffset_0.8s_ease-in]"
+                : "[transition:stroke-dashoffset_0.5s_ease-in]"
             }
           />
         </svg>
