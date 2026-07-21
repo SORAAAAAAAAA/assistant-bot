@@ -1,5 +1,4 @@
 export type DepartmentType = 'HR' | 'OJS' | 'Finance' | 'MIS' | 'GA' | 'OOS';
-
 export interface RegisterRequest {
     firstName: string;
     lastName: string;
@@ -8,7 +7,6 @@ export interface RegisterRequest {
     password: string;
     confirmPassword: string;
 }
-
 export interface LoginRequest {
     email: string;
     password: string;

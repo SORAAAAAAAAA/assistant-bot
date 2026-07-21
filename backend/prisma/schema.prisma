@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,14 +8,14 @@ datasource db {
 
 model User {  
     id Int @id @default(autoincrement())
+    firstName String
+    lastName String
+    department String
     email String @unique
     hashedPassword String
-    isApproved Boolean @default(false)
-    isAdmin Boolean @default(false)
     createdAt DateTime @default(now())
     chatHistory ChatHistory[]
 }
-
 
 model ChatHistory {
     id Int @id @default(autoincrement())
