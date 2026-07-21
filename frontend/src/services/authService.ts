@@ -13,7 +13,11 @@ export async function registerService(formData: RegisterRequest): Promise<string
             body: JSON.stringify(formData),
         })
 
-        return registerResponse.text();
+        if (registerResponse.ok) {
+            return registerResponse.text();
+        } else {
+            throw new Error('Failed to register ' + registerResponse.status);
+        }
 
     } catch (error) {
         throw new Error('Failed to register', error);
@@ -33,7 +37,11 @@ export async function loginService(formData: LoginRequest): Promise<string> {
             body: JSON.stringify(formData),
         })
 
-        return ('Logged-in Sucessfully!');
+        if (loginResponse.ok) {
+            return await loginResponse.text();
+        } else {
+            throw new Error('Failed to log in' + loginResponse.status);
+        }
 
     } catch (error) {
         throw new Error('Failed to log in', error);

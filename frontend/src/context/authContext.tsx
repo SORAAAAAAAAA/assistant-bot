@@ -9,8 +9,38 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function isTokenExpired(token: string | null): boolean {
+    if (!token) return true;
+    try {
+        const base64Url = token.split('.')[1];
+        if (!base64Url) return true;
+
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+
+        const { exp } = JSON.parse(jsonPayload);
+        if (!exp) return false;
+
+        return exp * 1000 < Date.now();
+    } catch (e) {
+        return true; // we treat it invalid if cannot parse
+    }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+    const [token, setToken] = useState<string | null>(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken && isTokenExpired(storedToken)) {
+            localStorage.removeItem('token');
+            return null;
+        }
+        return storedToken;
+    });
 
     const login = (newToken: string) => {
         localStorage.setItem('token', newToken);

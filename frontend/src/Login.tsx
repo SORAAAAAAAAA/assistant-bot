@@ -18,7 +18,6 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password, rememberMe });
     const loginData: LoginRequest = {
       email: email,
       password: password,

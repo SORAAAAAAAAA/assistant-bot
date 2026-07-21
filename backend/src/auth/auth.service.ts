@@ -22,7 +22,13 @@ export class AuthService {
         if (existing) throw new ConflictException('Email already registered');
         const hashedPassword = await bcrypt.hash(dto.password, 10);
         await this.prisma.user.create({
-            data: { email: dto.email, hashedPassword },
+            data: {
+                firstName: dto.firstName,
+                lastName: dto.lastName,
+                department: dto.department,
+                email: dto.email,
+                hashedPassword: hashedPassword
+            },
         });
         return { message: 'Registered. You can now Log-in!' };
     }
