@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { MessageList } from '@/features/chat/MessageList';
 import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
+import { chatService } from '@/services/chatService';
+import type { ChatRequest } from '@ai-assistant/shared';
 
 export default function ChatInterface() {
     const [input, setInput] = useState('');
@@ -45,7 +47,7 @@ export default function ChatInterface() {
         }
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if ((!input.trim() && attachedFiles.length === 0) || isTyping) return;
         const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const uId = Date.now();
@@ -56,19 +58,28 @@ export default function ChatInterface() {
             files: attachedFiles.map(f => f.name), relatedId: aId
         };
 
-        setMessages(prev => [...prev, userMsg]);
-        setInput('');
-        setAttachedFiles([]);
+        const chatRequest: ChatRequest = {
+            message: input
+        }
         setIsTyping(true);
-
-        setTimeout(() => {
+        try {
+            const response = await chatService(chatRequest)
             const reply: Message = {
                 id: aId, role: 'assistant', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                content: "I have received your message."
+                content: JSON.stringify(response)
             };
             setMessages(prev => [...prev, reply]);
             setIsTyping(false);
-        }, 1500);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+
+        setMessages(prev => [...prev, userMsg]);
+        setInput('');
+        setAttachedFiles([]);
+
     };
 
     return (

@@ -105,7 +105,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
             <span>Remember me</span>
           </label>
 
-          <button 
+          <button
             type="button"
             onClick={onSwitchToForgotPassword}
             className="font-medium underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
@@ -114,8 +114,8 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
           </button>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="mt-2 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
         >
           Log In
@@ -124,8 +124,8 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
 
       <div className="mt-5 text-center text-[13px] text-slate-700">
         Don't have an account?{' '}
-        <button 
-          onClick={onSwitchToSignup} 
+        <button
+          onClick={onSwitchToSignup}
           className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
         >
           Sign up
