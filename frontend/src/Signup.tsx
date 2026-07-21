@@ -37,17 +37,18 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
 
   const departmentOptions = ["MIS", "OJS", "HR", "OOS", "GA", "Finance"];
 
-  const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";
-  const labelClasses = "text-[10px] font-bold text-slate-800 uppercase tracking-wider mb-1.5 block text-left ml-1";
+  // MICRO-ADJUSTMENT: py-3 adds just a tiny bit of height back to the boxes
+  const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-3 text-[13px] text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";
+  const labelClasses = "text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1 block text-left ml-1";
 
   return (
     <div className="flex flex-col text-slate-900 animate-view-change">
       <div className="text-left mb-4">
-       <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Sign Up</h2>
-        <p className="text-xs text-slate-600 mt-1">Create an account to get started.</p>
+        <h2 className="text-2xl !font-extrabold tracking-wide !text-red-600">Sign Up</h2>
+        <p className="text-[13px] text-slate-600 mt-1">Create an account to get started.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
 
         <div className="flex gap-3">
           <div className="flex-1">
@@ -66,25 +67,25 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
           </div>
         </div>
 
-        <div>
-          <label className={labelClasses}>Department</label>
-          <CustomSelect
-            value={formData.department}
-            onChange={handleDepartmentChange}
-            options={departmentOptions}
-            placeholder="Select Department"
-          />
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <label className={labelClasses}>Department</label>
+            <CustomSelect
+              value={formData.department}
+              onChange={handleDepartmentChange}
+              options={departmentOptions}
+              placeholder="Select Dept"
+            />
+          </div>
+          <div className="flex-1">
+            <label htmlFor="email" className={labelClasses}>Email Address</label>
+            <EmailInput
+              id="email" name="email" placeholder="name@company.com"
+              className={inputClasses} value={formData.email} onChange={handleChange} required
+            />
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="email" className={labelClasses}>Email Address</label>
-          <EmailInput
-            id="email" name="email" placeholder="name@company.com"
-            className={inputClasses} value={formData.email} onChange={handleChange} required
-          />
-        </div>
-
-        {/* SIDE-BY-SIDE PASSWORDS TO REDUCE HEIGHT */}
         <div className="flex gap-3">
           <div className="flex-1">
             <label htmlFor="password" className={labelClasses}>Password</label>
@@ -102,15 +103,16 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
           </div>
         </div>
 
+        {/* MICRO-ADJUSTMENT: py-3.5 makes the button match the inputs proportionally */}
         <button 
           type="submit" 
-          className="mt-3 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
+          className="mt-1 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
         >
           Create Account
         </button>
       </form>
 
-      <div className="mt-4 text-center text-xs text-slate-700">
+      <div className="mt-4 text-center text-[13px] text-slate-700">
         Already have an account?{' '}
         <button 
           onClick={onSwitchToLogin} 
