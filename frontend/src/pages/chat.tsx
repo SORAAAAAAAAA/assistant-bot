@@ -20,26 +20,16 @@ export default function LogisticsChat() {
     if (aiScrollRef.current) aiScrollRef.current.scrollTop = aiScrollRef.current.scrollHeight;
   }, [messages, isTyping]);
 
-  // FIX: Manual scroll calculation prevents the "Large Footer" layout shift
   const jumpToResponse = (relatedId?: number) => {
     if (!relatedId) return;
-    
     const container = aiScrollRef.current;
     const element = document.getElementById(`msg-${relatedId}`);
-    
     if (element && container) {
-      // Calculate position relative to the container, not the screen
       const elementRect = element.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
       const relativeTop = elementRect.top - containerRect.top;
-      
       const targetScroll = container.scrollTop + relativeTop - (container.clientHeight / 2) + (element.clientHeight / 2);
-      
-      container.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth'
-      });
-
+      container.scrollTo({ top: targetScroll, behavior: 'smooth' });
       setHighlightedId(relatedId);
       setTimeout(() => setHighlightedId(null), 3000);
     }
@@ -73,13 +63,29 @@ export default function LogisticsChat() {
 
   return (
     <div className="h-screen w-screen bg-[#E5E7EB] fixed top-0 left-0 overflow-hidden font-['Inter',system-ui,sans-serif]">
+      
+      {/* ── BACKGROUND LAYER (Blobs for Glass Effect) ── */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-50" />
-      <div className="absolute -top-[10%] left-[10%] w-[70vw] h-[70vw] bg-[#E23B4E]/[0.08] blur-[120px] rounded-full pointer-events-none animate-pulse" />
-      <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+      
+      {/* Moving Aurora Blobs */}
+      <div className="absolute top-[10%] left-[10%] w-[45vw] h-[45vw] bg-[#E23B4E]/[0.12] blur-[100px] rounded-full pointer-events-none animate-[drift_18s_infinite_linear]" />
+      <div className="absolute bottom-[5%] right-[5%] w-[40vw] h-[40vw] bg-[#E08A1E]/[0.15] blur-[120px] rounded-full pointer-events-none animate-[drift_22s_infinite_linear_reverse]" />
+      <div className="absolute top-[40%] left-[40%] w-[30vw] h-[30vw] bg-[#3B82F6]/[0.08] blur-[100px] rounded-full pointer-events-none animate-[drift_15s_infinite_ease-in-out]" />
+
+      {/* Static Dot Grid Overlay */}
+      <div className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
         body { margin: 0; padding: 0; overflow: hidden; }
+        
+        @keyframes drift {
+          0% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(5vw, -10vh) scale(1.1); }
+          66% { transform: translate(-3vw, 5vh) scale(0.9); }
+          100% { transform: translate(0, 0) scale(1); }
+        }
+
         @keyframes popIn { 0% { opacity: 0; transform: translateY(8px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes letterJump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         @keyframes blinkRed { 0%, 100% { color: #6B7280; } 50% { color: #E23B4E; } }
@@ -90,7 +96,7 @@ export default function LogisticsChat() {
         }
       `}</style>
 
-      {/* Main Container - Controlled paddings to keep layout tight */}
+      {/* Main Container */}
       <div className="grid grid-cols-2 h-full w-full max-w-[1000px] mx-auto px-6 pt-8 pb-8 gap-8 relative z-[1] box-border">
         {/* DIVIDER LINE */}
         <div className="absolute top-4 bottom-8 w-px bg-gray-400/40 -translate-x-1/2" style={{ left: 'calc(50% - 0px)' }} />
