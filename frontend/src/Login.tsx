@@ -8,9 +8,11 @@ import { useAuth } from '@/context/authContext';
 interface LoginProps {
   onSwitchToSignup: () => void;
   onSwitchToForgotPassword: () => void;
+  onShowToast: (message: string, type: 'success' | 'error') => void;
+  setIsLoading: (loading: boolean) => void;
 }
 
-export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: LoginProps) {
+export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onShowToast, setIsLoading }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -23,12 +25,23 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword }: Lo
       password: password,
     };
     const login = async () => {
+
+      setIsLoading(true);
       try {
         const result = await loginService(loginData);
-        alert(result);
-        contextLogin(result);
+
+        setTimeout(() => {
+          setIsLoading(false);
+          contextLogin(result.access_token);
+        }, 1000);
+
       } catch (error) {
-        console.error(error);
+        setIsLoading(false);
+        if (error instanceof Error) {
+          onShowToast(error.message, 'error');
+        } else {
+          onShowToast('An unknown error occurred', 'error');
+        }
       }
     }
     login();

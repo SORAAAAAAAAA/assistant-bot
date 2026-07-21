@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 interface ToastProps {
   type: 'success' | 'error';
@@ -24,18 +24,14 @@ export default function Toast({ type, message, isVisible, onClose }: ToastProps)
 
   return (
     <div className="fixed bottom-6 right-6 z-[100] animate-toast-slide-in font-sans">
-      <div 
-        className={`relative flex items-center gap-3 overflow-hidden rounded-xl border p-4 pr-6 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.2)] backdrop-blur-2xl transition-all ${
-          isSuccess 
-            ? 'border-green-500/30 bg-white/80 text-slate-900' 
-            : 'border-red-500/30 bg-white/80 text-slate-900'
-        }`}
+      <div
+        className="relative flex items-center gap-4 rounded-[24px] border border-white/60 bg-white/40 p-4 pr-6 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] backdrop-blur-2xl transition-all text-slate-900"
       >
-        {/* Left Accent Line */}
-        <div className={`absolute left-0 top-0 h-full w-1.5 ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`} />
+        {/* --- REALISTIC GLASS OVERLAY (Matching Modal) --- */}
+        <div className="pointer-events-none absolute inset-0 rounded-[24px] border border-white/70 bg-gradient-to-b from-white/60 via-transparent to-transparent opacity-80" />
 
         {/* Dynamic Icon */}
-        <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${isSuccess ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+        <div className={`relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full shadow-sm ${isSuccess ? 'bg-green-100/80 text-green-600' : 'bg-red-100/80 text-red-600'}`}>
           {isSuccess ? (
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -48,15 +44,15 @@ export default function Toast({ type, message, isVisible, onClose }: ToastProps)
         </div>
 
         {/* Message Content */}
-        <div className="flex flex-col">
+        <div className="relative z-10 flex flex-col">
           <h4 className="text-sm font-bold tracking-wide">{isSuccess ? 'Success' : 'Error'}</h4>
-          <p className="text-xs font-medium text-slate-600">{message}</p>
+          <p className="text-xs font-medium text-slate-800">{message}</p>
         </div>
 
         {/* Manual Close Button */}
-        <button 
+        <button
           onClick={onClose}
-          className="ml-4 rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-900/10 hover:text-slate-700 focus:outline-none"
+          className="relative z-10 ml-4 rounded-md p-1 text-slate-500 transition-colors hover:bg-slate-900/10 hover:text-slate-900 focus:outline-none"
           aria-label="Close"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">

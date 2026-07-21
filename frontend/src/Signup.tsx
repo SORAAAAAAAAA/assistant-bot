@@ -7,9 +7,11 @@ import type { RegisterRequest, DepartmentType } from '@ai-assistant/shared';
 
 interface SignupProps {
   onSwitchToLogin: () => void;
+  onShowToast: (message: string, type: 'success' | 'error') => void;
+  setIsLoading: (loading: boolean) => void;
 }
 
-export default function Signup({ onSwitchToLogin }: SignupProps) {
+export default function Signup({ onSwitchToLogin, onShowToast, setIsLoading }: SignupProps) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,6 +20,7 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
     password: '',
     confirmPassword: '',
   });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,11 +48,24 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
     };
 
     const register = async () => {
+      setIsLoading(true);
       try {
         const result = await registerService(registerData);
-        alert(result);
+
+        onShowToast(result.message, 'success');
+
+        setTimeout(() => {
+          setIsLoading(false);
+          onSwitchToLogin();
+        }, 1200);
+
       } catch (error) {
-        console.error(error);
+        setIsLoading(false);
+        if (error instanceof Error) {
+          onShowToast(error.message, 'error');
+        } else {
+          onShowToast('An unknown error occurred', 'error');
+        }
       }
     }
     register();
