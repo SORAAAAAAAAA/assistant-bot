@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { MessageSquare, History, HelpCircle, Plus } from 'lucide-react';
 
-// Imports
 import { SidebarBackground } from './SidebarBackground';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
@@ -11,9 +10,9 @@ export function Sidebar() {
     const [isOpen, setIsOpen] = useState(true);
 
     const topItems = [
-        { icon: <MessageSquare size={20} />, label: 'Chat' },
-        { icon: <History size={20} />, label: 'History' },
-        { icon: <HelpCircle size={20} />, label: 'FAQs' },
+        { icon: <MessageSquare size={20} />, label: 'Chat', path: '/chat' },
+        { icon: <History size={20} />, label: 'History', path: '/history' },
+        { icon: <HelpCircle size={20} />, label: 'FAQs', path: '/faqs' },
     ];
 
     return (
@@ -42,7 +41,7 @@ export function Sidebar() {
                         icon={item.icon}
                         label={item.label}
                         isOpen={isOpen}
-                        onClick={() => alert(`You clicked: ${item.label}`)}
+                        to={item.path}
                     />
                 ))}
             </nav>

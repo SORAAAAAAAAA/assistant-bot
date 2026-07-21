@@ -1,29 +1,37 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 interface NavItemProps {
     icon: ReactNode;
     label: string;
     isOpen: boolean;
-    onClick: () => void;
+    onClick?: () => void; // Made optional
+    to?: string;          // New optional property for routing
     isDanger?: boolean;
     isPrimary?: boolean;
 }
 
-export function NavItem({ icon, label, isOpen, onClick, isDanger = false, isPrimary = false }: NavItemProps) {
+export function NavItem({
+    icon,
+    label,
+    isOpen,
+    onClick,
+    to,
+    isDanger = false,
+    isPrimary = false
+}: NavItemProps) {
 
-    // Define base styles depending on whether it's a primary action (New Inquiry), danger, or normal link
     const baseStyles = isPrimary
         ? "bg-red-600/60 hover:bg-red-500/80 backdrop-blur-md border border-red-400/40 text-white shadow-lg mb-8"
         : isDanger
             ? "hover:bg-red-500/40 hover:text-white border border-transparent hover:border-red-400/30 text-red-200"
             : "text-red-100 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10 hover:shadow-sm";
 
-    return (
-        <button
-            onClick={onClick}
-            className={`flex items-center w-full rounded-xl transition-all duration-200 group p-3 ${baseStyles}`}
-            title={!isOpen ? label : undefined}
-        >
+    const commonClasses = `flex items-center w-full rounded-xl transition-all duration-200 group p-3 ${baseStyles}`;
+
+    // We extract the inner content so we don't repeat it in both the Link and Button
+    const innerContent = (
+        <>
             <div className={`flex items-center justify-center flex-shrink-0 w-6 h-6 transition-transform duration-200 ${isOpen ? '' : 'group-hover:scale-110'}`}>
                 {icon}
             </div>
@@ -35,6 +43,31 @@ export function NavItem({ icon, label, isOpen, onClick, isDanger = false, isPrim
                     {label}
                 </span>
             </div>
+        </>
+    );
+
+    // If a 'to' prop is passed, render a React Router Link
+    if (to) {
+        return (
+            <Link
+                to={to}
+                onClick={onClick}
+                className={commonClasses}
+                title={!isOpen ? label : undefined}
+            >
+                {innerContent}
+            </Link>
+        );
+    }
+
+    // Otherwise, render the standard button (for Log Out, New Inquiry, etc.)
+    return (
+        <button
+            onClick={onClick}
+            className={commonClasses}
+            title={!isOpen ? label : undefined}
+        >
+            {innerContent}
         </button>
     );
 }
