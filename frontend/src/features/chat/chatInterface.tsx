@@ -87,7 +87,6 @@ export default function ChatInterface() {
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
         body { margin: 0; padding: 0; overflow: hidden; }
         @keyframes popIn { 0% { opacity: 0; transform: translateY(8px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes letterJump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         @keyframes blinkRed { 0%, 100% { color: #6B7280; } 50% { color: #E23B4E; } }
         @keyframes glowRed {
           0% { box-shadow: 0 0 0 0 rgba(226, 59, 78, 0.4); border-color: rgba(226, 59, 78, 0.2); }
@@ -127,7 +126,7 @@ export default function ChatInterface() {
                     {isTyping && (
                         <div className="flex gap-[1px] text-[10px] justify-center py-3 font-semibold font-['JetBrains_Mono',monospace]">
                             {"THINKING...".split("").map((char, i) => (
-                                <span key={i} className="inline-block animate-[letterJump_1s_infinite_ease-in-out,blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
+                                <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
                             ))}
                         </div>
                     )}
