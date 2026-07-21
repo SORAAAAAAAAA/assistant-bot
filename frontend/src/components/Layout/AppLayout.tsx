@@ -1,4 +1,4 @@
-import Sidebar from '@/components/Sidebar/Sidebar'
+import Sidebar from '@/components/Sidebar'
 import ChatInterface from '@/features/chat/chatInterface'
 
 export default function AppLayout() {
