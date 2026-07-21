@@ -1,6 +1,6 @@
 import type { FC, RefObject } from 'react'
-import type { Message } from './types'
-import { MessageBubble } from './MessageBubble'
+import type { Message } from '@/types'
+import { MessageBubble } from '@/features/chat/MessageBubble'
 
 interface MessageListProps {
   messages: Message[]
@@ -14,9 +14,8 @@ export const MessageList: FC<MessageListProps> = ({ messages, variant, highlight
   return (
     <div
       ref={scrollRef}
-      className={`no-scrollbar flex-1 overflow-y-auto flex flex-col gap-6 ${
-        variant === 'user' ? 'items-end px-5 py-3' : 'px-5 py-3'
-      } [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
+      className={`no-scrollbar flex-1 overflow-y-auto flex flex-col gap-6 ${variant === 'user' ? 'items-end px-5 py-3' : 'px-5 py-3'
+        } [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
     >
       {messages.map(msg => (
         <MessageBubble key={msg.id} message={msg} variant={variant} highlighted={highlightedId === msg.id} onJump={onJump} />

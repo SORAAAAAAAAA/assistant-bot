@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/authContext';
 
-export function Sidebar() {
+export default function Sidebar() {
     const { logout } = useAuth();
     const [isOpen, setIsOpen] = useState(true);
 

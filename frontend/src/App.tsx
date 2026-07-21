@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import './App.css';
-import Modal from '@/components/Modal';
-import ForgotPassword from '@/components/ForgotPassword';
-import Login from '@/Login';
-import Signup from '@/Signup';
+import Modal from '@/components/ui/Modal';
+import ForgotPassword from '@/features/auth/ForgotPassword';
+import Login from '@/features/auth/Login';
+import Signup from '@/features/auth/Signup';
 import { useAuth } from '@/context/authContext';
-import LogisticsChat from '@/pages/chat';
-import Toast from '@/components/Toast';
-import LoadingOverlay from '@/components/LoadingOverlay';
+import ChatPage from '@/pages/chat';
+import Toast from '@/components/ui/Toast';
+import LoadingOverlay from '@/features/chat/LoadingOverlay';
 
 type ViewState = 'login' | 'signup' | 'forgotPassword';
 type ToastType = 'success' | 'error';
@@ -31,7 +31,7 @@ function App() {
   };
 
   if (isAuthenticated) {
-    return <LogisticsChat />;
+    return <ChatPage />;
   }
 
   return (

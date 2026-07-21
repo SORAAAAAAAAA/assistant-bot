@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import PasswordInput from '@/components/PasswordInput';
-import EmailInput from '@/components/EmailInput';
+import PasswordInput from '@/features/auth/PasswordInput';
+import EmailInput from '@/components/ui/EmailInput';
 import { loginService } from '@/services/authService';
 import type { LoginRequest } from '@ai-assistant/shared';
 import { useAuth } from '@/context/authContext';

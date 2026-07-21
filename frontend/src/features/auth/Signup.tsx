@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PasswordInput from '@/components/PasswordInput';
-import EmailInput from '@/components/EmailInput';
-import CustomSelect from '@/components/CustomSelect';
+import PasswordInput from '@/features/auth/PasswordInput';
+import EmailInput from '@/components/ui/EmailInput';
+import CustomSelect from '@/features/chat/CustomSelect';
 import { registerService } from '@/services/authService';
 import type { RegisterRequest, DepartmentType } from '@ai-assistant/shared';
 

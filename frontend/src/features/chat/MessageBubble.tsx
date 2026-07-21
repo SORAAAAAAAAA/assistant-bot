@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { Message } from './types'
+import type { Message } from '../../types'
 import { SwirlBorder } from './SwirlBorder'
 
 interface MessageBubbleProps {
@@ -35,7 +35,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
           <div className="text-[11px] text-[#1A1C1E] leading-[1.4] font-medium">
             {message.content}
           </div>
-          
+
           {message.files && message.files.length > 0 && (
             <div className="mt-2 pt-2 border-t border-white/30 flex flex-col gap-1">
               {message.files.map((name, i) => (
