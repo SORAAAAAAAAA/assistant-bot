@@ -45,22 +45,51 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
   }
 
   // Assistant variant
-  return (
-    <div 
-      id={`msg-${message.id}`} 
-      className="w-[90%] shrink-0 relative animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]"
+return (
+  <div 
+    id={`msg-${message.id}`} 
+    className="w-[90%] shrink-0 relative animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]"
+  >
+    <div
+      className={`
+        /* Glassmorphism Material */
+        bg-white/10 
+        backdrop-blur-xl 
+        border border-white/20 
+        ring-1 ring-black/5
+        shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)]
+        
+        /* Layout & Text */
+        p-7 
+        rounded-[24px_24px_4px_24px] 
+        text-[15px] 
+        text-[#1A1C1E] 
+        leading-[1.6] 
+        relative 
+        break-words 
+        whitespace-normal
+
+        /* Interaction States */
+        will-change-transform 
+        transition-[transform_0.5s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease,border_0.3s_ease] 
+        hover:-translate-y-[10px] 
+        hover:scale-[1.03] 
+        hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.15)] 
+        hover:z-50 
+        active:!translate-y-[-4px] 
+        active:!scale-[0.96] 
+        active:!duration-100 
+        active:!ease-linear
+
+        /* Dynamic Highlight */
+        ${highlighted ? 'border-transparent ring-0' : 'border-white/20'}
+      `}
     >
-      <div
-        className={`bg-white/45 backdrop-blur-[24px] p-7 rounded-[24px_24px_24px_4px] text-[15px] text-[#1A1C1E] shadow-[0_8px_32px_rgba(0,0,0,0.05)] leading-[1.6] relative border border-white/50 will-change-transform transition-[transform_0.5s_cubic-bezier(0.34,1.56,0.64,1),box-shadow_0.4s_ease] hover:-translate-y-[10px] hover:scale-[1.03] hover:shadow-[0_25px_45px_rgba(0,0,0,0.12)] hover:z-50 active:!translate-y-[-4px] active:!scale-[0.96] active:!duration-100 active:!ease-linear break-words whitespace-normal ${
-          highlighted ? 'border-transparent' : 'border-white/50'
-        }`}
-      >
-        <SwirlBorder active={highlighted}/>
-        {message.content}
-      </div>
-      <div className={TIME_STAMP_CLASSES}>
-        {message.time}
-      </div>
+      <SwirlBorder active={highlighted} />
+      {message.content}
     </div>
-  )
-}
+    <div className={TIME_STAMP_CLASSES}>
+      {message.time}
+    </div>
+  </div>
+)}
