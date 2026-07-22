@@ -33,16 +33,6 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
           <div className="text-[11px] text-[#1A1C1E] leading-[1.4] font-medium">
             {message.content}
           </div>
-
-          {message.files && message.files.length > 0 && (
-            <div className="mt-2 pt-2 border-t border-white/30 flex flex-col gap-1">
-              {message.files.map((name, i) => (
-                <div key={i} className="text-[9px] bg-white/30 px-2 py-0.5 rounded flex items-center overflow-hidden gap-1.5 border border-white/20">
-                  <span className="text-[#E23B4E]">📄</span> {name}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     )
@@ -60,14 +50,34 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
           relative 
           will-change-transform transition-all duration-300 
           hover:-translate-y-1 hover:shadow-lg 
-          break-words whitespace-normal
+          break-words whitespace-pre-wrap
           ${highlighted ? 'ring-2 ring-[#E23B4E]/40 border-transparent shadow-[0_0_20px_rgba(226,59,78,0.15)]' : ''}
         `}
       >
         <SwirlBorder active={highlighted} radii={[16, 16, 16, 3]} />
-        <div className="text-[11px] text-[#1A1C1E] leading-[1.6] font-medium">
-          {message.content}
+        <div className="text-[12px] text-[#1A1C1E] leading-[1.6] font-medium">
+          {/* Format AI Output to BOLD */}
+          {message.content.split(/(\*\*.*?\*\*)/g).map((part, i) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return <strong key={i} className="font-bold text-black">{part.slice(2, -2)}</strong>;
+            }
+            return <span key={i}>{part}</span>;
+          })}
         </div>
+
+        {/* Distinct Sources Rendering */}
+        {message.sources && message.sources.length > 0 && (
+          <div className="mt-4 pt-3 border-t border-gray-300/60 flex flex-col gap-1.5">
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Sources</span>
+            <div className="flex flex-wrap gap-2">
+              {message.sources.map((src, i) => (
+                <div key={i} className="text-[10px] bg-white/70 px-2.5 py-1 rounded-md shadow-sm border border-gray-200/50 flex items-center gap-1.5 text-gray-700 font-medium">
+                  <span className="text-[#E23B4E]">-</span> {src}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

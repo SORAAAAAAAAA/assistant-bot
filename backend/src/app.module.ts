@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import { RagModule } from './rag/rag.module';
+import { IntentModule } from './intent/intent.module';
 import { AppController } from './app.controller';
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AppController } from './app.controller';
     PrismaModule,
     AuthModule,
     RagModule,
+    IntentModule,
     ChatModule,
   ],
   controllers: [AppController],

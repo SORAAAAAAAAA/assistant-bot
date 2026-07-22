@@ -4,11 +4,11 @@ import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
 import { chatService } from '@/services/chatService';
 import type { ChatRequest } from '@ai-assistant/shared';
-import { formatAiResponse } from "@/lib/aiFormatter"
 
 export default function ChatPage() {
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [highlightedId, setHighlightedId] = useState<number | null>(null);
 
@@ -19,7 +19,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (userScrollRef.current) userScrollRef.current.scrollTop = userScrollRef.current.scrollHeight;
     if (aiScrollRef.current) aiScrollRef.current.scrollTop = aiScrollRef.current.scrollHeight;
-  }, [messages, isTyping]);
+  }, [messages, isGenerating, isThinking]);
 
   // FIX: Manual scroll calculation prevents the "Large Footer" layout shift
   const jumpToResponse = (relatedId?: number) => {
@@ -47,7 +47,7 @@ export default function ChatPage() {
   };
 
   const handleSend = async () => {
-    if (!input.trim() || isTyping) return;
+    if (!input.trim() || isGenerating) return;
     const uId = Date.now();
     const aId = uId + 1;
 
@@ -60,20 +60,55 @@ export default function ChatPage() {
     }
     setMessages(prev => [...prev, userMsg]);
     setInput('');
-    setIsTyping(true);
-    try {
-      const response = await chatService(chatRequest)
+    setIsGenerating(true);
+    setIsThinking(true);
 
-      const reply: Message = {
-        id: aId, role: 'assistant',
-        content: formatAiResponse(response)
-      };
-      setMessages(prev => [...prev, reply]);
-      setIsTyping(false);
+    let fullContent = '';
+    let sources: string[] = [];
+    let isFirstChunk = true;
+
+    try {
+      await chatService(chatRequest, (chunkRes) => {
+        fullContent += chunkRes.answer;
+        if (chunkRes.sources && chunkRes.sources.length > 0) {
+          sources = chunkRes.sources;
+        }
+
+        // Only create the bubble when we actually have some text to show!
+        if (fullContent.length > 0) {
+            if (isFirstChunk) {
+              // Stop "THINKING..." animation and create the bubble on the very first word
+              setIsThinking(false);
+              setMessages(prev => [...prev, {
+                id: aId, role: 'assistant',
+                content: fullContent,
+                sources: [] // Hide sources while streaming
+              }]);
+              isFirstChunk = false;
+            } else {
+              // Update the existing bubble, still hiding sources
+              setMessages(prev => prev.map(msg => 
+                msg.id === aId ? { ...msg, content: fullContent, sources: [] } : msg
+              ));
+            }
+        }
+      });
+
+      // Stream is fully completed!
+      setIsGenerating(false);
+      setIsThinking(false);
+      
+      // Now attach the sources to the final message!
+      if (sources.length > 0) {
+          setMessages(prev => prev.map(msg => 
+            msg.id === aId ? { ...msg, content: fullContent, sources: sources } : msg
+          ));
+      }
 
     } catch (error) {
       console.error('Error:', error);
-      setIsTyping(false);
+      setIsGenerating(false);
+      setIsThinking(false);
     }
   };
 
@@ -111,7 +146,7 @@ export default function ChatPage() {
           ) : (
             <MessageList messages={messages.filter(m => m.role === 'user')} variant="user" onJump={jumpToResponse} scrollRef={userScrollRef} />
           )}
-          <MessageComposer input={input} isTyping={isTyping} onSend={handleSend} onInputChange={setInput} inputRef={composerInputRef} />
+          <MessageComposer input={input} isTyping={isGenerating} onSend={handleSend} onInputChange={setInput} inputRef={composerInputRef} />
         </div>
 
         {/* RIGHT COLUMN */}
@@ -123,7 +158,7 @@ export default function ChatPage() {
           ) : (
             <MessageList messages={messages.filter(m => m.role === 'assistant')} variant="assistant" highlightedId={highlightedId} scrollRef={aiScrollRef} />
           )}
-          {isTyping && (
+          {isThinking && (
             <div className="flex gap-[1px] text-[10px] justify-center py-3 font-semibold font-['JetBrains_Mono',monospace]">
               {"THINKING...".split("").map((char, i) => (
                 <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
