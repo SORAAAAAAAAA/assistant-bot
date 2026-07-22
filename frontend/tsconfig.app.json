@@ -13,7 +13,8 @@
     ],
     "module": "esnext",
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
@@ -32,6 +33,7 @@
   },
   "include": [
     "src",
-    "src/components/Sidebar"
+    "src/services",
+    "components"
   ]
 }

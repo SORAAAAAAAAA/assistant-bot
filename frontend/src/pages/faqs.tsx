@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Package, CreditCard, Truck, Headset, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
-export function FAQPage() {
+export default function FaqsPage() {
     const [activeCategory, setActiveCategory] = useState('tracking');
     const [openQuestion, setOpenQuestion] = useState<number | null>(0);
 

@@ -6,7 +6,7 @@ import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
 import { NavItem } from './NavItem';
 
-export function Sidebar() {
+export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(true);
 
     const topItems = [
@@ -28,9 +28,9 @@ export function Sidebar() {
 
             <NavItem
                 icon={<Plus size={20} />}
-                label="New Inquiry"
+                label="New Chat"
                 isOpen={isOpen}
-                onClick={() => alert("Open New Inquiry Modal")}
+                to="/chat"
                 isPrimary={true}
             />
 
@@ -47,6 +47,6 @@ export function Sidebar() {
             </nav>
 
             <SidebarFooter isOpen={isOpen} />
-        </aside>
+        </aside >
     );
 }

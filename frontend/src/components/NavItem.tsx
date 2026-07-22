@@ -46,7 +46,6 @@ export function NavItem({
         </>
     );
 
-    // If a 'to' prop is passed, render a React Router Link
     if (to) {
         return (
             <Link
@@ -60,7 +59,7 @@ export function NavItem({
         );
     }
 
-    // Otherwise, render the standard button (for Log Out, New Inquiry, etc.)
+
     return (
         <button
             onClick={onClick}
