@@ -229,42 +229,6 @@
   }
 }
 
-@keyframes float-tr {
-
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(-3vw, 5vh);
-  }
-}
-
-@keyframes float-bl {
-
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(4vw, -4vh);
-  }
-}
-
-@keyframes float-br {
-
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(-4vw, -3vh);
-  }
-}
-
 .circle-tl {
   animation: float-tl 14s ease-in-out infinite;
 }
@@ -279,4 +243,16 @@
 
 .circle-br {
   animation: float-br 18s ease-in-out infinite;
+}
+
+@keyframes authSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

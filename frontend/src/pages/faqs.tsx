@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Package, CreditCard, Truck, Headset, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
-export function FAQPage() {
+export default function FaqsPage() {
     const [activeCategory, setActiveCategory] = useState('tracking');
     const [openQuestion, setOpenQuestion] = useState<number | null>(0);
 
@@ -40,7 +40,7 @@ export function FAQPage() {
 
                 {/* Heading */}
                 <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 text-center tracking-tight">
-                    <span className="text-red-600">Frequently asked questions</span>
+                    <span className="text-red-600">Frequently Asked Questions</span>
                 </h1>
 
                 {/* Subtitle */}
