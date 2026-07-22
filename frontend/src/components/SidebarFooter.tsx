@@ -41,7 +41,7 @@ export function SidebarFooter({ isOpen }: SidebarFooterProps) {
     const initial = userName.charAt(0).toUpperCase();
 
     return (
-        <div className="w-full mt-auto pt-4 flex items-center relative z-10 border-t border-white/10">
+        <div className="w-full mt-auto pl-1 pt-4 flex items-center relative z-10 border-t border-white/10">
 
             {/* Avatar — always visible, pinned left (mirrors nav icon behaviour) */}
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-sm font-bold text-white shadow-sm select-none">
