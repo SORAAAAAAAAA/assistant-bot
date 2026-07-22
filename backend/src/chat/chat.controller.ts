@@ -12,7 +12,24 @@ export class ChatController {
     constructor(private chatService: ChatService) { }
     @Post()
     async ask(@Body() dto: ChatDto, @CurrentUser() user: User, @Res() res: Response) {
-        await this.chatService.askStream(user.id, dto.message, res);
+        res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+        res.setHeader('Transfer-Encoding', 'chunked');
+
+        await this.chatService.askStream(
+            user.id,
+            dto.message,
+            (data) => {
+                res.write(JSON.stringify(data) + '\n');
+                if (typeof (res as any).flush === 'function') {
+                    (res as any).flush();
+                }
+            },
+            () => res.end(),
+            (err) => {
+                console.error(err);
+                res.status(500).end('Internal Server Error');
+            }
+        );
     }
     @Get('history')
     history(@CurrentUser() user: User) {
