@@ -23,7 +23,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
             bg-red-500/10
             border border-red-300/30
             px-4 py-3
-            rounded-[16px_16px_3px_16px] 
+            rounded-3xl
             cursor-pointer relative 
             will-change-transform transition-all duration-300 
             hover:-translate-y-1 hover:shadow-lg hover:bg-red-500/20
@@ -57,7 +57,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
           ${GLASS_STYLE} 
           bg-white/20
           px-4 py-3
-          rounded-[16px_16px_16px_3px] 
+          rounded-3xl
           relative 
           will-change-transform transition-all duration-300 
           hover:-translate-y-1 hover:shadow-lg 

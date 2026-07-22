@@ -1,6 +1,5 @@
 import type { FC, RefObject } from 'react'
 
-
 interface MessageComposerProps {
   input: string
   isTyping: boolean
@@ -16,16 +15,16 @@ export const MessageComposer: FC<MessageComposerProps> = ({
   onInputChange,
   inputRef
 }) => {
-
+  const canSend = input.trim().length > 0 && !isTyping
 
   return (
-    <div className="group w-[85%] relative mt-3 ml-auto px-4">
-
+    <div className="group w-full max-w-[85%] relative mt-3 mx-auto px-4">
       <div
-        className={`relative bg-white/10 backdrop-blur-[20px] px-6 py-3 rounded-xl overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.05)] flex items-center border cursor-text transition-all duration-300 ${isTyping
-          ? 'border-transparent animate-[glowRed_0.8s_ease-in-out_infinite]'
-          : 'border-black/60'
-          }`}
+        className={`relative bg-white/10 backdrop-blur-[20px] pl-6 pr-2 py-2 rounded-xl overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.05)] flex items-center border cursor-text transition-all duration-300 ${
+          isTyping
+            ? 'border-transparent animate-[glowRed_0.8s_ease-in-out_infinite]'
+            : 'border-black/60 focus-within:border-[#E23B4E]'
+        }`}
         onClick={() => inputRef.current?.focus()}
       >
         <input
@@ -33,10 +32,28 @@ export const MessageComposer: FC<MessageComposerProps> = ({
           value={input}
           onChange={e => onInputChange(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && onSend()}
-          placeholder={"Enter Query..."}
+          placeholder={isTyping ? "" : "Enter Query..."}
           disabled={isTyping}
-          className="flex-1 border-none bg-transparent outline-none text-[11px] text-[#1A1C1E] font-['JetBrains_Mono',monospace] tracking-tight"
+          className="flex-1 border-none bg-transparent outline-none text-[11px] text-[#1A1C1E] font-['JetBrains_Mono',monospace] tracking-tight placeholder:text-gray-500"
         />
+
+        {/* Red Send Button with Arrow Glyph */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            if (canSend) onSend()
+          }}
+          disabled={!canSend}
+          aria-label="Send message"
+          className={`flex items-center justify-center w-8 h-8 rounded-lg bg-[#E23B4E] text-white font-bold text-sm leading-none transition-all duration-200 ${
+            canSend
+              ? 'hover:bg-[#C82D3F] hover:scale-105 active:scale-95 cursor-pointer opacity-100 shadow-md'
+              : 'opacity-40 cursor-not-allowed'
+          }`}
+        >
+          ↑
+        </button>
       </div>
     </div>
   )
