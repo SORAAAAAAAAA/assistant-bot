@@ -17,6 +17,7 @@ export interface LoginRequest {
     password: string;
 }
 export interface LoginResponse {
+    fullName: string,
     access_token: string;
     token_type: "bearer";
 }

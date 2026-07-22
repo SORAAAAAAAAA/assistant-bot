@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PasswordInput from '@/features/auth/PasswordInput';
 import EmailInput from '@/components/ui/EmailInput';
 import CustomSelect from '@/features/chat/CustomSelect';
+import Button from '@/components/ui/Button'; // Import path adjustment may be needed
 import { registerService } from '@/services/authService';
 import type { RegisterRequest, DepartmentType } from '@ai-assistant/shared';
 
@@ -13,14 +14,9 @@ interface SignupProps {
 
 export default function Signup({ onSwitchToLogin, onShowToast, setIsLoading }: SignupProps) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    department: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: '', lastName: '', department: '',
+    email: '', password: '', confirmPassword: '',
   });
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,26 +35,20 @@ export default function Signup({ onSwitchToLogin, onShowToast, setIsLoading }: S
     }
 
     const registerData: RegisterRequest = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      department: formData.department as DepartmentType,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
+      firstName: formData.firstName, lastName: formData.lastName,
+      email: formData.email, department: formData.department as DepartmentType,
+      password: formData.password, confirmPassword: formData.confirmPassword,
     };
 
     const register = async () => {
       setIsLoading(true);
       try {
         const result = await registerService(registerData);
-
         onShowToast(result.message, 'success');
-
         setTimeout(() => {
           setIsLoading(false);
           onSwitchToLogin();
         }, 1200);
-
       } catch (error) {
         setIsLoading(false);
         if (error instanceof Error) {
@@ -73,19 +63,17 @@ export default function Signup({ onSwitchToLogin, onShowToast, setIsLoading }: S
 
   const departmentOptions = ["MIS", "OJS", "HR", "OOS", "GA", "Finance"];
 
-  // MICRO-ADJUSTMENT: py-3 adds just a tiny bit of height back to the boxes
-  const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-3 text-[13px] text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";
-  const labelClasses = "text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1 block text-left ml-1";
+  const inputClasses = "w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 text-[13px] text-white placeholder-white/40 outline-none focus:bg-black/40 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all";
+  const labelClasses = "text-[11px] font-bold text-white/70 uppercase tracking-wider mb-1 block text-left ml-1";
 
   return (
-    <div className="flex flex-col text-slate-900 animate-view-change">
+    <div className="flex flex-col animate-view-change">
       <div className="text-left mb-4">
-        <h2 className="text-2xl !font-extrabold tracking-wide !text-red-600">Sign Up</h2>
-        <p className="text-[13px] text-slate-600 mt-1">Create an account to get started.</p>
+        <h2 className="text-2xl font-extrabold tracking-wide text-white">Sign Up</h2>
+        <p className="text-[13px] text-white/70 mt-1">Create an account to get started.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
-
         <div className="flex gap-3">
           <div className="flex-1">
             <label htmlFor="firstName" className={labelClasses}>First Name</label>
@@ -139,20 +127,15 @@ export default function Signup({ onSwitchToLogin, onShowToast, setIsLoading }: S
           </div>
         </div>
 
-        {/* MICRO-ADJUSTMENT: py-3.5 makes the button match the inputs proportionally */}
-        <button 
-          type="submit" 
-          className="mt-1 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
-        >
-          Create Account
-        </button>
+        {/* Utilizing the centralized Button component */}
+        <Button type="submit" label="Create Account" className="mt-1" />
       </form>
 
-      <div className="mt-4 text-center text-[13px] text-slate-700">
+      <div className="mt-4 text-center text-[13px] text-white/70">
         Already have an account?{' '}
         <button 
           onClick={onSwitchToLogin} 
-          className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+          className="font-bold text-white underline decoration-white/30 underline-offset-2 transition-colors hover:decoration-white"
         >
           Log In
         </button>
