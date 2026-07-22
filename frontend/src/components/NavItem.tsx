@@ -16,6 +16,7 @@ export function NavItem({
     label,
     isOpen,
     onClick,
+    to,
     isDanger = false,
     isPrimary = false
 }: NavItemProps) {
