@@ -9,7 +9,7 @@ interface MessageBubbleProps {
   onJump?: (relatedId?: number) => void
 }
 
-const GLASS_STYLE = "backdrop-blur-xl border border-white/60 ring-1 ring-black/5 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
+const GLASS_STYLE = "backdrop-blur-xl border border-black/10 ring-1 ring-black/5 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
 
 export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highlighted = false, onJump }) => {
   const isUser = variant === 'user'
@@ -20,12 +20,13 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
         <div
           className={`
             ${GLASS_STYLE} 
-            bg-white/40 
-            px-4 py-3 
+            bg-red-500/10
+            border border-red-300/30
+            px-4 py-3
             rounded-[16px_16px_3px_16px] 
             cursor-pointer relative 
             will-change-transform transition-all duration-300 
-            hover:-translate-y-1 hover:shadow-lg hover:bg-white/50 
+            hover:-translate-y-1 hover:shadow-lg hover:bg-red-500/20
             active:scale-95 break-words whitespace-normal
           `}
           onClick={() => onJump?.(message.relatedId)}
@@ -54,8 +55,8 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, variant, highli
       <div
         className={`
           ${GLASS_STYLE} 
-          bg-white/60 
-          p-5 
+          bg-white/20
+          px-4 py-3
           rounded-[16px_16px_16px_3px] 
           relative 
           will-change-transform transition-all duration-300 
