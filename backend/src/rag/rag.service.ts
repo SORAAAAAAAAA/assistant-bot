@@ -24,7 +24,7 @@ export class RagService {
     }
     async getEmbedding(text: string): Promise<number[]> {
         const res = await axios.post(`${process.env.OLLAMA_URL}/api/embeddings`, {
-            model: process.env.EMBED_MODEL ?? 'nomic-embed-text',
+            model: process.env.EMBED_MODEL,
             prompt: text,
         });
         return res.data.embedding;

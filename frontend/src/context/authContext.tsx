@@ -33,6 +33,7 @@ function isTokenExpired(token: string | null): boolean {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+    const isAuthBypassed = import.meta.env.VITE_BYPASS_AUTH === 'true';
     const [token, setToken] = useState<string | null>(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken && isTokenExpired(storedToken)) {
@@ -53,7 +54,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!token, token, login, logout }}>
+        <AuthContext.Provider
+            value={{
+                isAuthenticated: isAuthBypassed || !!token && !isTokenExpired(token),
+                token,
+                login,
+                logout,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

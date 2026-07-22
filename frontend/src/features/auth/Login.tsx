@@ -47,17 +47,17 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
     login();
   };
 
-  const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";
-  const labelClasses = "text-[10px] font-bold text-slate-800 uppercase tracking-wider mb-1.5 block text-left ml-1";
+  const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-3 text-[13px] text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";
+  const labelClasses = "text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1 block text-left ml-1";
 
   return (
-    <div className="flex flex-col text-slate-900">
+    <div className="flex flex-col text-slate-900 animate-view-change">
       <div className="text-left mb-5">
-        <h2 className="text-3xl !font-extrabold tracking-wide !text-red-600">Log In</h2>
-        <p className="mt-1 text-xs ">Welcome back. Please log in to your account.</p>
+        <h2 className="text-2xl !font-extrabold tracking-wide !text-red-600">Log In</h2>
+        <p className="mt-1 text-[13px] text-slate-600">Welcome back. Please log in to your account.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
         <div>
           <label htmlFor="loginEmail" className={labelClasses}>Email Address</label>
           <EmailInput
@@ -82,7 +82,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
           />
         </div>
 
-        <div className="my-1 flex items-center justify-between text-xs text-slate-700 px-1">
+        <div className="my-1 flex items-center justify-between text-[13px] text-slate-700 px-1">
           <label className="flex cursor-pointer items-center gap-2 select-none">
             <div className="relative flex items-center justify-center">
               <input
@@ -90,7 +90,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
                 id="rememberMe"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="peer h-4 w-4 appearance-none rounded border border-slate-900/30 bg-white/50 checked:bg-slate-900 checked:border-slate-900 focus:outline-none transition-all cursor-pointer"
+                className="peer h-3.5 w-3.5 appearance-none rounded border border-slate-900/30 bg-white/50 checked:bg-slate-900 checked:border-slate-900 focus:outline-none transition-all cursor-pointer"
               />
               <svg
                 className="pointer-events-none absolute hidden peer-checked:block h-2.5 w-2.5 text-white"
@@ -116,13 +116,13 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
 
         <button
           type="submit"
-          className="mt-4 w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
+          className="mt-2 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
         >
           Log In
         </button>
       </form>
 
-      <div className="mt-5 text-center text-xs text-slate-700">
+      <div className="mt-5 text-center text-[13px] text-slate-700">
         Don't have an account?{' '}
         <button
           onClick={onSwitchToSignup}
@@ -131,6 +131,6 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
           Sign up
         </button>
       </div>
-    </div >
+    </div>
   );
 }
