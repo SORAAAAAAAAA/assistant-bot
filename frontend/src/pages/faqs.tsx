@@ -56,7 +56,6 @@ export default function FaqsPage() {
                 .history-main-title { 
                     font-family: 'Hanken Grotesk', sans-serif; 
                     font-weight: 800; font-size: 2.8rem; color: #E23B4E; 
-                    // text-transform: uppercase; 
                     letter-spacing: -0.05em; line-height: 1; 
                 }
 
@@ -75,8 +74,8 @@ export default function FaqsPage() {
                     </p>
                 </header>
 
-                {/* CATEGORY TABS (Glassmorphic Cards) */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full px-8 mb-8 animate-[popIn_0.5s_ease-out_forwards]">
+                {/* CATEGORY TABS (Glassmorphic Cards - Icon Left, Title Right) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full px-8 mb-8 animate-[popIn_0.5s_ease-out_forwards]">
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
@@ -84,15 +83,15 @@ export default function FaqsPage() {
                                 setActiveCategory(cat.id);
                                 setOpenQuestions(new Set());
                             }}
-                            className={`group flex flex-col items-center justify-center p-5 bg-white/40 backdrop-blur-xl border rounded-[24px] transition-all duration-500 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.02)]
+                            className={`group flex flex-row items-center justify-start p-4 gap-3.5 bg-white/40 backdrop-blur-xl border rounded-[24px] transition-all duration-500 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.02)]
                                 ${activeCategory === cat.id
                                     ? 'border-white/90 bg-white/60 -translate-y-2 scale-[1.02] shadow-xl z-20'
                                     : 'border-white/60 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-xl hover:bg-white/60 hover:border-white/90 z-10'}`}
                         >
-                            <div className={`mb-3 transition-transform duration-500 ${activeCategory === cat.id ? 'scale-110 text-[#E23B4E]' : 'text-[#1A1C1E]/40 group-hover:text-[#E23B4E] group-hover:scale-110'}`}>
+                            <div className={`transition-transform duration-500 shrink-0 ${activeCategory === cat.id ? 'scale-110 text-[#E23B4E]' : 'text-[#1A1C1E]/40 group-hover:text-[#E23B4E] group-hover:scale-110'}`}>
                                 {cat.icon}
                             </div>
-                            <span className={`text-[11px] font-bold uppercase tracking-wider font-['JetBrains_Mono',monospace] transition-colors
+                            <span className={`text-[11px] font-bold uppercase tracking-wider font-['JetBrains_Mono',monospace] transition-colors text-left truncate
                                 ${activeCategory === cat.id ? 'text-[#E23B4E]' : 'text-[#1A1C1E]/70 group-hover:text-[#1A1C1E]'}`}>
                                 {cat.label}
                             </span>
