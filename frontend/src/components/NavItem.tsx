@@ -5,8 +5,8 @@ interface NavItemProps {
     icon: ReactNode;
     label: string;
     isOpen: boolean;
-    onClick?: () => void; // Made optional
-    to?: string;          // New optional property for routing
+    onClick?: () => void;
+    to?: string;
     isDanger?: boolean;
     isPrimary?: boolean;
 }

@@ -29,28 +29,15 @@ export default function FaqsPage() {
     const currentFaqs = faqs[activeCategory as keyof typeof faqs] || [];
 
     return (
-        <div className="relative h-full w-full bg-[#E5E7EB] overflow-hidden font-['Inter',system-ui,sans-serif] select-text">
+        <div className="relative h-full w-full bg-white overflow-hidden font-['Inter',system-ui,sans-serif] select-text">
 
             {/* ── BACKGROUND LAYERS ── */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-40 pointer-events-none" />
-            <div className="blob-1 absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-[#E23B4E]/[0.3] blur-[50px] rounded-full pointer-events-none" />
-            <div className="blob-2 absolute -bottom-[10%] -right-[10%] w-[50vw] h-[50vw] bg-[#E08A1E]/[0.35] blur-[60px] rounded-full pointer-events-none" />
-            <div className="blob-3 absolute top-[20%] left-[30%] w-[40vw] h-[40vw] bg-[#3B82F6]/[0.2] blur-[40px] rounded-full pointer-events-none" />
-            <div className="absolute inset-0 opacity-[0.25] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+            {/* Kept only the grid layer */}
+            <div className="absolute inset-0 opacity-[0.15] pointer-events-none z-[-1]" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
                 
-                .blob-1 { animation: drift 20s infinite alternate ease-in-out; }
-                .blob-2 { animation: drift 25s infinite alternate-reverse ease-in-out; }
-                .blob-3 { animation: drift 15s infinite alternate ease-in-out; }
-
-                @keyframes drift {
-                    0% { transform: translate(0, 0) scale(1); }
-                    50% { transform: translate(10vw, 15vh) scale(1.1); }
-                    100% { transform: translate(-5vw, -10vh) scale(0.95); }
-                }
-
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
@@ -60,7 +47,7 @@ export default function FaqsPage() {
                 <div className="max-w-4xl mx-auto flex flex-col items-center">
 
                     {/* Top Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-xl border border-white/60 shadow-sm text-red-600 text-xs font-bold mb-3 uppercase tracking-wider font-['JetBrains_Mono',monospace]">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-xl border border-gray-200 shadow-sm text-red-600 text-xs font-bold mb-3 uppercase tracking-wider font-['JetBrains_Mono',monospace]">
                         <HelpCircle size={14} />
                         <span>FAQs</span>
                     </div>
@@ -70,11 +57,12 @@ export default function FaqsPage() {
                         <span className="uppercase text-[#E23B4E]">Frequently Asked Questions</span>
                     </h1>
 
-                    {/* Subtitle - The <br /> tag under here was removed to fix the spacing */}
+                    {/* Subtitle */}
                     <p className="text-gray-700 font-medium text-center text-sm md:text-base max-w-2xl mb-12 drop-shadow-sm">
                         Choose a plan that fits your logistics needs and budget. No hidden fees, no surprises—just straightforward pricing for powerful freight management.
                     </p>
                     <br />
+
                     {/* 4 Large Category Buttons */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-12">
                         {categories.map((cat) => (
@@ -84,10 +72,10 @@ export default function FaqsPage() {
                                     setActiveCategory(cat.id);
                                     setOpenQuestion(null);
                                 }}
-                                className={`flex flex-col items-center justify-center p-6 rounded-3xl transition-all duration-300 border shadow-[0_4px_20px_rgba(0,0,0,0.02)] backdrop-blur-xl hover:-translate-y-1 hover:shadow-xl
+                                className={`flex flex-col items-center justify-center p-6 rounded-3xl transition-all duration-300 border shadow-[0_4px_20px_rgba(0,0,0,0.02)] backdrop-blur-sm hover:-translate-y-1 hover:shadow-xl
                                     ${activeCategory === cat.id
-                                        ? 'border-[#E23B4E] bg-white/70 text-[#E23B4E]'
-                                        : 'border-white/60 bg-white/40 text-gray-700 hover:border-white/90 hover:bg-white/60'
+                                        ? 'border-[#E23B4E] bg-white text-[#E23B4E] shadow-md'
+                                        : 'border-gray-200 bg-white/60 text-gray-700 hover:border-gray-300 hover:bg-white'
                                     }`}
                             >
                                 <div className={`mb-4 transition-transform duration-300 ${activeCategory === cat.id ? 'scale-110 text-[#E23B4E]' : 'text-gray-500'}`}>
@@ -100,12 +88,12 @@ export default function FaqsPage() {
                         ))}
                     </div>
 
-                    {/* FAQ Accordion List - Removed pb-20 to fix the massive gap at the bottom */}
+                    {/* FAQ Accordion List */}
                     <div className="w-full space-y-4">
                         {currentFaqs.map((faq, index) => (
                             <div
                                 key={index}
-                                className="bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl overflow-hidden transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:bg-white/60 hover:shadow-xl hover:border-white/90"
+                                className="bg-white border border-gray-200 rounded-3xl overflow-hidden transition-all duration-500 shadow-sm hover:shadow-md hover:border-gray-300"
                             >
                                 <button
                                     onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
@@ -113,7 +101,7 @@ export default function FaqsPage() {
                                 >
                                     <span className="font-bold text-[#1A1C1E] pr-8">{faq.q}</span>
                                     <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 shadow-sm border
-                                        ${openQuestion === index ? 'bg-[#E23B4E] border-[#E23B4E] text-white' : 'bg-white/80 border-white text-[#E23B4E]'}`}>
+                                        ${openQuestion === index ? 'bg-[#E23B4E] border-[#E23B4E] text-white' : 'bg-gray-50 border-gray-200 text-[#E23B4E]'}`}>
                                         {openQuestion === index ? <ChevronUp size={18} strokeWidth={2.5} /> : <ChevronDown size={18} strokeWidth={2.5} />}
                                     </div>
                                 </button>
@@ -131,7 +119,7 @@ export default function FaqsPage() {
                         ))}
 
                         {currentFaqs.length === 0 && (
-                            <div className="text-center py-12 text-gray-500 bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl font-bold">
+                            <div className="text-center py-12 text-gray-500 bg-white border border-gray-200 rounded-3xl font-bold">
                                 No questions available for this category yet.
                             </div>
                         )}

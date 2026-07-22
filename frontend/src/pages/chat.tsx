@@ -78,7 +78,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="h-screen w-screen bg-[#E5E7EB] fixed top-0 left-0 overflow-hidden font-['Inter',system-ui,sans-serif]">
+    <div className="h-full w-full bg-[#E5E7EB] overflow-hidden font-['Inter',system-ui,sans-serif]">
       <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-50" />
       <div className="absolute -top-[10%] left-[10%] w-[70vw] h-[70vw] bg-[#E23B4E]/[0.08] blur-[120px] rounded-full pointer-events-none animate-pulse" />
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />

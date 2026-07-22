@@ -16,10 +16,7 @@ export default function Sidebar() {
 
     return (
         <aside
-            className={`h-screen flex flex-col transition-all duration-500 ease-in-out py-5 px-4 relative z-50 overflow-hidden flex-shrink-0 text-red-50
-            bg-white/5 backdrop-blur-2xl border-r border-white/10 shadow-[8px_0_32px_rgba(0,0,0,0.25)]
-            ${isOpen ? 'w-64' : 'w-20'}
-            `}
+            className={`h-screen flex flex-col transition-all duration-500 ease-in-out py-5 px-4 relative z-50 overflow-hidden flex-shrink-0 text-red-50 border-r border-white/10 shadow-[8px_0_32px_rgba(0,0,0,0.25)] ${isOpen ? 'w-64' : 'w-20'}`}
         >
             <SidebarBackground />
 
@@ -46,6 +43,6 @@ export default function Sidebar() {
             </nav>
 
             <SidebarFooter isOpen={isOpen} />
-        </aside >
+        </aside>
     );
 }

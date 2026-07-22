@@ -48,7 +48,7 @@ export default function HistoryPage() {
   }, [sortKey, searchQuery, items]);
 
   return (
-    <div className="h-screen w-screen bg-[#E5E7EB] fixed top-0 left-0 overflow-hidden font-['Inter',system-ui,sans-serif] select-text">
+    <div className="h-full w-full bg-[#E5E7EB] overflow-hidden font-['Inter',system-ui,sans-serif] select-text">
       
       {/* ── BACKGROUND LAYERS ── */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-40" />
