@@ -38,6 +38,9 @@ export class ChatService {
                 stream: true,
                 options: {
                     num_predict: 2048,
+                    temperature: 0.0, // 0.0 forces the AI to be completely deterministic, stopping hallucinations
+                    top_k: 10,        // Limits word choices to the 10 most likely words
+                    top_p: 0.5,       // Discards weird/creative word choices
                 }
             }, {
                 responseType: 'stream'
