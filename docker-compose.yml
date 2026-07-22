@@ -16,6 +16,8 @@ services:
     image: chromadb/chroma:latest
     container_name: chroma
     restart: unless-stopped
+    environment:
+      - IS_PERSISTENT=TRUE
     ports:
       - "${CHROMA_HOST_PORT}:${CHROMA_CONTAINER_PORT}"
     volumes:
