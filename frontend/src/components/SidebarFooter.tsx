@@ -41,28 +41,34 @@ export function SidebarFooter({ isOpen }: SidebarFooterProps) {
     const initial = userName.charAt(0).toUpperCase();
 
     return (
-        <div className={`w-full mt-auto pt-4 flex items-center relative z-10 border-t border-white/10 transition-all duration-300 ${isOpen ? 'justify-between px-1' : 'justify-center'}`}>
+        <div className="w-full mt-auto pt-4 flex items-center relative z-10 border-t border-white/10">
 
-            {/* Profile Section (Left Side) - Only renders when Sidebar is open */}
-            {isOpen && (
-                <div className="flex items-center gap-3 overflow-hidden mr-2">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-sm font-bold text-white shadow-sm select-none">
-                        {initial}
-                    </div>
-                    <span className="text-sm font-semibold text-red-50 truncate">
-                        {userName}
-                    </span>
-                </div>
-            )}
+            {/* Avatar — always visible, pinned left (mirrors nav icon behaviour) */}
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-sm font-bold text-white shadow-sm select-none">
+                {initial}
+            </div>
 
-            {/* Log Out Button (Right Side / Centered when collapsed) */}
-            <button
-                onClick={handleLogout}
-                title="Log Out"
-                className="flex flex-shrink-0 items-center justify-center p-1.5 rounded-xl text-red-200 hover:text-white hover:bg-red-500/40 transition-all duration-300"
-            >
-                <LogOut size={18} strokeWidth={2.5} />
-            </button>
+            {/* Username — takes remaining space, slides in */}
+            <div className={`flex-1 overflow-hidden transition-all duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)]
+                ${isOpen ? 'opacity-100 ml-2 max-w-full' : 'opacity-0 ml-0 max-w-0'}
+            `}>
+                <span className="text-sm font-semibold text-red-50 truncate whitespace-nowrap block">
+                    {userName}
+                </span>
+            </div>
+
+            {/* Logout button — pinned to far right, slides in */}
+            <div className={`flex-shrink-0 overflow-hidden transition-all duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)]
+                ${isOpen ? 'max-w-[40px] opacity-100 ml-2' : 'max-w-0 opacity-0 ml-0'}
+            `}>
+                <button
+                    onClick={handleLogout}
+                    title="Log Out"
+                    className="p-1.5 rounded-xl text-red-200 hover:text-white hover:bg-red-500/40 transition-all duration-300"
+                >
+                    <LogOut size={18} strokeWidth={2.5} />
+                </button>
+            </div>
 
         </div>
     );
