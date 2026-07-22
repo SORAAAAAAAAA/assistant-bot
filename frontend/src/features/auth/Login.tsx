@@ -114,8 +114,8 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
           </button>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="mt-2 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
         >
           Log In

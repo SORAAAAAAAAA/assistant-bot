@@ -3,6 +3,7 @@ import axios from 'axios';
 import { PrismaService } from '../prisma/prisma.service';
 import { RagService } from '../rag/rag.service';
 import { ChatResponse, ChatHistoryEntry } from '@ai-assistant/shared';
+import { SystemPrompt } from "@/chat/chat.prompt";
 @Injectable()
 export class ChatService {
     constructor(
@@ -12,13 +13,7 @@ export class ChatService {
     async ask(userId: number, message: string): Promise<ChatResponse> {
         const contextChunks = await this.rag.retrieveContext(message);
         const contextText = contextChunks.join('\n\n');
-        const prompt = `You are an internal assistant that answers employee questions using ONLY the
-company procedure excerpts below. If the answer isn't in the excerpts, say you don't know
-and suggest who to ask, rather than guessing.
-Procedure excerpts:
-${contextText}
-Employee question: ${message}
-Answer:`;
+        const prompt = `${SystemPrompt} \n\n Procedure excerpts: \n\n${contextText} \n\n Employee question: ${message}`;
         const res = await axios.post(`${process.env.OLLAMA_URL}/api/generate`, {
             model: process.env.CHAT_MODEL ?? 'qwen2.5:7b',
             prompt,
