@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PasswordInput from '@/features/auth/PasswordInput';
 import EmailInput from '@/components/ui/EmailInput';
+import Button from '@/components/ui/Button'; 
 import { loginService } from '@/services/authService';
 import type { LoginRequest } from '@ai-assistant/shared';
 import { useAuth } from '@/context/authContext';
@@ -20,21 +21,15 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const loginData: LoginRequest = {
-      email: email,
-      password: password,
-    };
+    const loginData: LoginRequest = { email, password };
     const login = async () => {
-
       setIsLoading(true);
       try {
         const result = await loginService(loginData);
-
         setTimeout(() => {
           setIsLoading(false);
           contextLogin(result.access_token);
         }, 1000);
-
       } catch (error) {
         setIsLoading(false);
         if (error instanceof Error) {
@@ -47,14 +42,14 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
     login();
   };
 
-  const inputClasses = "w-full rounded-xl border border-slate-900/10 bg-white/60 px-4 py-3 text-[13px] text-slate-900 placeholder-slate-500 outline-none focus:bg-white focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 transition-all";
-  const labelClasses = "text-[11px] font-bold text-slate-800 uppercase tracking-wider mb-1 block text-left ml-1";
+  const inputClasses = "w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 text-[13px] text-white placeholder-white/40 outline-none focus:bg-black/40 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all";
+  const labelClasses = "text-[11px] font-bold text-white/70 uppercase tracking-wider mb-1 block text-left ml-1";
 
   return (
-    <div className="flex flex-col text-slate-900 animate-view-change">
+    <div className="flex flex-col animate-view-change">
       <div className="text-left mb-5">
-        <h2 className="text-2xl !font-extrabold tracking-wide !text-red-600">Log In</h2>
-        <p className="mt-1 text-[13px] text-slate-600">Welcome back. Please log in to your account.</p>
+        <h2 className="text-2xl font-extrabold tracking-wide text-white">Log In</h2>
+        <p className="mt-1 text-[13px] text-white/70">Welcome back. Please log in to your account.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
@@ -82,18 +77,18 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
           />
         </div>
 
-        <div className="my-1 flex items-center justify-between text-[13px] text-slate-700 px-1">
-          <label className="flex cursor-pointer items-center gap-2 select-none">
+        <div className="my-1 flex items-center justify-between text-[13px] px-1">
+          <label className="flex cursor-pointer items-center gap-2 select-none text-white/80">
             <div className="relative flex items-center justify-center">
               <input
                 type="checkbox"
                 id="rememberMe"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="peer h-3.5 w-3.5 appearance-none rounded border border-slate-900/30 bg-white/50 checked:bg-slate-900 checked:border-slate-900 focus:outline-none transition-all cursor-pointer"
+                className="peer h-3.5 w-3.5 appearance-none rounded border border-white/40 bg-black/20 checked:bg-white checked:border-white focus:outline-none transition-all cursor-pointer"
               />
               <svg
-                className="pointer-events-none absolute hidden peer-checked:block h-2.5 w-2.5 text-white"
+                className="pointer-events-none absolute hidden peer-checked:block h-2.5 w-2.5 text-[#0f172a]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -108,25 +103,21 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
           <button 
             type="button"
             onClick={onSwitchToForgotPassword}
-            className="font-medium underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+            className="font-medium text-white/80 underline decoration-white/30 underline-offset-2 transition-colors hover:text-white hover:decoration-white"
           >
             Forgot password
           </button>
         </div>
 
-        <button
-          type="submit"
-          className="mt-2 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-red-600 active:bg-red-700"
-        >
-          Log In
-        </button>
+        {/* Utilizing the centralized Button component */}
+        <Button type="submit" label="Log In" className="mt-2" />
       </form>
 
-      <div className="mt-5 text-center text-[13px] text-slate-700">
+      <div className="mt-5 text-center text-[13px] text-white/70">
         Don't have an account?{' '}
         <button 
           onClick={onSwitchToSignup} 
-          className="font-bold underline decoration-slate-900/30 underline-offset-2 transition-colors hover:text-red-600 hover:decoration-red-600"
+          className="font-bold text-white underline decoration-white/30 underline-offset-2 transition-colors hover:decoration-white"
         >
           Sign up
         </button>
