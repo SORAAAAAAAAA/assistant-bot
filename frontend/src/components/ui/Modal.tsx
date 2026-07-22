@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import logo from '@/assets/logoseiwa.png'; 
 
-/* --- BACKGROUND COMPONENT --- */
+/* --- EXTERNAL BACKGROUND COMPONENT --- */
 const BouncingBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -24,16 +24,15 @@ const BouncingBackground: React.FC = () => {
       return Math.random() * (max - radius * 2) + radius;
     };
 
+  
     const circleData = [
-      { vx: 0.8, vy: 0.6, baseRadius: 100, color: '#FCA5A5' }, 
-      { vx: -0.5, vy: 0.9, baseRadius: 80, color: '#F87171' },  
-      { vx: 1.0, vy: -0.7, baseRadius: 115, color: '#EF4444' }, 
-      { vx: -0.9, vy: -0.5, baseRadius: 95, color: '#DC2626' }, 
-      { vx: 0.6, vy: -0.8, baseRadius: 105, color: '#B91C1C' }, 
-      { vx: -0.7, vy: 1.0, baseRadius: 70, color: '#991B1B' },  
-      { vx: -0.6, vy: 0.7, baseRadius: 85, color: '#EF4444' },  
-      { vx: 0.7, vy: -0.6, baseRadius: 110, color: '#FCA5A5' }, 
-      { vx: -0.8, vy: -0.6, baseRadius: 100, color: '#B91C1C' },
+      { vx: 0.5, vy: 0.4, baseRadius: 130, color: '#87000d' }, // Maroon
+      { vx: -0.4, vy: 0.6, baseRadius: 110, color: '#4a0005' }, // Super Dark Red
+      { vx: 0.7, vy: -0.5, baseRadius: 95, color: '#de0018' },  // Vibrant Red
+      { vx: -0.6, vy: -0.4, baseRadius: 120, color: '#680009' }, // Dark Red
+      { vx: 0.4, vy: -0.6, baseRadius: 100, color: '#3f0004' }, // Deepest Burgundy
+      { vx: -0.5, vy: 0.5, baseRadius: 115, color: '#9e000f' }, // Crimson Red
+      { vx: 0.6, vy: 0.5, baseRadius: 90, color: '#590008' },  // Dark Maroon
     ];
 
     const circles: Array<{ x: number; y: number; vx: number; vy: number; baseRadius: number; color: string }> = [];
@@ -57,7 +56,7 @@ const BouncingBackground: React.FC = () => {
           const dy = y - existing.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < scaledRadius + existingScaledRadius + (100 * initialScale)) {
+          if (distance < scaledRadius + existingScaledRadius + (120 * initialScale)) {
             hasOverlap = true;
             break;
           }
@@ -136,6 +135,9 @@ const BouncingBackground: React.FC = () => {
         ctx.beginPath();
         ctx.arc(c1.x, c1.y, r1, 0, Math.PI * 2);
         ctx.fillStyle = c1.color;
+        // Clean minimalist look with subtle professional shadow transparency
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 15;
         ctx.fill();
         ctx.closePath();
       }
@@ -153,12 +155,11 @@ const BouncingBackground: React.FC = () => {
       <div className="absolute inset-0 z-0 bg-white" />
       <canvas 
         ref={canvasRef} 
-        className="absolute inset-0 z-0 h-full w-full"
+        className="absolute inset-0 z-0 h-full w-full opacity-35"
       />
     </>
   );
 };
-
 
 /* --- MAIN MODAL COMPONENT --- */
 interface ModalProps {
@@ -181,37 +182,57 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden px-4 font-sans">
       
+      {/* External Background (Pure white base with organized, non-pastel red/maroon floating circles) */}
       <BouncingBackground />
 
+      {/* Invisible overlay to close modal on click */}
       <div 
         className="absolute inset-0 z-10" 
         onClick={onClose} 
         aria-hidden="true" 
       />
 
-      {/* REVERTED WIDTH: max-w-[460px] so it is not overly wide */}
+      {/* Modal Card */}
       <div 
-        className="relative z-20 w-full max-w-[460px] rounded-[32px] border border-white/60 bg-white/30 p-5 shadow-[0_12px_40px_rgba(0,0,0,0.15)] backdrop-blur-3xl sm:px-8 sm:py-7"
+        className="relative z-20 w-full max-w-[460px] rounded-[32px] border border-white/10 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden sm:px-8 sm:py-7"
       >
-        <div className="pointer-events-none absolute inset-0 rounded-[32px] border border-white/80 bg-gradient-to-b from-white/60 via-white/20 to-transparent opacity-80" />
+        {/* Custom CSS Animation for the moving, beating radial effect */}
+        <style>{`
+          @keyframes wandering-beat {
+            0% { background-position: 0% 0%; background-size: 200% 200%; }
+            25% { background-position: 100% 0%; background-size: 250% 250%; }
+            50% { background-position: 100% 100%; background-size: 200% 200%; }
+            75% { background-position: 0% 100%; background-size: 250% 250%; }
+            100% { background-position: 0% 0%; background-size: 200% 200%; }
+          }
+          .animate-wandering-beat {
+            background-image: radial-gradient(circle at center, #de0018 0%, #87000d 50%, #4a0005 100%);
+            animation: wandering-beat 6s ease-in-out infinite;
+          }
+        `}</style>
+
+        {/* The moving, beating background overlay */}
+        <div className="absolute inset-0 z-0 animate-wandering-beat opacity-100" />
         
-        <div className="relative z-30 w-full text-slate-900">
+        <div className="relative z-30 w-full text-white">
           
-          <div className="flex flex-col items-center justify-center gap-1.5 drop-shadow-sm">
+          <div className="flex flex-col items-center justify-center gap-2 drop-shadow-sm">
+            {/* Logo without box container, scaled up to match text width */}
             <img 
               src={logo} 
               alt="SKPI Logo" 
-              className="h-9 w-auto object-contain" 
+              className="h-12 w-auto object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]" 
+              style={{ filter: 'brightness(0) saturate(100%) invert(18%) sepia(94%) saturate(6015%) hue-rotate(345deg) brightness(92%) contrast(105%)' }}
             />
             <span 
-              className="text-2xl font-bold tracking-tight"
+              className="text-2xl font-bold tracking-tight text-white"
               style={{ fontFamily: 'Cambria, Georgia, serif' }}
             >
-              <span className="text-red-600">SKPI</span> <span className="text-slate-900">Chatbot</span>
+              SKPI Chatbot
             </span>
           </div>
 
-          <div className="my-5 h-[1px] w-full bg-gradient-to-r from-transparent via-slate-900/15 to-transparent" />
+          <div className="my-5 h-[1px] w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
           {children}
           
