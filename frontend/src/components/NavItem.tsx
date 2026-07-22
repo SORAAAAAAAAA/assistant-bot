@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 interface NavItemProps {
     icon: ReactNode;
@@ -44,8 +45,6 @@ export function NavItem({
         </>
     );
 
-    /* Link?
-    // If a 'to' prop is passed, render a React Router Link
     if (to) {
         return (
             <Link
@@ -58,9 +57,8 @@ export function NavItem({
             </Link>
         );
     }
-    */
 
-    // Otherwise, render the standard button (for Log Out, New Inquiry, etc.)
+
     return (
         <button
             onClick={onClick}

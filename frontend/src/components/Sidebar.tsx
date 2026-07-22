@@ -28,9 +28,9 @@ export default function Sidebar() {
 
             <NavItem
                 icon={<Plus size={20} />}
-                label="New Inquiry"
+                label="New Chat"
                 isOpen={isOpen}
-                onClick={() => alert("Open New Inquiry Modal")}
+                to="/chat"
                 isPrimary={true}
             />
 
