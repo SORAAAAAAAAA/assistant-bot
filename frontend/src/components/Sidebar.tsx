@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSquare, History, HelpCircle, Plus } from 'lucide-react';
+import { MessageSquare, History, HelpCircle } from 'lucide-react';
 
 import { SidebarBackground } from './SidebarBackground';
 import { SidebarHeader } from './SidebarHeader';
@@ -10,7 +10,6 @@ export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(true);
 
     const topItems = [
-        { icon: <MessageSquare size={20} />, label: 'Chat', path: '/chat' },
         { icon: <History size={20} />, label: 'History', path: '/history' },
         { icon: <HelpCircle size={20} />, label: 'FAQs', path: '/faqs' },
     ];
@@ -27,8 +26,8 @@ export default function Sidebar() {
             <SidebarHeader isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
 
             <NavItem
-                icon={<Plus size={20} />}
-                label="New Chat"
+                icon={<MessageSquare size={20} />}
+                label="Chat"
                 isOpen={isOpen}
                 to="/chat"
                 isPrimary={true}
