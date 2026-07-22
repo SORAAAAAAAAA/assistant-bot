@@ -2,10 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { MessageList } from '@/features/chat/MessageList';
 import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
+import { chatService } from '@/services/chatService';
+import type { ChatRequest } from '@ai-assistant/shared';
+import { formatAiResponse } from "@/lib/aiFormatter"
 
 export default function ChatInterface() {
     const [input, setInput] = useState('');
-    const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
     const [isTyping, setIsTyping] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [highlightedId, setHighlightedId] = useState<number | null>(null);
@@ -13,7 +15,6 @@ export default function ChatInterface() {
     const userScrollRef = useRef<HTMLDivElement>(null);
     const aiScrollRef = useRef<HTMLDivElement>(null);
     const composerInputRef = useRef<HTMLInputElement>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (userScrollRef.current) userScrollRef.current.scrollTop = userScrollRef.current.scrollHeight;
@@ -45,30 +46,35 @@ export default function ChatInterface() {
         }
     };
 
-    const handleSend = () => {
-        if ((!input.trim() && attachedFiles.length === 0) || isTyping) return;
-        const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const handleSend = async () => {
+        if (!input.trim() || isTyping) return;
         const uId = Date.now();
         const aId = uId + 1;
 
         const userMsg: Message = {
-            id: uId, role: 'user', time: userTime, content: input,
-            files: attachedFiles.map(f => f.name), relatedId: aId
+            id: uId, role: 'user', content: input,
         };
 
+        const chatRequest: ChatRequest = {
+            message: input
+        }
         setMessages(prev => [...prev, userMsg]);
         setInput('');
-        setAttachedFiles([]);
         setIsTyping(true);
+        try {
+            const response = await chatService(chatRequest)
 
-        setTimeout(() => {
             const reply: Message = {
-                id: aId, role: 'assistant', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                content: "I have received your message."
+                id: aId, role: 'assistant',
+                content: formatAiResponse(response)
             };
             setMessages(prev => [...prev, reply]);
             setIsTyping(false);
-        }, 1500);
+
+        } catch (error) {
+            console.error('Error:', error);
+            setIsTyping(false);
+        }
     };
 
     return (
@@ -81,7 +87,6 @@ export default function ChatInterface() {
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
         body { margin: 0; padding: 0; overflow: hidden; }
         @keyframes popIn { 0% { opacity: 0; transform: translateY(8px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes letterJump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         @keyframes blinkRed { 0%, 100% { color: #6B7280; } 50% { color: #E23B4E; } }
         @keyframes glowRed {
           0% { box-shadow: 0 0 0 0 rgba(226, 59, 78, 0.4); border-color: rgba(226, 59, 78, 0.2); }
@@ -106,7 +111,7 @@ export default function ChatInterface() {
                     ) : (
                         <MessageList messages={messages.filter(m => m.role === 'user')} variant="user" onJump={jumpToResponse} scrollRef={userScrollRef} />
                     )}
-                    <MessageComposer input={input} attachedFiles={attachedFiles} isTyping={isTyping} onSend={handleSend} onFileSelect={setAttachedFiles} onInputChange={setInput} fileInputRef={fileInputRef} inputRef={composerInputRef} />
+                    <MessageComposer input={input} isTyping={isTyping} onSend={handleSend} onInputChange={setInput} inputRef={composerInputRef} />
                 </div>
 
                 {/* RIGHT COLUMN */}
@@ -121,7 +126,7 @@ export default function ChatInterface() {
                     {isTyping && (
                         <div className="flex gap-[1px] text-[10px] justify-center py-3 font-semibold font-['JetBrains_Mono',monospace]">
                             {"THINKING...".split("").map((char, i) => (
-                                <span key={i} className="inline-block animate-[letterJump_1s_infinite_ease-in-out,blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
+                                <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
                             ))}
                         </div>
                     )}

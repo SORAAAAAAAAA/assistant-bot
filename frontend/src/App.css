@@ -182,3 +182,59 @@
     border-right-color: var(--border);
   }
 }
+
+/* Custom smooth view transition */
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-view-change {
+  animation: viewFadeIn 0.35s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+}
+
+
+/* Custom smooth view transition */
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-view-change {
+  animation: viewFadeIn 0.35s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+}
+
+/* Floating Background Circles */
+@keyframes float-tl {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(3vw, 4vh); }
+}
+@keyframes float-tr {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-3vw, 5vh); }
+}
+@keyframes float-bl {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(4vw, -4vh); }
+}
+@keyframes float-br {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-4vw, -3vh); }
+}
+
+.circle-tl { animation: float-tl 14s ease-in-out infinite; }
+.circle-tr { animation: float-tr 17s ease-in-out infinite; }
+.circle-bl { animation: float-bl 15s ease-in-out infinite; }
+.circle-br { animation: float-br 18s ease-in-out infinite; }

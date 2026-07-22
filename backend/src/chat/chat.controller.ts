@@ -1,14 +1,10 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { IsNotEmpty } from 'class-validator';
 import { type User } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { ChatService } from './chat.service';
-import { ChatRequest } from '@ai-assistant/shared';
-class ChatDto implements ChatRequest {
-    @IsNotEmpty()
-    message: string;
-}
+import { ChatDto } from '@/chat/dto/chat.dto';
+
 @UseGuards(JwtAuthGuard)
 @Controller('chat')
 export class ChatController {
