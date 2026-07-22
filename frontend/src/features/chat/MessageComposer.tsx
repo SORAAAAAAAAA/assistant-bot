@@ -23,7 +23,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
         className={`relative bg-white/10 backdrop-blur-[20px] pl-6 pr-2 py-2 rounded-xl overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.05)] flex items-center border cursor-text transition-all duration-300 ${
           isTyping
             ? 'border-transparent animate-[glowRed_0.8s_ease-in-out_infinite]'
-            : 'border-black/60 focus-within:border-[#E23B4E]'
+            : 'border-black/60 focus-within:border-[#87000d]'
         }`}
         onClick={() => inputRef.current?.focus()}
       >
@@ -46,7 +46,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
           }}
           disabled={!canSend}
           aria-label="Send message"
-          className={`flex items-center justify-center w-8 h-8 rounded-lg bg-[#E23B4E] text-white font-bold text-sm leading-none transition-all duration-200 ${
+          className={`flex items-center justify-center w-8 h-8 rounded-lg bg-[#87000d] text-white font-bold text-sm leading-none transition-all duration-200 ${
             canSend
               ? 'hover:bg-[#C82D3F] hover:scale-105 active:scale-95 cursor-pointer opacity-100 shadow-md'
               : 'opacity-40 cursor-not-allowed'

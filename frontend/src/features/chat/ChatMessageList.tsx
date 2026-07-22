@@ -1,6 +1,6 @@
 import type { FC, RefObject } from 'react'
 import type { Message } from '@/types'
-import { ChatMessageBubble } from './bubbles'
+import { ChatMessageBubble } from './ChatBubbles'
 
 interface ChatMessageListProps {
   messages: Message[]
