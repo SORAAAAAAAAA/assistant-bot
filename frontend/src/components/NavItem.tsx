@@ -29,7 +29,7 @@ export function NavItem({
             : "text-red-100 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10 hover:shadow-sm";
 
     // Replaced py-2 with py-1.5 to reduce the vertical height of every button
-    const commonClasses = `flex items-center w-full rounded-full transition-all duration-200 group py-0.5 px-2.5 ${baseStyles}`;
+    const commonClasses = `flex items-center w-full rounded-full transition-all duration-200 group py-0.5 ${isOpen ? 'px-2.5' : 'justify-center px-0'} ${baseStyles}`;
 
     const innerContent = (
         <>
@@ -41,7 +41,7 @@ export function NavItem({
                 ${isOpen ? 'max-w-[200px] opacity-100 ml-2.5' : 'max-w-0 opacity-0 ml-0'}
             `}>
                 {/* Added 'leading-none' to remove extra built-in spacing above and below the text */}
-                <span className="whitespace-nowrap font-medium text-sm leading-none tracking-wide">
+                <span className="whitespace-nowrap font-medium text-[13px] leading-none tracking-wide">
                     {label}
                 </span>
             </div>
