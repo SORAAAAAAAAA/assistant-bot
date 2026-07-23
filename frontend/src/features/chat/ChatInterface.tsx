@@ -4,14 +4,26 @@ import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
 import { chatService } from '@/services/chatService';
 import type { ChatRequest } from '@ai-assistant/shared';
+import { getRandomGreeting } from '@/features/chat/chatGreetings';
+import { getLocalUserProfile } from '@/lib/userUtils';
+
 
 export default function ChatInterface() {
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    const userProfile = getLocalUserProfile();
+    const greetingName = userProfile.firstName;
+    const [greeting] = useState(() => getRandomGreeting(greetingName));
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const composerInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const handleReset = () => setMessages([]);
+        window.addEventListener('reset-chat', handleReset);
+        return () => window.removeEventListener('reset-chat', handleReset);
+    }, []);
 
     useEffect(() => {
         if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -103,8 +115,8 @@ export default function ChatInterface() {
             {/* Ambient Red Glow Layers - Only shown before chat starts */}
             {messages.length === 0 && (
                 <>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[250px] bg-[#87000d] mix-blend-multiply blur-[120px] rounded-full pointer-events-none animate-pulse transition-opacity duration-500" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[100px] bg-[#4a0005] mix-blend-multiply blur-[70px] rounded-full pointer-events-none transition-opacity duration-500" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[250px] bg-[#800000] blur-[120px] rounded-full pointer-events-none animate-pulse transition-opacity duration-500 opacity-70" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[100px] bg-[#5c0000] blur-[70px] rounded-full pointer-events-none transition-opacity duration-500 opacity-80" />
                 </>
             )}
 
@@ -124,30 +136,35 @@ export default function ChatInterface() {
       `}</style>
 
             {/* Main Container - single column, full-height chat feed */}
-            <div className="flex flex-col h-full w-full max-w-[790px] mx-auto px-6 pt-8 pb-8 gap-4 relative z-[1] box-border">
+            <div className="flex flex-col h-full w-full max-w-[790px] mx-auto px-6 pt-8 pb-8 relative z-[1] box-border">
 
                 {/* SCROLLABLE MESSAGE FEED */}
-                <div className="flex-1 min-h-0 flex flex-col">
+                <div className={`flex flex-col transition-all duration-700 ease-in-out ${messages.length === 0 ? 'flex-1 min-h-0' : 'flex-1 min-h-0'}`}>
                     {messages.length === 0 ? (
-                        <div className="flex-1 flex flex-col items-center justify-center animate-[popIn_0.6s_ease-out_forwards]">
-                            <p className="text-[10px] font-bold text-[#de0018] uppercase tracking-[0.4em] font-['JetBrains_Mono',monospace]">Ready</p>
-                            <p className="text-[24px] font-black text-[#1A1C1E] mt-3 tracking-tighter uppercase">Start Chatting</p>
+                        <div className="flex-1 flex flex-col items-center mb-3 justify-end animate-[popIn_0.6s_ease-out_forwards]">
+                            <p className="text-[35px] font-black text-[#1A1C1E] mt-3 tracking-tighter uppercase">{greeting}</p>
                         </div>
                     ) : (
-                        <ChatMessageList messages={messages} onJump={jumpToResponse} scrollRef={scrollRef} />
-                    )}
-
-                    {isTyping && (
-                        <div className="flex gap-[1px] text-[10px] justify-start py-3 pl-1 font-semibold font-['JetBrains_Mono',monospace]">
-                            {"THINKING...".split("").map((char, i) => (
-                                <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
-                            ))}
-                        </div>
+                        <>
+                            <ChatMessageList messages={messages} onJump={jumpToResponse} scrollRef={scrollRef} />
+                            {isTyping && (
+                                <div className="flex gap-[1px] text-[10px] justify-start py-3 pl-1 font-semibold font-['JetBrains_Mono',monospace]">
+                                    {"THINKING...".split("").map((char, i) => (
+                                        <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
+                                    ))}
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
 
-                {/* COMPOSER - anchored to bottom, full width */}
-                <MessageComposer input={input} isTyping={isTyping} onSend={handleSend} onInputChange={setInput} inputRef={composerInputRef} />
+                {/* COMPOSER - animated to slide down */}
+                <div className="w-full shrink-0 transition-all duration-700 ease-in-out mt-4 relative z-10">
+                    <MessageComposer input={input} isTyping={isTyping} onSend={handleSend} onInputChange={setInput} inputRef={composerInputRef} />
+                </div>
+
+                {/* BOTTOM SPACER - pushes composer to middle initially */}
+                <div className={`transition-all duration-700 ease-in-out ${messages.length === 0 ? 'flex-1' : 'flex-none h-0'}`} />
             </div>
         </div>
     )
