@@ -1,3 +1,5 @@
+import { DepartmentType } from "@ai-assistant/shared";
+
 export interface RAGDocument {
     docId: string;
     text: string;
