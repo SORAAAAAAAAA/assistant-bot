@@ -34,6 +34,7 @@ export default function Sidebar() {
                         label={item.label}
                         isOpen={isOpen}
                         to={item.path}
+                        onClick={item.onClick}
                     />
                 ))}
             </nav>

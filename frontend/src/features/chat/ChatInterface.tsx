@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ChatMessageList } from '@/features/chat/ChatMessageList';
 import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
@@ -9,6 +10,9 @@ import { getLocalUserProfile } from '@/lib/userUtils';
 
 
 export default function ChatInterface() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -24,6 +28,19 @@ export default function ChatInterface() {
         window.addEventListener('reset-chat', handleReset);
         return () => window.removeEventListener('reset-chat', handleReset);
     }, []);
+
+    // Load history item if passed from routing state
+    useEffect(() => {
+        if (location.state?.historyItem) {
+            const { message, answer, sources } = location.state.historyItem;
+            setMessages([
+                { id: Date.now(), role: 'user', content: message },
+                { id: Date.now() + 1, role: 'assistant', content: answer, sources }
+            ]);
+            // Clear the state to prevent reload loops
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location.state, navigate, location.pathname]);
 
     useEffect(() => {
         if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

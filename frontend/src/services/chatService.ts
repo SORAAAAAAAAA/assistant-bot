@@ -30,11 +30,11 @@ export async function chatService(message: ChatRequest, onChunk: (chunk: ChatRes
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            
+
             buffer += decoder.decode(value, { stream: true });
             const lines = buffer.split('\n');
             buffer = lines.pop() || '';
-            
+
             for (const line of lines) {
                 if (line.trim()) {
                     try {
@@ -50,3 +50,19 @@ export async function chatService(message: ChatRequest, onChunk: (chunk: ChatRes
         reader.releaseLock();
     }
 }
+
+export async function getChatHistory() {
+    const response = await fetchWithAuth(`${baseURL}/chat/history`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch chat history');
+    }
+
+    return response.json();
+}
+
