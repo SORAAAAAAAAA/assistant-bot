@@ -124,6 +124,7 @@ export default function ChatInterface() {
         } catch (error) {
             console.error('Error:', error);
             setIsTyping(false);
+            setIsThinking(false);
         }
     };
 
@@ -172,7 +173,6 @@ export default function ChatInterface() {
                     )}
                 </div>
 
-                {/* COMPOSER - animated to slide down */}
                 <div className="w-full shrink-0 transition-all duration-700 ease-in-out mt-4 relative z-10">
                     <MessageComposer input={input} isTyping={isTyping} onSend={handleSend} onInputChange={setInput} inputRef={composerInputRef} />
                 </div>
