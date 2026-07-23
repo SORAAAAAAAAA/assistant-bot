@@ -2,18 +2,18 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 
 interface SwirlBorderProps {
   active: boolean
+  // Accepts custom radii or defaults to a full pill radius
   radii?: [number, number, number, number]
 }
 
-export const SwirlBorder = ({ active, radii = [12, 12, 12, 12] }: SwirlBorderProps) => {
+export const SwirlBorder = ({ active, radii }: SwirlBorderProps) => {
   const [rectSize, setRectSize] = useState({ w: 0, h: 0 })
   const [pathLength, setPathLength] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
 
   const strokeWidth = 2
-  // Inset path by half stroke width so overflow-hidden doesn't clip the outer edge
-  const inset = strokeWidth / 2
+  const halfStroke = strokeWidth / 2
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -39,29 +39,39 @@ export const SwirlBorder = ({ active, radii = [12, 12, 12, 12] }: SwirlBorderPro
     const { w, h } = rectSize
     if (w <= 0 || h <= 0) return ""
 
-    const [tl, tr, br, bl] = radii
-    const wIn = w - inset
-    const hIn = h - inset
+    // Calculate maximum possible radius for full pill rounding if not explicitly provided
+    const maxPillRadius = Math.min(w, h) / 2
+    const [tl, tr, br, bl] = radii 
+      ? radii.map(r => Math.min(r, maxPillRadius)) 
+      : [maxPillRadius, maxPillRadius, maxPillRadius, maxPillRadius]
+
+    const left = halfStroke
+    const top = halfStroke
+    const right = w - halfStroke
+    const bottom = h - halfStroke
 
     return `
-      M ${tl + inset},${inset} 
-      H ${wIn - tr} 
-      A ${tr},${tr} 0 0 1 ${wIn},${tr + inset} 
-      V ${hIn - br} 
-      A ${br},${br} 0 0 1 ${wIn - br},${hIn} 
-      H ${bl + inset} 
-      A ${bl},${bl} 0 0 1 ${inset},${hIn - bl} 
-      V ${tl + inset} 
-      A ${tl},${tl} 0 0 1 ${tl + inset},${inset} 
+      M ${left + tl},${top}
+      H ${right - tr}
+      A ${tr},${tr} 0 0 1 ${right},${top + tr}
+      V ${bottom - br}
+      A ${br},${br} 0 0 1 ${right - br},${bottom}
+      H ${left + bl}
+      A ${bl},${bl} 0 0 1 ${left},${bottom - bl}
+      V ${top + tl}
+      A ${tl},${tl} 0 0 1 ${left + tl},${top}
       Z
     `
-  }, [rectSize, radii, inset])
+  }, [rectSize, radii, halfStroke])
 
   useEffect(() => {
     if (pathRef.current) {
       setPathLength(pathRef.current.getTotalLength())
     }
   }, [d])
+
+  const dashLength = pathLength * 0.35
+  const gapLength = pathLength * 0.65
 
   return (
     <div
@@ -75,13 +85,17 @@ export const SwirlBorder = ({ active, radii = [12, 12, 12, 12] }: SwirlBorderPro
           width="100%" 
           height="100%" 
           viewBox={`0 0 ${rectSize.w} ${rectSize.h}`}
-          className="block w-full h-full"
+          className="block w-full h-full overflow-visible"
         >
           {pathLength > 0 && (
             <style>{`
-              @keyframes swirlInfinite {
-                0% { stroke-dashoffset: ${pathLength}; }
-                100% { stroke-dashoffset: 0; }
+              @keyframes swirlContinuous {
+                0% {
+                  stroke-dashoffset: 0;
+                }
+                100% {
+                  stroke-dashoffset: -${pathLength};
+                }
               }
             `}</style>
           )}
@@ -89,13 +103,16 @@ export const SwirlBorder = ({ active, radii = [12, 12, 12, 12] }: SwirlBorderPro
             ref={pathRef}
             d={d}
             fill="none"
-            stroke="#E23B4E"
+            stroke="#87000D"
             strokeWidth={strokeWidth}
-            strokeDasharray={pathLength ? `${pathLength * 0.35} ${pathLength * 0.65}` : undefined}
+            strokeDasharray={pathLength ? `${dashLength} ${gapLength}` : undefined}
             style={
               active && pathLength > 0
-                ? { animation: 'swirlInfinite 1.2s linear infinite' }
-                : { strokeDashoffset: pathLength }
+                ? {
+                    animation: 'swirlContinuous 1.2s linear infinite',
+                    willChange: 'stroke-dashoffset'
+                  }
+                : undefined
             }
           />
         </svg>
