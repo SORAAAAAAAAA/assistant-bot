@@ -1,4 +1,5 @@
 import type { FC, RefObject } from 'react'
+import { SwirlBorder } from './SwirlBorder'
 
 interface MessageComposerProps {
   input: string
@@ -23,6 +24,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
         className={`relative bg-gray-200 pl-6 pr-2 py-4 rounded-3xl overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.05)] flex items-center border cursor-text transition-all duration-300 border-white/50 focus-within:border-[#87000d]'}`}
         onClick={() => inputRef.current?.focus()}
       >
+        <SwirlBorder active={isTyping} radii={[24, 24, 24, 24]} />
         <input
           ref={inputRef}
           value={input}
