@@ -29,7 +29,7 @@ export class RagService {
         });
         return res.data.embedding;
     }
-    chunkText(text: string, chunkSize = 500, overlap = 50): string[] {
+    chunkText(text: string, chunkSize = 250, overlap = 50): string[] {
         const words = text.split(/\s+/);
         const chunks: string[] = [];
         let i = 0;
@@ -52,15 +52,23 @@ export class RagService {
             });
         }
     }
-    async retrieveContext(query: string, topK = 4): Promise<string[]> {
+    async retrieveContext(query: string, topK = 15): Promise<{ chunks: string[], sources: string[] }> {
         const collection = await this.getCollection();
         const queryEmbedding = await this.getEmbedding(query);
         const results = await collection.query({
             queryEmbeddings: [queryEmbedding],
             nResults: topK,
         });
-        const docs = results.documents?.[0] ?? [];
 
-        return docs.filter((doc): doc is string => doc !== null);
+        const docs = results.documents?.[0] ?? [];
+        const metas = results.metadatas?.[0] ?? [];
+
+        const chunks = docs.filter((doc): doc is string => doc !== null);
+
+        // Extract the filename/source from metadata and remove duplicates
+        const rawSources = metas.map(m => m ? m.source as string : 'Unknown Source');
+        const sources = Array.from(new Set(rawSources));
+
+        return { chunks, sources };
     }
 }

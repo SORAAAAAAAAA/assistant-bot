@@ -22,7 +22,7 @@ export function SidebarHeader({ isOpen, toggle }: SidebarHeaderProps) {
                     <img
                         src="../../images/Seiwa-Logo.png"
                         alt="Seiwa Kaiun Logo"
-                        className={`absolute inset-0 m-auto w-8 h-8 object-contain transition-opacity duration-200 ${!isOpen ? 'group-hover:opacity-0 opacity-100' : 'opacity-100'}`}
+                        className={`absolute inset-0 m-auto w-6 h-6 object-contain transition-opacity duration-200 ${!isOpen ? 'group-hover:opacity-0 opacity-100' : 'opacity-100'}`}
                     />
 
                     {/* Hover State: Open Sidebar Icon (Only renders when closed) */}
@@ -37,7 +37,7 @@ export function SidebarHeader({ isOpen, toggle }: SidebarHeaderProps) {
                 <div className={`overflow-hidden transition-all duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center
                     ${isOpen ? 'max-w-[200px] opacity-100 ml-3' : 'max-w-0 opacity-0 ml-0'}
                 `}>
-                    <span className="font-['Cambria'] font-semibold text-white tracking-wide text-[18px] whitespace-nowrap drop-shadow-md">
+                    <span className="font-['Cambria'] font-semibold text-white tracking-wide text-[14px] whitespace-nowrap drop-shadow-md">
                         SKPI Chatbot
                     </span>
                 </div>
