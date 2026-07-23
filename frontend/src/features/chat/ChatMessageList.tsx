@@ -6,9 +6,10 @@ interface ChatMessageListProps {
   messages: Message[]
   onJump?: (relatedId?: number) => void
   scrollRef?: RefObject<HTMLDivElement | null>
+  isThinking?: boolean
 }
 
-export const ChatMessageList: FC<ChatMessageListProps> = ({ messages, onJump, scrollRef }) => {
+export const ChatMessageList: FC<ChatMessageListProps> = ({ messages, onJump, scrollRef, isThinking }) => {
   return (
     <div
       ref={scrollRef}
@@ -26,6 +27,13 @@ export const ChatMessageList: FC<ChatMessageListProps> = ({ messages, onJump, sc
           </div>
         )
       })}
+      {isThinking && (
+        <div className="flex gap-[1px] text-[10px] justify-start py-3 px-5 font-semibold font-['JetBrains_Mono',monospace]">
+          {"THINKING...".split("").map((char, i) => (
+            <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

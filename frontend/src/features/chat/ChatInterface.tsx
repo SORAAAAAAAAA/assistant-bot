@@ -12,9 +12,10 @@ import { getLocalUserProfile } from '@/lib/userUtils';
 export default function ChatInterface() {
     const location = useLocation();
     const navigate = useNavigate();
-    
+
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [isThinking, setIsThinking] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const userProfile = getLocalUserProfile();
     const greetingName = userProfile.firstName;
@@ -82,6 +83,7 @@ export default function ChatInterface() {
         setMessages(prev => [...prev, userMsg]);
         setInput('');
         setIsTyping(true);
+        setIsThinking(true);
 
         let fullContent = '';
         let sources: string[] = [];
@@ -96,6 +98,7 @@ export default function ChatInterface() {
 
                 if (fullContent.length > 0) {
                     if (isFirstChunk) {
+                        setIsThinking(false);
                         setMessages(prev => [...prev, {
                             id: aId, role: 'assistant',
                             content: fullContent,
@@ -144,7 +147,7 @@ export default function ChatInterface() {
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
         body { margin: 0; padding: 0; overflow: hidden; }
         @keyframes popIn { 0% { opacity: 0; transform: translateY(8px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes blinkRed { 0%, 100% { color: #6B7280; } 50% { color: #de0018; } }
+        @keyframes blinkRed { 0%, 100% { color: #5c0000; } 50% { color: #E23B4E; } }
         @keyframes glowRed {
           0% { box-shadow: 0 0 0 0 rgba(135, 0, 13, 0.4); border-color: rgba(135, 0, 13, 0.2); }
           50% { box-shadow: 0 0 15px 4px rgba(135, 0, 13, 0.5); border-color: rgba(135, 0, 13, 0.8); }
@@ -163,14 +166,8 @@ export default function ChatInterface() {
                         </div>
                     ) : (
                         <>
-                            <ChatMessageList messages={messages} onJump={jumpToResponse} scrollRef={scrollRef} />
-                            {isTyping && (
-                                <div className="flex gap-[1px] text-[10px] justify-start py-3 pl-1 font-semibold font-['JetBrains_Mono',monospace]">
-                                    {"THINKING...".split("").map((char, i) => (
-                                        <span key={i} className="inline-block animate-[blinkRed_1.5s_infinite_ease-in-out]" style={{ animationDelay: `${i * 0.1}s` }}>{char}</span>
-                                    ))}
-                                </div>
-                            )}
+                            <ChatMessageList messages={messages} onJump={jumpToResponse} scrollRef={scrollRef} isThinking={isThinking} />
+
                         </>
                     )}
                 </div>

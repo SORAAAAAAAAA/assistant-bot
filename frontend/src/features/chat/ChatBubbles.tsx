@@ -27,7 +27,7 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
           `}
           onClick={() => onJump?.(message.relatedId)}
         >
-          <div className="text-[11px] text-[#1A1C1E] leading-[1.4] font-medium">
+          <div className="text-[14px] text-[#1A1C1E] leading-[1.4] font-medium">
             {message.content}
           </div>
 
@@ -48,15 +48,15 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
   // Assistant variant — left-aligned, plain text spanning full width
   return (
     <div id={`msg-${message.id}`} className="w-full shrink-0 relative animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]">
-      <div className="text-[11px] text-[#1A1C1E] leading-[1.6] font-medium break-words text-left flex flex-col gap-1">
+      <div className="text-[14px] text-[#1A1C1E] leading-[1.6] font-medium break-words text-left flex flex-col gap-1">
         {message.content.split('\n').map((line, lineIdx) => {
           const isBullet = /^(\s*)([-*•])\s+(.*)/.exec(line);
           const isNumbered = /^(\s*)(\d+\.)\s+(.*)/.exec(line);
-          
+
           let prefix = '';
           let content = line;
           let indent = 0;
-          
+
           if (isBullet) {
             indent = isBullet[1].length * 6 + 8;
             prefix = '•'; // normalize bullet character
