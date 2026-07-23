@@ -4,10 +4,9 @@ import ForgotPassword from '@/features/auth/ForgotPassword';
 import Login from '@/features/auth/Login';
 import Signup from '@/features/auth/Signup';
 import { useAuth } from '@/context/authContext';
-import ChatPage from '@/pages/chat';
+import { Navigate } from 'react-router-dom';
 import Toast from '@/components/ui/Toast';
-import LoadingOverlay from '@/features/chat/LoadingOverlay';
-
+import LoadingOverlay from '@/features/auth/LoadingOverlay';
 type ViewState = 'login' | 'signup' | 'forgotPassword';
 type ToastType = 'success' | 'error';
 
@@ -30,7 +29,7 @@ export default function IndexPage() {
   };
 
   if (isAuthenticated) {
-    return <ChatPage />;
+    return <Navigate to="/chat" replace />;
   }
 
   return (
@@ -77,7 +76,6 @@ export default function IndexPage() {
         )}
 
       </Modal>
-
     </div>
   );
 }

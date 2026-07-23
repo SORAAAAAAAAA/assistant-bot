@@ -1,8 +1,5 @@
-import AppLayout from '@/components/Layout/AppLayout'
+import ChatInterface from '@/features/chat/ChatInterface';
 
 export default function ChatPage() {
-
-  return (
-    <AppLayout />
-  )
-}
+  return <ChatInterface />;
+}

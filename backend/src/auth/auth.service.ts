@@ -9,7 +9,7 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { LoginResponse, RegisterResponse } from '@ai-assistant/shared';
+import { DepartmentType, LoginResponse, RegisterResponse, UserProfile } from '@ai-assistant/shared';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +40,11 @@ export class AuthService {
         if (!(await bcrypt.compare(dto.password, user.hashedPassword))) {
             throw new UnauthorizedException('Incorrect Password');
         }
+        const userProfile: UserProfile = {
+            fullName: `${user.firstName} ${user.lastName}`,
+            department: user.department as DepartmentType
+        }
         const token = this.jwt.sign({ sub: user.email });
-        return { access_token: token, token_type: 'bearer' };
+        return { access_token: token, token_type: 'bearer', userProfile };
     }
 }

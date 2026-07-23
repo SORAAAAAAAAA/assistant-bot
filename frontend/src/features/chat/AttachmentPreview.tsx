@@ -15,13 +15,13 @@ export const AttachmentPreview: FC<AttachmentPreviewProps> = ({ files, onClear }
           key={i} 
           className="bg-white/90 backdrop-blur-md border border-white/50 text-[8px] px-2 py-1 rounded-full shadow-sm flex items-center gap-1.5 max-w-full overflow-hidden"
         >
-          <span className="font-bold text-[#E23B4E] shrink-0 tracking-tighter uppercase">Attached:</span> 
+          <span className="font-bold text-[#de0018] shrink-0 tracking-tighter uppercase">Attached:</span> 
           <span className="truncate break-all text-[#1A1C1E] font-medium">
             {file.name}
           </span>
           <button 
             onClick={onClear} 
-            className="hover:text-[#E23B4E] ml-0.5 cursor-pointer shrink-0 text-[10px]"
+            className="hover:text-[#de0018] ml-0.5 cursor-pointer shrink-0 text-[10px]"
           >
             ×
           </button>
