@@ -6,7 +6,7 @@ import Signup from '@/features/auth/Signup';
 import { useAuth } from '@/context/authContext';
 import { Navigate } from 'react-router-dom';
 import Toast from '@/components/ui/Toast';
-import LoadingOverlay from '@/features/chat/LoadingOverlay';
+import LoadingOverlay from '@/features/auth/LoadingOverlay';
 type ViewState = 'login' | 'signup' | 'forgotPassword';
 type ToastType = 'success' | 'error';
 

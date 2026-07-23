@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PasswordInput from '@/features/auth/PasswordInput';
 import EmailInput from '@/components/ui/EmailInput';
-import Button from '@/components/ui/Button'; 
+import Button from '@/components/ui/Button';
 import { loginService } from '@/services/authService';
 import type { LoginRequest } from '@ai-assistant/shared';
 import { useAuth } from '@/context/authContext';
@@ -29,6 +29,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
         setTimeout(() => {
           setIsLoading(false);
           contextLogin(result.access_token);
+          localStorage.setItem("userProfile", JSON.stringify(result.userProfile));
         }, 1000);
       } catch (error) {
         setIsLoading(false);
@@ -100,7 +101,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
             <span>Remember me</span>
           </label>
 
-          <button 
+          <button
             type="button"
             onClick={onSwitchToForgotPassword}
             className="font-medium text-white/80 underline decoration-white/30 underline-offset-2 transition-colors hover:text-white hover:decoration-white"
@@ -115,13 +116,13 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
 
       <div className="mt-5 text-center text-[13px] text-white/70">
         Don't have an account?{' '}
-        <button 
-          onClick={onSwitchToSignup} 
+        <button
+          onClick={onSwitchToSignup}
           className="font-bold text-white underline decoration-white/30 underline-offset-2 transition-colors hover:decoration-white"
         >
           Sign up
         </button>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }

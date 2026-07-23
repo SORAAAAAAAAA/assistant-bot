@@ -1,4 +1,3 @@
-// src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import IndexPage from '@/pages/index';
 import ChatPage from '@/pages/chat';
