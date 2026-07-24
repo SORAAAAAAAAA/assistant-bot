@@ -2,6 +2,7 @@ export interface ParsedMessage {
     reasoningLines: string[];
     answerLines: string[];
     hasAnswer: boolean;
+    isCurrentlyThinking: boolean;
 }
 
 export type LineType = 'heading' | 'bullet' | 'numbered' | 'text' | 'empty';
@@ -21,10 +22,12 @@ export const parseMessageContent = (content: string): ParsedMessage => {
 
     let isReasoningPhase = true;
     let inThinkTag = false;
+    let hasSeenThinkStart = false;
+    let hasSeenThinkEnd = false;
 
     for (let line of lines) {
-        // Handle <think> tags (common in newer models like Deepseek/Qwen)
         if (line.includes('<think>')) {
+            hasSeenThinkStart = true;
             inThinkTag = true;
             isReasoningPhase = true;
             const parts = line.split('<think>');
@@ -33,13 +36,13 @@ export const parseMessageContent = (content: string): ParsedMessage => {
         }
 
         if (line.includes('</think>')) {
+            hasSeenThinkEnd = true;
             inThinkTag = false;
             isReasoningPhase = false;
             const parts = line.split('</think>');
             if (parts[0].trim()) reasoningLines.push(parts[0]);
             line = parts.slice(1).join('</think>');
 
-            // If there's nothing after </think> on this line, skip it
             if (!line.trim()) continue;
         }
 
@@ -48,14 +51,12 @@ export const parseMessageContent = (content: string): ParsedMessage => {
             continue;
         }
 
-        // Handle markdown blockquote reasoning
         const isQuote = /^(\s*)>\s*(.*)/.exec(line);
         if (isQuote) {
             isReasoningPhase = true;
             reasoningLines.push(isQuote[2]);
             continue;
         } else {
-            // Check for empty lines or common AI reasoning preamble
             const cleanLine = line.trim().toLowerCase();
             if (cleanLine !== '' && !cleanLine.startsWith('thinking process') && !cleanLine.startsWith('here is the thought') && !cleanLine.startsWith('okay') && !cleanLine.startsWith('let me')) {
                 isReasoningPhase = false;
@@ -64,10 +65,17 @@ export const parseMessageContent = (content: string): ParsedMessage => {
         }
     }
 
+    // It is currently thinking if we've seen a <think> tag but haven't seen a </think> tag yet.
+    // If it's using old blockquotes (>), we consider it thinking as long as it hasn't produced an answer.
+    const isCurrentlyThinking = hasSeenThinkStart 
+        ? !hasSeenThinkEnd 
+        : (reasoningLines.length > 0 && answerLines.every(l => l.trim() === ''));
+
     return {
         reasoningLines,
         answerLines,
         hasAnswer: answerLines.some((l) => l.trim() !== ''),
+        isCurrentlyThinking
     };
 };
 

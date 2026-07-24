@@ -14,8 +14,15 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
   const isUser = variant === 'user'
 
   // Pre-parse reasoning and answer lines
-  const { reasoningLines, answerLines, hasAnswer } = parseMessageContent(message.content);
+  const { reasoningLines, answerLines, isCurrentlyThinking } = parseMessageContent(message.content);
   const [isExpanded, setIsExpanded] = useState(true);
+
+  // Auto-collapse when the AI stops thinking
+  useEffect(() => {
+    if (!isCurrentlyThinking && reasoningLines.length > 0) {
+      setIsExpanded(false);
+    }
+  }, [isCurrentlyThinking, reasoningLines.length]);
 
   const renderBold = (text: string) => parseBoldText(text).map((part, i) => {
     if (part.isBold) {

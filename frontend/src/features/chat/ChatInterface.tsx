@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChatMessageList } from '@/features/chat/ChatMessageList';
 import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
@@ -10,7 +10,6 @@ import { getLocalUserProfile } from '@/lib/userUtils';
 
 
 export default function ChatInterface() {
-    const location = useLocation();
     const navigate = useNavigate();
     const { id } = useParams();
 
