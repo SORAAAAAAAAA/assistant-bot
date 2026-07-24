@@ -1,41 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { PrismaService } from '../prisma/prisma.service';
-import { RagService } from '../rag/rag.service';
-import { ChatResponse, ChatHistoryEntry } from '@ai-assistant/shared';
+import { PrismaService } from '@/prisma/prisma.service';
+import { OllamaService } from '@/llm/ollama.service';
+import { RagService } from '@/rag/rag.service';
+import { IntentRouterService } from '@/intent/intent.service';
+import { ChatHistoryEntry } from '@ai-assistant/shared';
 import { SystemPrompt } from "@/chat/chat.prompt";
 @Injectable()
 export class ChatService {
     constructor(
         private rag: RagService,
+        private intentRouter: IntentRouterService,
         private prisma: PrismaService,
+        private llm: OllamaService,
     ) { }
-    async ask(userId: number, message: string): Promise<ChatResponse> {
-        const contextChunks = await this.rag.retrieveContext(message);
-        const contextText = contextChunks.join('\n\n');
-        const prompt = `${SystemPrompt} \n\n Procedure excerpts: \n\n${contextText} \n\n Employee question: ${message}`;
-        const res = await axios.post(`${process.env.OLLAMA_URL}/api/generate`, {
-            model: process.env.CHAT_MODEL ?? 'qwen2.5:7b',
-            prompt,
-            stream: false,
-        });
-        const answer: string = res.data.response;
-        // Persist this exchange, tied to the employee who asked it
-        await this.prisma.chatHistory.create({
-            data: {
-                userId,
-                message,
-                answer,
-                sources: contextChunks,
+    async askStream(
+        userId: number,
+        message: string,
+        onMessage: (data: any) => void,
+        onComplete: () => void,
+        onError: (err: any) => void
+    ): Promise<void> {
+        let chunks: string[] = [];
+        let sources: string[] = [];
+
+        if (!this.intentRouter.isChitChat(message)) {
+            const result = await this.rag.retrieveContext(message);
+            chunks = result.chunks;
+            sources = result.sources;
+        }
+        const contextText = chunks.join('\n\n');
+        console.log('--- RETRIEVED CHUNKS ---');
+        console.log(contextText);
+        console.log('------------------------');
+        const prompt = `${SystemPrompt}\n\n<context>\n${contextText}\n</context>\n\nEmployee question: ${message}`;
+        onMessage({ answer: '', sources: sources });
+        await this.llm.generateStream(prompt,
+            (chunk) => onMessage({ answer: chunk, sources: [] }),
+            async (fullAnswer) => {
+                try {
+                    await this.prisma.chatHistory.create({
+                        data: { userId, message, answer: fullAnswer, sources: sources },
+                    });
+                } catch (dbError) {
+                    console.error('Failed to save chat history', dbError);
+                }
+                onComplete();
             },
-        });
-        return { answer, sources: contextChunks };
+            (err) => onError(err)
+        );
     }
     async getHistory(userId: number, limit = 50): Promise<ChatHistoryEntry[]> {
         const rows = await this.prisma.chatHistory.findMany({
             where: { userId },
-            orderBy: { createdAt: 'asc' },
-            take: limit,
+            orderBy: { createdAt: 'desc' },
         });
         return rows.map((row) => ({
             id: row.id,

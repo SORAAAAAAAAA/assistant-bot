@@ -1,114 +1,88 @@
 import { useState } from 'react';
-import { Package, CreditCard, Truck, Headset, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import FaqsHeader from '../features/faqs/FaqsHeader';
+import FaqsCategories from '../features/faqs/FaqsCategories';
+import FaqsAccordion from '../features/faqs/FaqsAccordion';
+
+const faqsData = {
+    tracking: [
+        { q: "How can I track my shipment in real-time?", a: "You can track your cargo using the 12-digit Waybill number provided at the time of booking. Enter it in the tracking bar on our homepage for real-time status updates." },
+        { q: "What does 'In Transit' mean for my freight?", a: "Your shipment is currently moving within our network toward its final destination. It has left the origin facility but has not yet reached the local delivery terminal." },
+        { q: "Can I change the delivery address after dispatch?", a: "Rerouting is possible subject to current location and additional fees. Please contact support immediately with your Waybill number." }
+    ],
+    billing: [
+        { q: "How are freight shipping rates calculated?", a: "Rates are based on the origin, destination, freight class, and the dimensional weight (dim weight) of your shipment." },
+        { q: "What payment methods do you accept for invoices?", a: "We accept bank transfers, corporate checks, and all major credit cards. Approved accounts can also operate on net-30 terms." }
+    ],
+    services: [
+        { q: "Do you handle hazardous materials?", a: "Yes, we handle select classes of HAZMAT. Specialized documentation is required." }
+    ],
+    support: [
+        { q: "How do I file a damage claim?", a: "Claims must be filed within 7 days of delivery. Navigate to the Claims portal and provide photos and the original invoice." }
+    ]
+};
 
 export default function FaqsPage() {
     const [activeCategory, setActiveCategory] = useState('tracking');
-    const [openQuestion, setOpenQuestion] = useState<number | null>(0);
+    const [openQuestions, setOpenQuestions] = useState<Set<number>>(new Set([0]));
 
-    const categories = [
-        { id: 'tracking', icon: <Package size={32} />, label: 'Tracking & Delivery' },
-        { id: 'billing', icon: <CreditCard size={32} />, label: 'Rates & Billing' },
-        { id: 'services', icon: <Truck size={32} />, label: 'Services & Freight' },
-        { id: 'support', icon: <Headset size={32} />, label: 'Claims & Support' },
-    ];
-
-    const faqs = {
-        tracking: [
-            { q: "How can I track my shipment in real-time?", a: "You can track your cargo using the 12-digit Waybill number provided at the time of booking. Enter it in the tracking bar on our homepage for real-time status updates." },
-            { q: "What does 'In Transit' mean for my freight?", a: "Your shipment is currently moving within our network toward its final destination. It has left the origin facility but has not yet reached the local delivery terminal." },
-            { q: "Can I change the delivery address after dispatch?", a: "Rerouting is possible subject to current location and additional fees. Please contact support immediately with your Waybill number." }
-        ],
-        billing: [
-            { q: "How are freight shipping rates calculated?", a: "Rates are based on the origin, destination, freight class, and the dimensional weight (dim weight) of your shipment." },
-            { q: "What payment methods do you accept for invoices?", a: "We accept bank transfers, corporate checks, and all major credit cards. Approved accounts can also operate on net-30 terms." }
-        ],
-        services: [{ q: "Do you handle hazardous materials?", a: "Yes, we handle select classes of HAZMAT. Specialized documentation is required." }],
-        support: [{ q: "How do I file a damage claim?", a: "Claims must be filed within 7 days of delivery. Navigate to the Claims portal and provide photos and the original invoice." }]
+    const handleCategoryChange = (id: string) => {
+        setActiveCategory(id);
+        setOpenQuestions(new Set());
     };
 
-    const currentFaqs = faqs[activeCategory as keyof typeof faqs] || [];
+    const toggleQuestion = (index: number) => {
+        setOpenQuestions(prev => {
+            const next = new Set(prev);
+            next.has(index) ? next.delete(index) : next.add(index);
+            return next;
+        });
+    };
+
+    const currentFaqs = faqsData[activeCategory as keyof typeof faqsData] || [];
 
     return (
-        <div className="h-full overflow-y-auto bg-white w-full py-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto flex flex-col items-center">
+        <div className="h-full w-full bg-[#E5E7EB] overflow-hidden font-['Inter',system-ui,sans-serif] select-text relative">
+            {/* Background Layers */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-40" />
+            <div className="blob-1 absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-[#E23B4E]/[0.3] blur-[50px] rounded-full pointer-events-none" />
+            <div className="blob-2 absolute -bottom-[10%] -right-[10%] w-[50vw] h-[50vw] bg-[#E08A1E]/[0.35] blur-[60px] rounded-full pointer-events-none" />
+            <div className="blob-3 absolute top-[20%] left-[30%] w-[40vw] h-[40vw] bg-[#3B82F6]/[0.2] blur-[40px] rounded-full pointer-events-none" />
+            <div className="absolute inset-0 opacity-[0.25] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
-                {/* Top Badge */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-semibold mb-3">
-                    <HelpCircle size={14} />
-                    <span className="tracking-normal">FAQs</span>
-                </div>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
+                
+                .blob-1 { animation: drift 20s infinite alternate ease-in-out; }
+                .blob-2 { animation: drift 25s infinite alternate-reverse ease-in-out; }
+                .blob-3 { animation: drift 15s infinite alternate ease-in-out; }
 
-                {/* Heading */}
-                <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 text-center tracking-tight">
-                    <span className="text-red-600">Frequently Asked Questions</span>
-                </h1>
+                @keyframes drift {
+                    0% { transform: translate(0, 0) scale(1); }
+                    50% { transform: translate(10vw, 15vh) scale(1.1); }
+                    100% { transform: translate(-5vw, -10vh) scale(0.95); }
+                }
 
-                {/* Subtitle */}
-                <p className="text-gray-500 text-center text-sm md:text-base max-w-2xl mb-12">
-                    Choose a plan that fits your logistics needs and budget. No hidden fees, no surprises—just straightforward pricing for powerful freight management.
-                </p>
-                <br />
+                @keyframes popIn { 0% { opacity: 0; transform: translateY(8px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+                
+                .history-main-title { 
+                    font-family: 'Hanken Grotesk', sans-serif; 
+                    font-weight: 800; font-size: 2.8rem; color: #E23B4E; 
+                    letter-spacing: -0.05em; line-height: 1; 
+                }
 
-                {/* 4 Large Category Buttons with Icons restored */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mb-12">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat.id}
-                            onClick={() => {
-                                setActiveCategory(cat.id);
-                                setOpenQuestion(null);
-                            }}
-                            className={`flex flex-col items-center justify-center p-6 rounded-2xl transition-all duration-200 border
-                                ${activeCategory === cat.id
-                                    ? 'border-red-600 bg-red-50 text-red-700 shadow-sm'
-                                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
-                                }`}
-                        >
-                            <div className={`mb-4 ${activeCategory === cat.id ? 'text-red-600' : 'text-gray-400'}`}>
-                                {cat.icon}
-                            </div>
-                            <span className="text-sm font-semibold text-center">
-                                {cat.label}
-                            </span>
-                        </button>
-                    ))}
-                </div>
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            `}</style>
 
-                {/* FAQ Accordion List (Spaced out, clean rounded rectangles) */}
-                <div className="w-full space-y-4">
-                    {currentFaqs.map((faq, index) => (
-                        <div
-                            key={index}
-                            className="bg-[#f8f9fc] rounded-2xl overflow-hidden transition-all duration-300"
-                        >
-                            <button
-                                onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
-                                className="w-full px-6 py-5 text-left flex justify-between items-center"
-                            >
-                                <span className="font-medium text-gray-900 pr-8">{faq.q}</span>
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 
-                                    ${openQuestion === index ? 'bg-red-600 text-white' : 'bg-white text-red-600 shadow-sm border border-gray-200'}`}>
-                                    {openQuestion === index ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </div>
-                            </button>
-
-                            <div
-                                className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${openQuestion === index ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'
-                                    }`}
-                            >
-                                <p className="text-gray-500 text-sm leading-relaxed">
-                                    {faq.a}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-
-                    {currentFaqs.length === 0 && (
-                        <div className="text-center py-12 text-gray-500 bg-[#f8f9fc] rounded-2xl">
-                            No questions available for this category yet.
-                        </div>
-                    )}
-                </div>
+            {/* Main Container */}
+            <div className="max-w-[1000px] mx-auto relative z-10 h-full overflow-y-auto no-scrollbar flex flex-col pt-8 px-8 items-center">
+                <FaqsHeader />
+                <FaqsCategories activeCategory={activeCategory} onSelectCategory={handleCategoryChange} />
+                <FaqsAccordion
+                    currentFaqs={currentFaqs}
+                    openQuestions={openQuestions}
+                    toggleQuestion={toggleQuestion}
+                />
             </div>
         </div>
     );

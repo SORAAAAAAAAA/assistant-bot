@@ -1,5 +1,10 @@
 export type DepartmentType = 'HR' | 'OJS' | 'Finance' | 'MIS' | 'GA' | 'OOS';
 
+export interface UserProfile {
+    fullName: string;
+    department: DepartmentType;
+}
+
 export interface RegisterRequest {
     firstName: string;
     lastName: string;
@@ -17,6 +22,7 @@ export interface LoginRequest {
     password: string;
 }
 export interface LoginResponse {
+    userProfile: UserProfile,
     access_token: string;
     token_type: "bearer";
 }

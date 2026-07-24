@@ -1,0 +1,85 @@
+import { Injectable } from '@nestjs/common';
+import axios from 'axios';
+import { ILlmProvider } from '@/interfaces';
+import { XmlStreamParser } from './xml-stream-parser';
+
+@Injectable()
+export class OllamaService implements ILlmProvider {
+    async generateStream(
+        prompt: string,
+        onMessage: (chunk: string) => void,
+        onComplete: (fullAnswer: string) => void,
+        onError: (err: any) => void
+    ): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const ollamaRes = await axios.post(`${process.env.OLLAMA_URL}/api/generate`, {
+                    model: process.env.CHAT_MODEL ?? 'qwen2.5:3b',
+                    prompt,
+                    stream: true,
+                    options: {
+                        num_predict: 2048,
+                        temperature: 0.0,
+                        top_k: 20,
+                        top_p: 0.5,
+                    }
+                }, { responseType: 'stream' });
+
+                const parser = new XmlStreamParser(onMessage);
+                let buffer = '';
+
+                ollamaRes.data.on('data', (chunk: Buffer) => {
+                    buffer += chunk.toString('utf8');
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.trim() === '') continue;
+                        try {
+                            const parsed = JSON.parse(line);
+                            if (parsed.response) {
+                                parser.processChunk(parsed.response);
+                            }
+                        } catch (e) { }
+                    }
+                });
+
+                ollamaRes.data.on('end', () => {
+                    if (buffer.trim() !== '') {
+                        try {
+                            const parsed = JSON.parse(buffer);
+                            if (parsed.response) {
+                                parser.processChunk(parsed.response);
+                            }
+                        } catch (e) { }
+                    }
+
+                    const cleanEmitted = parser.getCleanEmitted();
+                    const rawOutput = parser.getRawOutput();
+
+                    // Fallback: If the model failed to output <response> tags entirely
+                    if (cleanEmitted.length === 0 && rawOutput.trim().length > 0) {
+                        // Strip scratchpad if it exists, otherwise dump the raw output
+                        const fallbackText = rawOutput.replace(/<scratchpad>[\s\S]*?<\/scratchpad>/, '').trim();
+                        if (fallbackText) {
+                            onMessage(fallbackText);
+                        }
+                        onComplete(fallbackText);
+                    } else {
+                        // Ensure the database only saves the clean, extracted answer
+                        onComplete(cleanEmitted);
+                    }
+                    resolve();
+                });
+
+                ollamaRes.data.on('error', (err: any) => {
+                    onError(err);
+                    reject(err);
+                });
+            } catch (error) {
+                onError(error);
+                reject(error);
+            }
+        });
+    }
+}
