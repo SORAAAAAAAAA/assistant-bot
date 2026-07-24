@@ -24,18 +24,48 @@ export class ChatService {
         let chunks: string[] = [];
         let sources: string[] = [];
 
-        if (!this.intentRouter.isChitChat(message)) {
+        const isChitChat = this.intentRouter.isChitChat(message);
+        if (!isChitChat) {
             const result = await this.rag.retrieveContext(message);
             chunks = result.chunks;
             sources = result.sources;
         }
-        const contextText = chunks.join('\n\n');
+        // --- Context Budget Guard ---
+        // Prevents context window overflow by trimming chunks that won't fit.
+        const NUM_CTX = 8192;
+        const NUM_PREDICT = 2048;
+        const CHARS_PER_TOKEN = 4;  // conservative estimate for English text
+        const INPUT_BUDGET = NUM_CTX - NUM_PREDICT; // tokens available for the entire input
+        const systemTokens = Math.ceil(SystemPrompt.length / CHARS_PER_TOKEN);
+        const userWrapperTokens = Math.ceil((message.length + 120) / CHARS_PER_TOKEN); // 120 chars for XML tags + wrapper text
+        const reservedTokens = systemTokens + userWrapperTokens;
+        const chunkBudget = INPUT_BUDGET - reservedTokens;
+
+        let usedTokens = 0;
+        const budgetedChunks: string[] = [];
+        for (const chunk of chunks) {
+            const chunkTokens = Math.ceil(chunk.length / CHARS_PER_TOKEN);
+            if (usedTokens + chunkTokens > chunkBudget) {
+                console.log(`[Budget Guard] Dropping chunk (${chunkTokens} tokens) — would exceed budget (${usedTokens}/${chunkBudget} used)`);
+                continue;
+            }
+            budgetedChunks.push(chunk);
+            usedTokens += chunkTokens;
+        }
+        console.log(`[Budget Guard] Using ${budgetedChunks.length}/${chunks.length} chunks (${usedTokens}/${chunkBudget} token budget)`);
+
+        const contextText = budgetedChunks.join('\n\n');
         console.log('--- RETRIEVED CHUNKS ---');
         console.log(contextText);
         console.log('------------------------');
+        
+        const userContent = isChitChat
+            ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
+            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>`;
+
         const messages = [
             { role: 'system', content: SystemPrompt },
-            { role: 'user', content: `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>` }
+            { role: 'user', content: userContent }
         ];
         onMessage({ answer: '', sources: sources });
         await this.llm.generateStream(messages,
