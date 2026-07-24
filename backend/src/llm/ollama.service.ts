@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ILlmProvider } from '@/interfaces';
+import { XmlStreamParser } from './xml-stream-parser';
 
 @Injectable()
 export class OllamaService implements ILlmProvider {
@@ -19,12 +20,12 @@ export class OllamaService implements ILlmProvider {
                     options: {
                         num_predict: 2048,
                         temperature: 0.0,
-                        top_k: 10,
+                        top_k: 20,
                         top_p: 0.5,
                     }
                 }, { responseType: 'stream' });
 
-                let fullAnswer = '';
+                const parser = new XmlStreamParser(onMessage);
                 let buffer = '';
 
                 ollamaRes.data.on('data', (chunk: Buffer) => {
@@ -37,8 +38,7 @@ export class OllamaService implements ILlmProvider {
                         try {
                             const parsed = JSON.parse(line);
                             if (parsed.response) {
-                                onMessage(parsed.response);
-                                fullAnswer += parsed.response;
+                                parser.processChunk(parsed.response);
                             }
                         } catch (e) { }
                     }
@@ -49,12 +49,26 @@ export class OllamaService implements ILlmProvider {
                         try {
                             const parsed = JSON.parse(buffer);
                             if (parsed.response) {
-                                onMessage(parsed.response);
-                                fullAnswer += parsed.response;
+                                parser.processChunk(parsed.response);
                             }
                         } catch (e) { }
                     }
-                    onComplete(fullAnswer);
+
+                    const cleanEmitted = parser.getCleanEmitted();
+                    const rawOutput = parser.getRawOutput();
+
+                    // Fallback: If the model failed to output <response> tags entirely
+                    if (cleanEmitted.length === 0 && rawOutput.trim().length > 0) {
+                        // Strip scratchpad if it exists, otherwise dump the raw output
+                        const fallbackText = rawOutput.replace(/<scratchpad>[\s\S]*?<\/scratchpad>/, '').trim();
+                        if (fallbackText) {
+                            onMessage(fallbackText);
+                        }
+                        onComplete(fallbackText);
+                    } else {
+                        // Ensure the database only saves the clean, extracted answer
+                        onComplete(cleanEmitted);
+                    }
                     resolve();
                 });
 

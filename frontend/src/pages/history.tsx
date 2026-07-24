@@ -183,9 +183,15 @@ export default function HistoryPage() {
                 <div className="w-16 h-16 bg-white/40 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/60 mb-6 shadow-sm">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="1.5" opacity="0.4"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
                 </div>
+<<<<<<< HEAD
                 <h2 className="font-['JetBrains_Mono',monospace] !text-[#6B7280] text-[10px] font-bold uppercase tracking-[0.4em]">
                   Nothing found
                 </h2>
+=======
+              <h2 className="font-['JetBrains_Mono',monospace] !text-[#6B7280] text-[10px] font-bold uppercase tracking-[0.4em]">
+                  Nothing found
+              </h2>
+>>>>>>> main
               </div>
             )}
           </div>
