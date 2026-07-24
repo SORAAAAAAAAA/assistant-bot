@@ -6,7 +6,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['https://assistant.internal', 'http://localhost:5173'],
+    // origin: true automatically reflects the request origin, allowing any device on your network to connect
+    origin: true,
     credentials: true
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
@@ -21,6 +22,6 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  await app.listen(process.env.PORT ?? 8000, '127.0.0.1');
+  await app.listen(process.env.PORT ?? 8000, '0.0.0.0');
 }
 bootstrap();

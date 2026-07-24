@@ -62,9 +62,6 @@ export default function HistoryPage() {
       
       {/* ── BACKGROUND LAYERS ── */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-40" />
-      <div className="blob-1 absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-[#E23B4E]/[0.3] blur-[50px] rounded-full pointer-events-none" />
-      <div className="blob-2 absolute -bottom-[10%] -right-[10%] w-[50vw] h-[50vw] bg-[#E08A1E]/[0.35] blur-[60px] rounded-full pointer-events-none" />
-      <div className="blob-3 absolute top-[20%] left-[30%] w-[40vw] h-[40vw] bg-[#3B82F6]/[0.2] blur-[40px] rounded-full pointer-events-none" />
       <div className="absolute inset-0 opacity-[0.25] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
       <style>{`
@@ -186,9 +183,9 @@ export default function HistoryPage() {
                 <div className="w-16 h-16 bg-white/40 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/60 mb-6 shadow-sm">
                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="1.5" opacity="0.4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </div>
-                <h2 className="font-['JetBrains_Mono',monospace] text-[#6B7280] text-[10px] font-bold uppercase tracking-[0.4em] opacity-60">
-                   Nothing found
-                </h2>
+              <h2 className="font-['JetBrains_Mono',monospace] !text-[#6B7280] text-[10px] font-bold uppercase tracking-[0.4em]">
+                  Nothing found
+              </h2>
               </div>
             )}
           </div>

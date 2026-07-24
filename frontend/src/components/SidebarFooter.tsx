@@ -46,7 +46,7 @@ export function SidebarFooter({ isOpen }: SidebarFooterProps) {
             `}>
                 <button
                     onClick={handleLogout}
-                    title="Settings"
+                    title="Logout"
                     className="rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
                 >
                     <LogOut size={18} strokeWidth={2.5} />

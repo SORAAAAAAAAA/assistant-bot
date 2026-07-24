@@ -5,7 +5,7 @@ import { SidebarBackground } from './SidebarBackground';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
 import { NavItem } from './NavItem';
-
+import { SidebarRecents } from './sidebarRecents';
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +13,8 @@ export default function Sidebar() {
     const iconClass = `transition-all duration-300 w-[16px] h-[16px]`;
 
     const topItems = [
-        { icon: <MessageSquare className={iconClass} />, label: 'New Chat', path: '/chat', onClick: () => window.dispatchEvent(new Event('reset-chat')) },
-        { icon: <History className={iconClass} />, label: 'History', path: '/history' },
+        { icon: <MessageSquare className={iconClass} />, label: 'New chat', path: '/chat', onClick: () => window.dispatchEvent(new Event('reset-chat')) },
+        { icon: <History className={iconClass} />, label: 'Search chats', path: '/history' },
         { icon: <HelpCircle className={iconClass} />, label: 'FAQs', path: '/faqs' },
     ];
 
@@ -26,17 +26,21 @@ export default function Sidebar() {
 
             <SidebarHeader isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
 
-            <nav className="flex-1 overflow-y-auto overflow-x-hidden space-y-1.5 scrollbar-hide relative z-10">
-                {topItems.map((item, index) => (
-                    <NavItem
-                        key={index}
-                        icon={item.icon}
-                        label={item.label}
-                        isOpen={isOpen}
-                        to={item.path}
-                        onClick={item.onClick}
-                    />
-                ))}
+            <nav className="flex-1 flex flex-col overflow-hidden relative z-10">
+                <div className="space-y-1.5 shrink-0">
+                    {topItems.map((item, index) => (
+                        <NavItem
+                            key={index}
+                            icon={item.icon}
+                            label={item.label}
+                            isOpen={isOpen}
+                            to={item.path}
+                            onClick={item.onClick}
+                        />
+                    ))}
+                </div>
+
+                <SidebarRecents isOpen={isOpen} />
             </nav>
 
             <SidebarFooter isOpen={isOpen} />

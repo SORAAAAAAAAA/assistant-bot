@@ -1,4 +1,5 @@
 import type { FC, RefObject } from 'react'
+import { SwirlBorder } from './SwirlBorder'
 
 interface MessageComposerProps {
   input: string
@@ -20,20 +21,18 @@ export const MessageComposer: FC<MessageComposerProps> = ({
   return (
     <div className="group w-full max-w-[85%] relative mt-3 mx-auto px-4">
       <div
-        className={`relative bg-gray-200 pl-6 pr-2 py-2 rounded-3xl overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.05)] flex items-center border cursor-text transition-all duration-300 ${isTyping
-          ? 'border-transparent animate-[glowRed_0.8s_ease-in-out_infinite]'
-          : 'border-black/60 focus-within:border-[#87000d]'
-          }`}
+        className={`relative bg-gray-200 pl-6 pr-2 py-4 rounded-3xl overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.05)] flex items-center border cursor-text transition-all duration-300 border-white/50 focus-within:border-[#87000d]'}`}
         onClick={() => inputRef.current?.focus()}
       >
+        <SwirlBorder active={isTyping} radii={[24, 24, 24, 24]} />
         <input
           ref={inputRef}
           value={input}
           onChange={e => onInputChange(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && onSend()}
-          placeholder={isTyping ? "" : "Ask about Procedures.."}
+          placeholder={isTyping ? "" : "Ask about Procedures"}
           disabled={isTyping}
-          className="flex-1 border-none bg-transparent outline-none text-[11px] text-[#1A1C1E] font-['JetBrains_Mono',monospace] tracking-tight placeholder:text-gray-500"
+          className="flex-1 border-none bg-transparent outline-none text-[13px] text-[#1A1C1E] font-['JetBrains_Mono',monospace] tracking-tight placeholder:text-gray-500"
         />
 
         {/* Red Send Button with Arrow Glyph */}

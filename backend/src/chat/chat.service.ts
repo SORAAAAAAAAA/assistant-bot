@@ -30,6 +30,9 @@ export class ChatService {
             sources = result.sources;
         }
         const contextText = chunks.join('\n\n');
+        console.log('--- RETRIEVED CHUNKS ---');
+        console.log(contextText);
+        console.log('------------------------');
         const prompt = `${SystemPrompt}\n\n<context>\n${contextText}\n</context>\n\nEmployee question: ${message}`;
         onMessage({ answer: '', sources: sources });
         await this.llm.generateStream(prompt,
