@@ -5,7 +5,7 @@ import { OllamaService } from '@/llm/ollama.service';
 import { RagService } from '@/rag/rag.service';
 import { IntentRouterService } from '@/intent/intent.service';
 import { ChatHistoryEntry } from '@ai-assistant/shared';
-import { SystemPrompt } from "@/chat/chat.prompt";
+import { ChitChatSystemPrompt, RagSystemPrompt } from "@/chat/chat.prompt";
 @Injectable()
 export class ChatService {
     constructor(
@@ -36,7 +36,7 @@ export class ChatService {
         const NUM_PREDICT = 2048;
         const CHARS_PER_TOKEN = 4;  // conservative estimate for English text
         const INPUT_BUDGET = NUM_CTX - NUM_PREDICT; // tokens available for the entire input
-        const systemTokens = Math.ceil(SystemPrompt.length / CHARS_PER_TOKEN);
+        const systemTokens = Math.ceil(RagSystemPrompt.length / CHARS_PER_TOKEN);
         const userWrapperTokens = Math.ceil((message.length + 120) / CHARS_PER_TOKEN); // 120 chars for XML tags + wrapper text
         const reservedTokens = systemTokens + userWrapperTokens;
         const chunkBudget = INPUT_BUDGET - reservedTokens;
@@ -63,8 +63,10 @@ export class ChatService {
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
             : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>`;
 
+        const systemPromptToUse = isChitChat ? ChitChatSystemPrompt : RagSystemPrompt;
+
         const messages = [
-            { role: 'system', content: SystemPrompt },
+            { role: 'system', content: systemPromptToUse },
             { role: 'user', content: userContent }
         ];
         onMessage({ answer: '', sources: sources });
