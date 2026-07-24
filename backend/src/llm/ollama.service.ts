@@ -13,12 +13,12 @@ export class OllamaService implements ILlmProvider {
         return new Promise(async (resolve, reject) => {
             try {
                 const ollamaRes = await axios.post(`${process.env.OLLAMA_URL}/api/chat`, {
-                    model: process.env.CHAT_MODEL ?? 'qwen2.5:7b',
+                    model: process.env.CHAT_MODEL,
                     messages: messages,
                     stream: true,
                     options: {
                         num_ctx: 4096,
-                        num_predict: 512,
+                        num_predict: 2048,
                         temperature: 0.0,
                         top_k: 10,
                         top_p: 0.5,
