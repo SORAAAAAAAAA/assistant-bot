@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect } from 'react'
 import type { Message } from '@/types'
+import { parseMessageContent, parseLine, parseBoldText } from '../../lib/aiFormatter'
 
 interface ChatMessageBubbleProps {
   message: Message
@@ -13,24 +14,7 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
   const isUser = variant === 'user'
 
   // Pre-parse reasoning and answer lines
-  const lines = message.content.split('\n');
-  const reasoningLines: string[] = [];
-  const answerLines: string[] = [];
-  let isReasoningPhase = true;
-
-  for (const line of lines) {
-    const isQuote = /^(\s*)>\s*(.*)/.exec(line);
-    if (isQuote && isReasoningPhase) {
-      reasoningLines.push(isQuote[2]);
-    } else {
-      if (line.trim() !== '') {
-        isReasoningPhase = false;
-      }
-      answerLines.push(line);
-    }
-  }
-
-  const hasAnswer = answerLines.some(l => l.trim() !== '');
+  const { reasoningLines, answerLines, hasAnswer } = parseMessageContent(message.content);
   const [isExpanded, setIsExpanded] = useState(true);
 
   // Auto-collapse when the final answer starts appearing
@@ -40,11 +24,11 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
     }
   }, [hasAnswer]);
 
-  const renderBold = (text: string) => text.split(/(\*\*.*?\*\*)/g).map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="font-bold text-black">{part.slice(2, -2)}</strong>;
+  const renderBold = (text: string) => parseBoldText(text).map((part, i) => {
+    if (part.isBold) {
+      return <strong key={i} className="font-bold text-black">{part.text}</strong>;
     }
-    return <span key={i}>{part}</span>;
+    return <span key={i}>{part.text}</span>;
   });
 
   if (isUser) {
@@ -107,39 +91,33 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
 
         {/* Final Answer */}
         {answerLines.map((line, lineIdx) => {
-          const isBullet = /^(\s*)([-*•])\s+(.*)/.exec(line);
-          const isNumbered = /^(\s*)(\d+\.)\s+(.*)/.exec(line);
+          const parsedLine = parseLine(line);
 
-          let prefix = '';
-          let content = line;
-          let indent = 0;
-
-          if (isBullet) {
-            indent = isBullet[1].length * 6 + 8;
-            prefix = '•';
-            content = isBullet[3];
-          } else if (isNumbered) {
-            indent = isNumbered[1].length * 6 + 8;
-            prefix = isNumbered[2];
-            content = isNumbered[3];
-          }
-
-          if (line.trim() === '') {
+          if (parsedLine.type === 'empty') {
             return <div key={lineIdx} className="h-1.5" />;
           }
 
-          if (isBullet || isNumbered) {
+          if (parsedLine.type === 'heading') {
+            const sizeClasses = ['text-lg', 'text-base', 'text-[15px]', 'text-[14px]', 'text-[14px]', 'text-[14px]'];
             return (
-              <div key={lineIdx} className="flex gap-2" style={{ paddingLeft: `${indent}px` }}>
-                <span className="shrink-0 text-black/60 font-bold min-w-[14px] text-right">{prefix}</span>
-                <span className="flex-1">{renderBold(content)}</span>
+              <div key={lineIdx} className={`font-bold mt-3 mb-1 text-black ${sizeClasses[(parsedLine.level || 1) - 1]}`}>
+                {renderBold(parsedLine.content)}
+              </div>
+            );
+          }
+
+          if (parsedLine.type === 'bullet' || parsedLine.type === 'numbered') {
+            return (
+              <div key={lineIdx} className="flex gap-2" style={{ paddingLeft: `${parsedLine.indent}px` }}>
+                <span className="shrink-0 text-black/60 font-bold min-w-[14px] text-right">{parsedLine.prefix}</span>
+                <span className="flex-1">{renderBold(parsedLine.content)}</span>
               </div>
             );
           }
 
           return (
             <div key={lineIdx}>
-              {renderBold(line)}
+              {renderBold(parsedLine.content)}
             </div>
           );
         })}

@@ -34,8 +34,8 @@ export class ChatService {
         console.log(contextText);
         console.log('------------------------');
         const messages = [
-            { role: 'system', content: `${SystemPrompt}\n\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>` },
-            { role: 'user', content: `<employee_inquiry>\n${message}\n</employee_inquiry>` }
+            { role: 'system', content: SystemPrompt },
+            { role: 'user', content: `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>` }
         ];
         onMessage({ answer: '', sources: sources });
         await this.llm.generateStream(messages,
