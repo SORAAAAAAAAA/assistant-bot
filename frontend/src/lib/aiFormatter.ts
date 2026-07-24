@@ -50,12 +50,14 @@ export const parseMessageContent = (content: string): ParsedMessage => {
 
         // Handle markdown blockquote reasoning
         const isQuote = /^(\s*)>\s*(.*)/.exec(line);
-        if (isQuote && isReasoningPhase) {
+        if (isQuote) {
+            isReasoningPhase = true;
             reasoningLines.push(isQuote[2]);
+            continue;
         } else {
             // Check for empty lines or common AI reasoning preamble
             const cleanLine = line.trim().toLowerCase();
-            if (cleanLine !== '' && !cleanLine.startsWith('thinking process') && !cleanLine.startsWith('here is the thought')) {
+            if (cleanLine !== '' && !cleanLine.startsWith('thinking process') && !cleanLine.startsWith('here is the thought') && !cleanLine.startsWith('okay') && !cleanLine.startsWith('let me')) {
                 isReasoningPhase = false;
             }
             answerLines.push(line);

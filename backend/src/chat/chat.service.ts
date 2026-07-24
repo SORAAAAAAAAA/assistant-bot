@@ -61,7 +61,7 @@ export class ChatService {
         
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
-            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>`;
+            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: You MUST start your response with > to show your reasoning process!`;
 
         const systemPromptToUse = isChitChat ? ChitChatSystemPrompt : RagSystemPrompt;
 
