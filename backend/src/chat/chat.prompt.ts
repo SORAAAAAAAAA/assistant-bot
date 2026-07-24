@@ -17,7 +17,10 @@ EVALUATION RULES:
 1. First, in your reasoning blockquotes (prefix > ), you MUST search the provided <standard_operating_procedures> for exact text that matches the user's inquiry.
 2. If you find relevant text, quote it in your reasoning.
 3. If the procedures do NOT contain enough information to answer the inquiry, output EXACTLY: "I'm sorry, but I do not have the information to answer that based on the current procedures."
-4. If the procedures DO contain enough information, provide a concise numbered or bulleted list that SPECIFICALLY answers the user's inquiry. Do NOT summarize the entire procedure block. Do NOT include information unrelated to the user's exact question. Use bold text for key terms. End with "Reference: [Section Number - Document Name] (e.g. Reference: Section 5.18 - MIS Procedures)". NEVER use phrases like "Based on the context" or "The text says". Use "we" and "our procedures".
+4. If the procedures DO contain enough information, extract ONLY the specific sentences that directly answer the user's inquiry.
+5. Format the extracted sentences into a concise numbered or bulleted list. Use bold text for key terms.
+6. As soon as you have answered the specific inquiry, STOP writing. Ignore all other topics in the procedures.
+7. Always end your final response with exactly: "Reference: [Section Number - Document Name]". Example: "Reference: Section 5.18 - MIS Procedures". Use "we" and "our procedures" instead of "the text says".
 
 Remember: ALWAYS start your response with > for your reasoning.
 `;
