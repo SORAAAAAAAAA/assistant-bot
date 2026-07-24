@@ -18,7 +18,7 @@ export const parseMessageContent = (content: string): ParsedMessage => {
     const lines = content.split('\n');
     const reasoningLines: string[] = [];
     const answerLines: string[] = [];
-    
+
     let isReasoningPhase = true;
     let inThinkTag = false;
 
@@ -31,14 +31,14 @@ export const parseMessageContent = (content: string): ParsedMessage => {
             if (parts[0].trim()) answerLines.push(parts[0]);
             line = parts.slice(1).join('<think>');
         }
-        
+
         if (line.includes('</think>')) {
             inThinkTag = false;
             isReasoningPhase = false;
             const parts = line.split('</think>');
             if (parts[0].trim()) reasoningLines.push(parts[0]);
             line = parts.slice(1).join('</think>');
-            
+
             // If there's nothing after </think> on this line, skip it
             if (!line.trim()) continue;
         }

@@ -17,7 +17,7 @@ export class OllamaService implements ILlmProvider {
                     messages: messages,
                     stream: true,
                     options: {
-                        num_ctx: 4096,
+                        num_ctx: 8192,
                         num_predict: 2048,
                         temperature: 0.0,
                         top_k: 10,

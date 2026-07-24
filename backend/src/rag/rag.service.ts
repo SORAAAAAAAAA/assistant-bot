@@ -29,45 +29,55 @@ export class RagService {
         });
         return res.data.embedding;
     }
-    chunkText(text: string, maxChunkSize = 1500): string[] {
+    chunkText(text: string, maxChunkSize = 1500, overlapSize = 300): string[] {
+        // Clean up PDF artifacts: replace single newlines with spaces, but keep double newlines (paragraphs)
+        const cleanedText = text
+            .replace(/\r\n/g, '\n')
+            .replace(/(?<!\n)\n(?!\n)/g, ' ') // replace single newlines with space
+            .replace(/\n{3,}/g, '\n\n') // normalize multiple newlines to double
+            .trim();
+
         const chunks: string[] = [];
+        const separators = ['\n\n', '. ', ', ', ' '];
 
         function splitRecursive(textToSplit: string) {
             if (textToSplit.length <= maxChunkSize) {
-                chunks.push(textToSplit);
+                if (textToSplit.trim().length > 0) chunks.push(textToSplit.trim());
                 return;
             }
-            const separators = ['\n\n', '\n', '. ', ' '];
-            let splitPoints: string[] = [];
+
+            let splitIndex = -1;
+            // Try to find the best separator within the maxChunkSize
             for (const sep of separators) {
-                const parts = textToSplit.split(sep);
-                if (parts.length > 1) {
-                    splitPoints = parts.map((p, i) => i === parts.length - 1 ? p : p + sep);
+                const lastIdx = textToSplit.lastIndexOf(sep, maxChunkSize);
+                if (lastIdx > 0) {
+                    splitIndex = lastIdx + sep.length;
                     break;
                 }
             }
-            if (splitPoints.length === 0) {
-                chunks.push(textToSplit.substring(0, maxChunkSize));
-                splitRecursive(textToSplit.substring(maxChunkSize));
-                return;
+
+            // Fallback if no separator found
+            if (splitIndex === -1) {
+                splitIndex = maxChunkSize;
             }
 
-            let currentChunk = '';
-            for (const part of splitPoints) {
-                if ((currentChunk.length + part.length) > maxChunkSize && currentChunk.length > 0) {
-                    chunks.push(currentChunk.trim());
-                    currentChunk = part;
-                } else {
-                    currentChunk += part;
-                }
+            const chunk = textToSplit.substring(0, splitIndex).trim();
+            if (chunk.length > 0) {
+                chunks.push(chunk);
             }
-            if (currentChunk.trim().length > 0) {
-                chunks.push(currentChunk.trim());
+
+            // Slide window back by overlapSize for the next chunk to preserve context.
+            // MUST ensure nextStartIndex > 0 to avoid infinite recursion!
+            let nextStartIndex = splitIndex - overlapSize;
+            if (nextStartIndex <= 0) {
+                nextStartIndex = splitIndex; // If chunk was very small, don't overlap to avoid getting stuck
             }
+
+            splitRecursive(textToSplit.substring(nextStartIndex));
         }
 
-        splitRecursive(text);
-        return chunks.filter(c => c.length > 0);
+        splitRecursive(cleanedText);
+        return chunks;
     }
     async addDocument(docId: string, text: string, source: string) {
         const collection = await this.getCollection();
@@ -87,7 +97,7 @@ export class RagService {
             }));
         }
     }
-    async retrieveContext(query: string, topK = 7): Promise<{ chunks: string[], sources: string[] }> {
+    async retrieveContext(query: string, topK = 4): Promise<{ chunks: string[], sources: string[] }> {
         const collection = await this.getCollection();
         const queryEmbedding = await this.getEmbedding(query);
         const results = await collection.query({
