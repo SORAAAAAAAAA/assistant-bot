@@ -78,6 +78,15 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
             return <div key={lineIdx} className="h-1.5" />;
           }
 
+          const isQuote = /^(\s*)>\s*(.*)/.exec(line);
+          if (isQuote) {
+            return (
+              <div key={lineIdx} className="border-l-2 border-gray-400 pl-3 my-1 text-gray-500 italic text-[13px]">
+                {renderBold(isQuote[2])}
+              </div>
+            );
+          }
+
           if (isBullet || isNumbered) {
             return (
               <div key={lineIdx} className="flex gap-2" style={{ paddingLeft: `${indent}px` }}>

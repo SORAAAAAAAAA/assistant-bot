@@ -87,7 +87,7 @@ export class RagService {
             }));
         }
     }
-    async retrieveContext(query: string, topK = 7): Promise<{ chunks: string[], sources: string[] }> {
+    async retrieveContext(query: string, topK = 7, finalK = 2): Promise<{ chunks: string[], sources: string[] }> {
         const collection = await this.getCollection();
         const queryEmbedding = await this.getEmbedding(query);
         const results = await collection.query({
@@ -98,10 +98,38 @@ export class RagService {
         const docs = results.documents?.[0] ?? [];
         const metas = results.metadatas?.[0] ?? [];
 
-        const chunks = docs.filter((doc): doc is string => doc !== null);
+        // Stage 2: Lexical Re-ranking
+        // Extract meaningful keywords from the query (ignore punctuation and small words)
+        const queryTerms = query.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(t => t.length > 2);
 
-        // Extract the filename/source from metadata and remove duplicates
-        const rawSources = metas.map(m => m ? m.source as string : 'Unknown Source');
+        const scoredDocs = docs.map((doc, index) => {
+            if (!doc) return { doc: '', meta: null, score: -999 };
+            const docLower = doc.toLowerCase();
+            let overlapScore = 0;
+            
+            for (const term of queryTerms) {
+                if (docLower.includes(term)) {
+                    // Boost score for exact term match
+                    overlapScore += 1;
+                }
+            }
+            
+            // Combine with Chroma's original semantic rank.
+            // Since index 0 is the best semantic match, we subtract a small penalty for lower ranks.
+            // This ensures that if overlap is equal, the better semantic match wins.
+            const finalScore = overlapScore - (index * 0.1);
+            
+            return { doc, meta: metas[index], score: finalScore };
+        }).filter(d => d.doc !== '');
+
+        // Sort by highest score first
+        scoredDocs.sort((a, b) => b.score - a.score);
+
+        // Stage 3: Payload Reduction
+        const topDocs = scoredDocs.slice(0, finalK);
+
+        const chunks = topDocs.map(d => d.doc);
+        const rawSources = topDocs.map(d => d.meta ? d.meta.source as string : 'Unknown Source');
         const sources = Array.from(new Set(rawSources));
 
         return { chunks, sources };
