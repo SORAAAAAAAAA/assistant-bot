@@ -37,12 +37,14 @@ export default function ChatInterface() {
     useEffect(() => {
         if (id) {
             getChatHistoryById(Number(id))
-                .then(chat => {
-                    if (chat) {
-                        setMessages([
-                            { id: Date.now(), role: 'user', content: chat.message },
-                            { id: Date.now() + 1, role: 'assistant', content: chat.answer, sources: chat.sources }
-                        ]);
+                .then(session => {
+                    if (session && session.messages) {
+                        setMessages(session.messages.map(m => ({
+                            id: m.id,
+                            role: m.role as 'user' | 'assistant',
+                            content: m.content,
+                            sources: m.sources
+                        })));
                     }
                 })
                 .catch(err => {
@@ -88,7 +90,8 @@ export default function ChatInterface() {
         };
 
         const chatRequest: ChatRequest = {
-            message: input
+            message: input,
+            ...(id ? { sessionId: Number(id) } : {})
         }
 
         setMessages(prev => [...prev, userMsg]);
@@ -102,9 +105,18 @@ export default function ChatInterface() {
 
         try {
             await chatService(chatRequest, (chunkRes) => {
-                fullContent += chunkRes.answer;
+                if (chunkRes.answer) {
+                    fullContent += chunkRes.answer;
+                }
                 if (chunkRes.sources && chunkRes.sources.length > 0) {
                     sources = chunkRes.sources;
+                }
+                
+                // If this is a new chat and we receive the newly created database ID,
+                // quietly update the URL without remounting the component
+                const newId = chunkRes.sessionId || chunkRes.chatId;
+                if (newId && !id) {
+                    navigate(`/chat/${newId}`, { replace: true });
                 }
 
                 if (fullContent.length > 0) {

@@ -1,4 +1,4 @@
-import type { ChatRequest, ChatResponse } from "@ai-assistant/shared";
+import type { ChatRequest, ChatResponse, ChatSessionDto } from "@ai-assistant/shared";
 import { fetchWithAuth } from "@/lib/fetchClient";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
@@ -51,7 +51,7 @@ export async function chatService(message: ChatRequest, onChunk: (chunk: ChatRes
     }
 }
 
-export async function getChatHistory() {
+export async function getChatHistory(): Promise<ChatSessionDto[]> {
     const response = await fetchWithAuth(`${baseURL}/chat/history`, {
         method: 'GET',
         headers: {
@@ -66,7 +66,7 @@ export async function getChatHistory() {
     return response.json();
 }
 
-export async function getChatHistoryById(id: number) {
+export async function getChatHistoryById(id: number): Promise<ChatSessionDto> {
     const response = await fetchWithAuth(`${baseURL}/chat/history/${id}`, {
         method: 'GET',
         headers: {

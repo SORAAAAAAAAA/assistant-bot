@@ -17,6 +17,7 @@ export class ChatService {
     async askStream(
         userId: number,
         message: string,
+        sessionId: number | undefined,
         onMessage: (data: any) => void,
         onComplete: () => void,
         onError: (err: any) => void
@@ -34,30 +35,43 @@ export class ChatService {
         // Prevents context window overflow by trimming chunks that won't fit.
         const NUM_CTX = 8192;
         const NUM_PREDICT = 2048;
-        const CHARS_PER_TOKEN = 4;  // conservative estimate for English text
-        const INPUT_BUDGET = NUM_CTX - NUM_PREDICT; // tokens available for the entire input
+        const CHARS_PER_TOKEN = 4;
+        const INPUT_BUDGET = NUM_CTX - NUM_PREDICT;
         const systemTokens = Math.ceil(RagSystemPrompt.length / CHARS_PER_TOKEN);
-        const userWrapperTokens = Math.ceil((message.length + 120) / CHARS_PER_TOKEN); // 120 chars for XML tags + wrapper text
-        const reservedTokens = systemTokens + userWrapperTokens;
+        const userWrapperTokens = Math.ceil((message.length + 120) / CHARS_PER_TOKEN);
+        
+        // Let's fetch history if sessionId exists
+        let historyMessages: any[] = [];
+        if (sessionId) {
+            const previousMessages = await this.prisma.chatMessage.findMany({
+                where: { sessionId },
+                orderBy: { createdAt: 'asc' },
+                take: 10, // Take the last 10 messages to limit context
+            });
+            historyMessages = previousMessages.map(m => ({ role: m.role, content: m.content }));
+        }
+
+        const historyTokens = historyMessages.reduce((acc, m) => acc + Math.ceil(m.content.length / CHARS_PER_TOKEN), 0);
+        
+        const reservedTokens = systemTokens + userWrapperTokens + historyTokens;
         const chunkBudget = INPUT_BUDGET - reservedTokens;
 
         let usedTokens = 0;
         const budgetedChunks: string[] = [];
-        for (const chunk of chunks) {
-            const chunkTokens = Math.ceil(chunk.length / CHARS_PER_TOKEN);
-            if (usedTokens + chunkTokens > chunkBudget) {
-                console.log(`[Budget Guard] Dropping chunk (${chunkTokens} tokens) — would exceed budget (${usedTokens}/${chunkBudget} used)`);
-                continue;
+        if (chunkBudget > 0) {
+            for (const chunk of chunks) {
+                const chunkTokens = Math.ceil(chunk.length / CHARS_PER_TOKEN);
+                if (usedTokens + chunkTokens > chunkBudget) {
+                    console.log(`[Budget Guard] Dropping chunk (${chunkTokens} tokens) — would exceed budget (${usedTokens}/${chunkBudget} used)`);
+                    continue;
+                }
+                budgetedChunks.push(chunk);
+                usedTokens += chunkTokens;
             }
-            budgetedChunks.push(chunk);
-            usedTokens += chunkTokens;
         }
         console.log(`[Budget Guard] Using ${budgetedChunks.length}/${chunks.length} chunks (${usedTokens}/${chunkBudget} token budget)`);
 
         const contextText = budgetedChunks.join('\n\n');
-        console.log('--- RETRIEVED CHUNKS ---');
-        console.log(contextText);
-        console.log('------------------------');
         
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
@@ -67,16 +81,47 @@ export class ChatService {
 
         const messages = [
             { role: 'system', content: systemPromptToUse },
+            ...historyMessages,
             { role: 'user', content: userContent }
         ];
+
         onMessage({ answer: '', sources: sources });
         await this.llm.generateStream(messages,
             (chunk) => onMessage({ answer: chunk, sources: [] }),
             async (fullAnswer) => {
                 try {
-                    await this.prisma.chatHistory.create({
-                        data: { userId, message, answer: fullAnswer, sources: sources },
+                    let currentSessionId = sessionId;
+                    if (!currentSessionId) {
+                        const newSession = await this.prisma.chatSession.create({
+                            data: {
+                                userId,
+                                title: message.substring(0, 30) + (message.length > 30 ? '...' : '')
+                            }
+                        });
+                        currentSessionId = newSession.id;
+                    }
+
+                    // Save user message
+                    await this.prisma.chatMessage.create({
+                        data: {
+                            sessionId: currentSessionId,
+                            role: 'user',
+                            content: message,
+                            sources: []
+                        }
                     });
+
+                    // Save assistant message
+                    await this.prisma.chatMessage.create({
+                        data: {
+                            sessionId: currentSessionId,
+                            role: 'assistant',
+                            content: fullAnswer,
+                            sources: sources
+                        }
+                    });
+
+                    onMessage({ sessionId: currentSessionId, chatId: currentSessionId });
                 } catch (dbError) {
                     console.error('Failed to save chat history', dbError);
                 }
@@ -85,31 +130,42 @@ export class ChatService {
             (err) => onError(err)
         );
     }
-    async getHistory(userId: number): Promise<ChatHistoryEntry[]> {
-        const rows = await this.prisma.chatHistory.findMany({
+    async getHistory(userId: number) {
+        const rows = await this.prisma.chatSession.findMany({
             where: { userId },
-            orderBy: { createdAt: 'desc' },
+            orderBy: { updatedAt: 'desc' },
         });
         return rows.map((row) => ({
             id: row.id,
-            message: row.message,
-            answer: row.answer,
-            sources: row.sources,
+            title: row.title,
             createdAt: row.createdAt.toISOString(),
+            updatedAt: row.updatedAt.toISOString(),
         }));
     }
 
-    async getHistoryById(userId: number, id: number): Promise<ChatHistoryEntry | null> {
-        const row = await this.prisma.chatHistory.findFirst({
+    async getHistoryById(userId: number, id: number) {
+        const row = await this.prisma.chatSession.findFirst({
             where: { id, userId },
+            include: {
+                messages: {
+                    orderBy: { createdAt: 'asc' }
+                }
+            }
         });
         if (!row) return null;
         return {
             id: row.id,
-            message: row.message,
-            answer: row.answer,
-            sources: row.sources,
+            title: row.title,
+            messages: row.messages.map(m => ({
+                id: m.id,
+                sessionId: m.sessionId,
+                role: m.role,
+                content: m.content,
+                sources: m.sources,
+                createdAt: m.createdAt.toISOString()
+            })),
             createdAt: row.createdAt.toISOString(),
+            updatedAt: row.updatedAt.toISOString(),
         };
     }
 }

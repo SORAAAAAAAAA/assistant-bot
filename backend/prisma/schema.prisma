@@ -14,16 +14,26 @@ model User {
     email String @unique
     hashedPassword String
     createdAt DateTime @default(now())
-    chatHistory ChatHistory[]
+    chatSessions ChatSession[]
 }
-
-model ChatHistory {
+model ChatSession {
     id Int @id @default(autoincrement())
     userId Int
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    message String
-    answer String
+    title String @default("New Chat")
+    messages ChatMessage[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@index([userId])
+}
+
+model ChatMessage {
+    id Int @id @default(autoincrement())
+    sessionId Int
+    session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+    role String
+    content String
     sources String[]
     createdAt DateTime @default(now())
-    @@index([userId])
+    @@index([sessionId])
 }

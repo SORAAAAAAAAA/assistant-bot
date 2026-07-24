@@ -18,6 +18,7 @@ export class ChatController {
         await this.chatService.askStream(
             user.id,
             dto.message,
+            dto.sessionId,
             (data) => {
                 res.write(JSON.stringify(data) + '\n');
                 if (typeof (res as any).flush === 'function') {
