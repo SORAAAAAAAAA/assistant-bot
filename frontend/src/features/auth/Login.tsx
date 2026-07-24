@@ -122,7 +122,7 @@ export default function Login({ onSwitchToSignup, onSwitchToForgotPassword, onSh
         >
           Sign up
         </button>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
