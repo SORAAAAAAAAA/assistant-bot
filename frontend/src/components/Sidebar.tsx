@@ -6,10 +6,6 @@ import { SidebarHeader } from './SidebarHeader';
 import { SidebarFooter } from './SidebarFooter';
 import { NavItem } from './NavItem';
 import { SidebarRecents } from './sidebarRecents';
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
