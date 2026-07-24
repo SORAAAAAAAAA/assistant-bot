@@ -21,7 +21,7 @@ export class OllamaService implements ILlmProvider {
                         num_predict: 2048,
                         temperature: 0.0,
                         top_k: 10,
-                        top_p: 0.5,
+                        top_p: 0.8,
                     }
                 }, { responseType: 'stream' });
 

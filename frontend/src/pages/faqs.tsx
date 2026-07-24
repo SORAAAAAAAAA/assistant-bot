@@ -44,10 +44,8 @@ export default function FaqsPage() {
         <div className="h-full w-full bg-[#E5E7EB] overflow-hidden font-['Inter',system-ui,sans-serif] select-text relative">
             {/* Background Layers */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-40" />
-            <div className="blob-1 absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-[#E23B4E]/[0.3] blur-[50px] rounded-full pointer-events-none" />
-            <div className="blob-2 absolute -bottom-[10%] -right-[10%] w-[50vw] h-[50vw] bg-[#E08A1E]/[0.35] blur-[60px] rounded-full pointer-events-none" />
-            <div className="blob-3 absolute top-[20%] left-[30%] w-[40vw] h-[40vw] bg-[#3B82F6]/[0.2] blur-[40px] rounded-full pointer-events-none" />
             <div className="absolute inset-0 opacity-[0.25] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+
 
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@700&display=swap');
