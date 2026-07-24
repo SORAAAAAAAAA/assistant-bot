@@ -25,15 +25,26 @@ export interface LoginResponse {
 }
 export interface ChatRequest {
     message: string;
+    sessionId?: number;
 }
 export interface ChatResponse {
-    answer: string;
-    sources: string[];
+    answer?: string;
+    sources?: string[];
+    chatId?: number | string;
+    sessionId?: number;
 }
-export interface ChatHistoryEntry {
+export interface ChatMessageDto {
     id: number;
-    message: string;
-    answer: string;
+    sessionId: number;
+    role: string;
+    content: string;
     sources: string[];
     createdAt: string;
+}
+export interface ChatSessionDto {
+    id: number;
+    title: string;
+    messages?: ChatMessageDto[];
+    createdAt: string;
+    updatedAt: string;
 }
