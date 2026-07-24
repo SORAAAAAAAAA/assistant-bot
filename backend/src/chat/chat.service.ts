@@ -61,7 +61,7 @@ export class ChatService {
         
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
-            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: You MUST start your response with > to show your reasoning process!`;
+            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: You MUST start your response with <think> to show your reasoning process!`;
 
         const systemPromptToUse = isChitChat ? ChitChatSystemPrompt : RagSystemPrompt;
 
@@ -74,10 +74,8 @@ export class ChatService {
             (chunk) => onMessage({ answer: chunk, sources: [] }),
             async (fullAnswer) => {
                 try {
-                    // Remove reasoning lines (starting with >) before saving to history
-                    const cleanAnswer = fullAnswer.replace(/^>.*$/gm, '').trim();
                     await this.prisma.chatHistory.create({
-                        data: { userId, message, answer: cleanAnswer, sources: sources },
+                        data: { userId, message, answer: fullAnswer, sources: sources },
                     });
                 } catch (dbError) {
                     console.error('Failed to save chat history', dbError);
