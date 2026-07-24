@@ -6,7 +6,7 @@ export class IntentRouterService {
     // We anchor it to ensure the WHOLE message is essentially just a greeting,
     // avoiding false positives if they ask "hi, what is the procedure for X?"
     // However, if they just say "hi" or "thank you so much", this catches it.
-    private chitChatRegex = /^(hi|hello|hey|greetings|good morning|good afternoon|good evening|thanks|thank you|who are you|what can you do|how are you|bye|goodbye|who are you\?|what can you do\?)[\s!?.]*$/i;
+    private chitChatRegex = /^(hi|hello|hey|greetings|good morning|good afternoon|good evening|thanks(?: a lot| very much)?|thank you(?: so much| very much)?|who are you\??|what (can|do) you do(?: for me)?\??|how are you(?: doing)?\??|bye|goodbye)[\s!?.]*$/i;
 
     /**
      * Determines if the user's message is simple chitchat that does not require RAG context.
