@@ -39,7 +39,7 @@ export function SidebarRecents({ isOpen }: SidebarRecentsProps) {
                 {recentChats.map((chat) => (
                     <button
                         key={chat.id}
-                        onClick={() => navigate('/chat', { state: { historyItem: chat } })}
+                        onClick={() => navigate(`/chat/${chat.id}`)}
                         className="w-full flex items-center rounded-full transition-all duration-200 group py-1 px-2.5 text-red-100 hover:bg-white/10 hover:text-white border border-transparent hover:border-white/10 cursor-pointer"
                         title={chat.message}
                     >

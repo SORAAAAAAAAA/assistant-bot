@@ -66,3 +66,18 @@ export async function getChatHistory() {
     return response.json();
 }
 
+export async function getChatHistoryById(id: number) {
+    const response = await fetchWithAuth(`${baseURL}/chat/history/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch chat history by id');
+    }
+
+    return response.json();
+}
+

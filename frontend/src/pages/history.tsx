@@ -148,7 +148,7 @@ export default function HistoryPage() {
               processedData.map((item, index) => (
                 <div
                   key={item.id}
-                  onClick={() => navigate('/chat', { state: { historyItem: item } })}
+                  onClick={() => navigate(`/chat/${item.id}`)}
                   className={`w-full group grid grid-cols-[1fr_180px_40px] items-center px-8 py-4 bg-white/40 backdrop-blur-xl border border-white/60 rounded-[24px] transition-all duration-500 cubic-bezier(0.34,1.56,0.64,1) cursor-pointer relative animate-[popIn_0.4s_ease-out_forwards] shadow-[0_4px_20px_rgba(0,0,0,0.02)] z-10 hover:z-[40] hover:-translate-y-2 hover:scale-[1.01] hover:shadow-xl hover:bg-white/60 hover:border-white/90`}
                   style={{ animationDelay: `${index * 0.04}s` }}
                 >

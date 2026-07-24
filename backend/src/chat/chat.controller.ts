@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Res, UseGuards } from '@nestjs/common';
 import { type User } from '@prisma/client';
 import type { Response } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -34,5 +34,10 @@ export class ChatController {
     @Get('history')
     history(@CurrentUser() user: User) {
         return this.chatService.getHistory(user.id);
+    }
+    
+    @Get('history/:id')
+    historyById(@CurrentUser() user: User, @Param('id', ParseIntPipe) id: number) {
+        return this.chatService.getHistoryById(user.id, id);
     }
 }

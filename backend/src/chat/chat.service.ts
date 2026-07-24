@@ -98,4 +98,18 @@ export class ChatService {
             createdAt: row.createdAt.toISOString(),
         }));
     }
+
+    async getHistoryById(userId: number, id: number): Promise<ChatHistoryEntry | null> {
+        const row = await this.prisma.chatHistory.findFirst({
+            where: { id, userId },
+        });
+        if (!row) return null;
+        return {
+            id: row.id,
+            message: row.message,
+            answer: row.answer,
+            sources: row.sources,
+            createdAt: row.createdAt.toISOString(),
+        };
+    }
 }

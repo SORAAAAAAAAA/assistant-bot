@@ -15,6 +15,7 @@ export default function App() {
         {/* Protected Routes wrapped in the Layout */}
         <Route element={<AuthenticatedLayout />}>
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/chat/:id" element={<ChatPage />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/faqs" element={<FaqsPage />} />
         </Route>

@@ -17,13 +17,6 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
   const { reasoningLines, answerLines, hasAnswer } = parseMessageContent(message.content);
   const [isExpanded, setIsExpanded] = useState(true);
 
-  // Auto-collapse when the final answer starts appearing
-  useEffect(() => {
-    if (hasAnswer) {
-      setIsExpanded(false);
-    }
-  }, [hasAnswer]);
-
   const renderBold = (text: string) => parseBoldText(text).map((part, i) => {
     if (part.isBold) {
       return <strong key={i} className="font-bold text-black">{part.text}</strong>;

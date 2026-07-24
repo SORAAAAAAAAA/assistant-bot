@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ChatMessageList } from '@/features/chat/ChatMessageList';
 import { MessageComposer } from '@/features/chat/MessageComposer';
 import type { Message } from '@/types';
-import { chatService } from '@/services/chatService';
+import { chatService, getChatHistoryById } from '@/services/chatService';
 import type { ChatRequest } from '@ai-assistant/shared';
 import { getRandomGreeting } from '@/features/chat/chatGreetings';
 import { getLocalUserProfile } from '@/lib/userUtils';
@@ -12,6 +12,7 @@ import { getLocalUserProfile } from '@/lib/userUtils';
 export default function ChatInterface() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -25,23 +26,34 @@ export default function ChatInterface() {
     const composerInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        const handleReset = () => setMessages([]);
+        const handleReset = () => {
+            if (id) navigate('/chat');
+            else setMessages([]);
+        };
         window.addEventListener('reset-chat', handleReset);
         return () => window.removeEventListener('reset-chat', handleReset);
-    }, []);
+    }, [id, navigate]);
 
-    // Load history item if passed from routing state
+    // Fetch history item by ID from URL
     useEffect(() => {
-        if (location.state?.historyItem) {
-            const { message, answer, sources } = location.state.historyItem;
-            setMessages([
-                { id: Date.now(), role: 'user', content: message },
-                { id: Date.now() + 1, role: 'assistant', content: answer, sources }
-            ]);
-            // Clear the state to prevent reload loops
-            navigate(location.pathname, { replace: true, state: {} });
+        if (id) {
+            getChatHistoryById(Number(id))
+                .then(chat => {
+                    if (chat) {
+                        setMessages([
+                            { id: Date.now(), role: 'user', content: chat.message },
+                            { id: Date.now() + 1, role: 'assistant', content: chat.answer, sources: chat.sources }
+                        ]);
+                    }
+                })
+                .catch(err => {
+                    console.error("Failed to load chat", err);
+                    navigate('/chat', { replace: true });
+                });
+        } else {
+            setMessages([]);
         }
-    }, [location.state, navigate, location.pathname]);
+    }, [id, navigate]);
 
     useEffect(() => {
         if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
