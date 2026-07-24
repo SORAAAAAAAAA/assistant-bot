@@ -28,7 +28,8 @@ export class OllamaService implements ILlmProvider {
                 let buffer = '';
 
                 ollamaRes.data.on('data', (chunk: Buffer) => {
-                    buffer += chunk.toString('utf8');
+                    const chunkStr = chunk.toString('utf8');
+                    buffer += chunkStr;
                     const lines = buffer.split('\n');
                     buffer = lines.pop() || '';
 
@@ -36,11 +37,14 @@ export class OllamaService implements ILlmProvider {
                         if (line.trim() === '') continue;
                         try {
                             const parsed = JSON.parse(line);
-                            if (parsed.message && parsed.message.content) {
+                            if (parsed.message && parsed.message.content !== undefined) {
                                 fullText += parsed.message.content;
+                                console.log('Ollama Chunk:', parsed.message.content);
                                 onMessage(parsed.message.content);
                             }
-                        } catch (e) { }
+                        } catch (e) { 
+                            console.error('Failed to parse line:', line);
+                        }
                     }
                 });
 
