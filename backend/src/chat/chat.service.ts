@@ -47,7 +47,7 @@ export class ChatService {
             (err) => onError(err)
         );
     }
-    async getHistory(userId: number, limit = 50): Promise<ChatHistoryEntry[]> {
+    async getHistory(userId: number): Promise<ChatHistoryEntry[]> {
         const rows = await this.prisma.chatHistory.findMany({
             where: { userId },
             orderBy: { createdAt: 'desc' },

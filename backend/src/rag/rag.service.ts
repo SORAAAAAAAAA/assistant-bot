@@ -52,7 +52,7 @@ export class RagService {
             });
         }
     }
-    async retrieveContext(query: string, topK = 15): Promise<{ chunks: string[], sources: string[] }> {
+    async retrieveContext(query: string, topK = 7): Promise<{ chunks: string[], sources: string[] }> {
         const collection = await this.getCollection();
         const queryEmbedding = await this.getEmbedding(query);
         const results = await collection.query({
