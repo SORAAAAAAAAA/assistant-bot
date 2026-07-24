@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC, useState, useEffect } from 'react'
 import type { Message } from '@/types'
 
 interface ChatMessageBubbleProps {
@@ -11,6 +11,41 @@ const GLASS_STYLE = "backdrop-blur-xl border border-white/20 ring-1 ring-black/5
 
 export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant, onJump }) => {
   const isUser = variant === 'user'
+
+  // Pre-parse reasoning and answer lines
+  const lines = message.content.split('\n');
+  const reasoningLines: string[] = [];
+  const answerLines: string[] = [];
+  let isReasoningPhase = true;
+
+  for (const line of lines) {
+    const isQuote = /^(\s*)>\s*(.*)/.exec(line);
+    if (isQuote && isReasoningPhase) {
+      reasoningLines.push(isQuote[2]);
+    } else {
+      if (line.trim() !== '') {
+        isReasoningPhase = false;
+      }
+      answerLines.push(line);
+    }
+  }
+
+  const hasAnswer = answerLines.some(l => l.trim() !== '');
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  // Auto-collapse when the final answer starts appearing
+  useEffect(() => {
+    if (hasAnswer) {
+      setIsExpanded(false);
+    }
+  }, [hasAnswer]);
+
+  const renderBold = (text: string) => text.split(/(\*\*.*?\*\*)/g).map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} className="font-bold text-black">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={i}>{part}</span>;
+  });
 
   if (isUser) {
     return (
@@ -45,11 +80,33 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
     )
   }
 
-  // Assistant variant — left-aligned, plain text spanning full width
+  // Assistant variant
   return (
     <div id={`msg-${message.id}`} className="w-full shrink-0 relative animate-[popIn_0.35s_cubic-bezier(0.2,0.8,0.2,1)_forwards]">
       <div className="text-[14px] text-[#1A1C1E] leading-[1.6] font-medium break-words text-left flex flex-col gap-1">
-        {message.content.split('\n').map((line, lineIdx) => {
+
+        {/* Reasoning Accordion */}
+        {reasoningLines.length > 0 && (
+          <div className="mb-2">
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 font-medium select-none transition-colors"
+            >
+              <span className={`transform transition-transform text-[9px] ${isExpanded ? 'rotate-90' : ''}`}>▶</span>
+              Thought process
+            </button>
+            {isExpanded && (
+              <div className="mt-2 pl-3 border-l-2 border-gray-300 text-gray-500 italic text-[13px] flex flex-col gap-1 animate-[popIn_0.2s_ease-out_forwards]">
+                {reasoningLines.map((line, i) => (
+                  <div key={i}>{renderBold(line)}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Final Answer */}
+        {answerLines.map((line, lineIdx) => {
           const isBullet = /^(\s*)([-*•])\s+(.*)/.exec(line);
           const isNumbered = /^(\s*)(\d+\.)\s+(.*)/.exec(line);
 
@@ -59,7 +116,7 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
 
           if (isBullet) {
             indent = isBullet[1].length * 6 + 8;
-            prefix = '•'; // normalize bullet character
+            prefix = '•';
             content = isBullet[3];
           } else if (isNumbered) {
             indent = isNumbered[1].length * 6 + 8;
@@ -67,24 +124,8 @@ export const ChatMessageBubble: FC<ChatMessageBubbleProps> = ({ message, variant
             content = isNumbered[3];
           }
 
-          const renderBold = (text: string) => text.split(/(\*\*.*?\*\*)/g).map((part, i) => {
-            if (part.startsWith('**') && part.endsWith('**')) {
-              return <strong key={i} className="font-bold text-black">{part.slice(2, -2)}</strong>;
-            }
-            return <span key={i}>{part}</span>;
-          });
-
           if (line.trim() === '') {
             return <div key={lineIdx} className="h-1.5" />;
-          }
-
-          const isQuote = /^(\s*)>\s*(.*)/.exec(line);
-          if (isQuote) {
-            return (
-              <div key={lineIdx} className="border-l-2 border-gray-400 pl-3 my-1 text-gray-500 italic text-[13px]">
-                {renderBold(isQuote[2])}
-              </div>
-            );
           }
 
           if (isBullet || isNumbered) {

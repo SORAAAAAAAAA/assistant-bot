@@ -17,7 +17,8 @@ export class OllamaService implements ILlmProvider {
                     messages: messages,
                     stream: true,
                     options: {
-                        num_predict: 2048,
+                        num_ctx: 2048,
+                        num_predict: 512,
                         temperature: 0.0,
                         top_k: 10,
                         top_p: 0.5,
@@ -28,8 +29,7 @@ export class OllamaService implements ILlmProvider {
                 let buffer = '';
 
                 ollamaRes.data.on('data', (chunk: Buffer) => {
-                    const chunkStr = chunk.toString('utf8');
-                    buffer += chunkStr;
+                    buffer += chunk.toString('utf8');
                     const lines = buffer.split('\n');
                     buffer = lines.pop() || '';
 
@@ -37,14 +37,11 @@ export class OllamaService implements ILlmProvider {
                         if (line.trim() === '') continue;
                         try {
                             const parsed = JSON.parse(line);
-                            if (parsed.message && parsed.message.content !== undefined) {
+                            if (parsed.message && parsed.message.content) {
                                 fullText += parsed.message.content;
-                                console.log('Ollama Chunk:', parsed.message.content);
                                 onMessage(parsed.message.content);
                             }
-                        } catch (e) { 
-                            console.error('Failed to parse line:', line);
-                        }
+                        } catch (e) { }
                     }
                 });
 

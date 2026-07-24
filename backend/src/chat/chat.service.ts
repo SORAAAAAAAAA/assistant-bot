@@ -42,8 +42,10 @@ export class ChatService {
             (chunk) => onMessage({ answer: chunk, sources: [] }),
             async (fullAnswer) => {
                 try {
+                    // Remove reasoning lines (starting with >) before saving to history
+                    const cleanAnswer = fullAnswer.replace(/^>.*$/gm, '').trim();
                     await this.prisma.chatHistory.create({
-                        data: { userId, message, answer: fullAnswer, sources: sources },
+                        data: { userId, message, answer: cleanAnswer, sources: sources },
                     });
                 } catch (dbError) {
                     console.error('Failed to save chat history', dbError);
