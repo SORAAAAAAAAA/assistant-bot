@@ -13,7 +13,7 @@ export interface RAGQuery {
 
 export interface ILlmProvider {
     generateStream(
-        prompt: string,
+        messages: { role: string, content: string }[],
         onMessage: (chunk: string) => void,
         onComplete: (fullAnswer: string) => void,
         onError: (err: any) => void,

@@ -33,9 +33,12 @@ export class ChatService {
         console.log('--- RETRIEVED CHUNKS ---');
         console.log(contextText);
         console.log('------------------------');
-        const prompt = `${SystemPrompt}\n\n<context>\n${contextText}\n</context>\n\nEmployee question: ${message}`;
+        const messages = [
+            { role: 'system', content: `${SystemPrompt}\n\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>` },
+            { role: 'user', content: `<employee_inquiry>\n${message}\n</employee_inquiry>` }
+        ];
         onMessage({ answer: '', sources: sources });
-        await this.llm.generateStream(prompt,
+        await this.llm.generateStream(messages,
             (chunk) => onMessage({ answer: chunk, sources: [] }),
             async (fullAnswer) => {
                 try {
