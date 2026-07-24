@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ILlmProvider } from '@/interfaces';
-import { XmlStreamParser } from './xml-stream-parser';
 
 @Injectable()
 export class OllamaService implements ILlmProvider {
@@ -25,7 +24,7 @@ export class OllamaService implements ILlmProvider {
                     }
                 }, { responseType: 'stream' });
 
-                const parser = new XmlStreamParser(onMessage);
+                let fullText = '';
                 let buffer = '';
 
                 ollamaRes.data.on('data', (chunk: Buffer) => {
@@ -38,7 +37,8 @@ export class OllamaService implements ILlmProvider {
                         try {
                             const parsed = JSON.parse(line);
                             if (parsed.message && parsed.message.content) {
-                                parser.processChunk(parsed.message.content);
+                                fullText += parsed.message.content;
+                                onMessage(parsed.message.content);
                             }
                         } catch (e) { }
                     }
@@ -49,26 +49,12 @@ export class OllamaService implements ILlmProvider {
                         try {
                             const parsed = JSON.parse(buffer);
                             if (parsed.message && parsed.message.content) {
-                                parser.processChunk(parsed.message.content);
+                                fullText += parsed.message.content;
+                                onMessage(parsed.message.content);
                             }
                         } catch (e) { }
                     }
-
-                    const cleanEmitted = parser.getCleanEmitted();
-                    const rawOutput = parser.getRawOutput();
-
-                    // Fallback: If the model failed to output <response> tags entirely
-                    if (cleanEmitted.length === 0 && rawOutput.trim().length > 0) {
-                        // Strip scratchpad if it exists, otherwise dump the raw output
-                        const fallbackText = rawOutput.replace(/<scratchpad>[\s\S]*?<\/scratchpad>/, '').trim();
-                        if (fallbackText) {
-                            onMessage(fallbackText);
-                        }
-                        onComplete(fallbackText);
-                    } else {
-                        // Ensure the database only saves the clean, extracted answer
-                        onComplete(cleanEmitted);
-                    }
+                    onComplete(fullText.trim());
                     resolve();
                 });
 
