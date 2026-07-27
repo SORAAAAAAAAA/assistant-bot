@@ -71,7 +71,7 @@ export class ChatService {
 
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
-            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: Before answering, you must first think step-by-step about how to answer the inquiry based on the procedures. Write your internal thinking process inside <think>...</think> tags. Only after closing the </think> tag, provide your final response.`;
+            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: Before answering, you must first think step-by-step about how to answer the inquiry based on the procedures. Write your internal thinking process inside <think>...</think> tags. Only after closing the </think> tag, provide your response.`;
 
         const systemPromptToUse = isChitChat ? ChitChatSystemPrompt : RagSystemPrompt;
 
