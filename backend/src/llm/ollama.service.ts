@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ILlmProvider } from '@/interfaces';
+import { LlmConfig } from '@/llm/llm.config';
 
 @Injectable()
 export class OllamaService implements ILlmProvider {
@@ -17,11 +18,11 @@ export class OllamaService implements ILlmProvider {
                     messages: messages,
                     stream: true,
                     options: {
-                        num_ctx: 8192,
-                        num_predict: 2048,
-                        temperature: 0.0,
-                        top_k: 10,
-                        top_p: 0.8,
+                        num_ctx: LlmConfig.NUM_CTX,
+                        num_predict: LlmConfig.NUM_PREDICT,
+                        temperature: LlmConfig.TEMPERATURE,
+                        top_k: LlmConfig.TOP_K,
+                        top_p: LlmConfig.TOP_P,
                     }
                 }, { responseType: 'stream' });
 
