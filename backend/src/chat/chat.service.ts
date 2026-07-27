@@ -35,7 +35,7 @@ export class ChatService {
         // Prevents context window overflow by trimming chunks that won't fit.
         const systemTokens = Math.ceil(RagSystemPrompt.length / LlmConfig.CHARS_PER_TOKEN);
         const userWrapperTokens = Math.ceil((message.length + 120) / LlmConfig.CHARS_PER_TOKEN);
-        
+
         // Let's fetch history if sessionId exists
         let historyMessages: any[] = [];
         if (sessionId) {
@@ -48,7 +48,7 @@ export class ChatService {
         }
 
         const historyTokens = historyMessages.reduce((acc, m) => acc + Math.ceil(m.content.length / LlmConfig.CHARS_PER_TOKEN), 0);
-        
+
         const reservedTokens = systemTokens + userWrapperTokens + historyTokens;
         const chunkBudget = INPUT_BUDGET - reservedTokens;
 
@@ -68,10 +68,10 @@ export class ChatService {
         console.log(`[Budget Guard] Using ${budgetedChunks.length}/${chunks.length} chunks (${usedTokens}/${chunkBudget} token budget)`);
 
         const contextText = budgetedChunks.join('\n\n');
-        
+
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
-            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: You MUST start your response with <think> to show your reasoning process!`;
+            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: Before answering, you must first think step-by-step about how to answer the inquiry based on the procedures. Write your internal thinking process inside <think>...</think> tags. Only after closing the </think> tag, provide your final response.`;
 
         const systemPromptToUse = isChitChat ? ChitChatSystemPrompt : RagSystemPrompt;
 
