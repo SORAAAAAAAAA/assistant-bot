@@ -18,7 +18,7 @@ export class EmailService {
     }
 
     async sendPasswordResetEmail(to: string, resetToken: string) {
-        const frontendUrl = process.env.FRONTEND_URL;
+        const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, '');
         const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
 
         const mailOptions = {
@@ -28,7 +28,7 @@ export class EmailService {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
                     <h2 style="color: #333;">Password Reset Request</h2>
-                    <p>We received a request to reset your password for your SEIWA KAIUN account.</p>
+                    <p>We received a request to reset your password for your SEIWA KAIUN account at SKPI Chatbot.</p>
                     <p>Click the button below to reset your password. This link will expire in 1 hour.</p>
                     <div style="text-align: center; margin: 30px 0;">
                         <a href="${resetLink}" style="background-color: #800000; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Reset Password</a>

@@ -56,8 +56,7 @@ export class AuthService {
     async forgotPassword(dto: ForgotPasswordDto) {
         const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
         if (!user) {
-            // Do not throw an error to prevent email enumeration attacks
-            return { message: 'If an account exists, a reset link has been sent.' };
+            throw new ForbiddenException('User not found');
         }
 
         const resetToken = crypto.randomBytes(32).toString('hex');
@@ -71,7 +70,7 @@ export class AuthService {
 
         await this.emailService.sendPasswordResetEmail(user.email, resetToken);
 
-        return { message: 'If an account exists, a reset link has been sent.' };
+        return { message: 'Password reset link sent to your email.' };
     }
 
     async resetPassword(dto: ResetPasswordDto) {
