@@ -4,7 +4,6 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { OllamaService } from '@/llm/ollama.service';
 import { RagService } from '@/rag/rag.service';
 import { IntentRouterService } from '@/intent/intent.service';
-import { ChatHistoryEntry } from '@ai-assistant/shared';
 import { ChitChatSystemPrompt, RagSystemPrompt } from "@/chat/chat.prompt";
 @Injectable()
 export class ChatService {
@@ -39,7 +38,7 @@ export class ChatService {
         const INPUT_BUDGET = NUM_CTX - NUM_PREDICT;
         const systemTokens = Math.ceil(RagSystemPrompt.length / CHARS_PER_TOKEN);
         const userWrapperTokens = Math.ceil((message.length + 120) / CHARS_PER_TOKEN);
-        
+
         // Let's fetch history if sessionId exists
         let historyMessages: any[] = [];
         if (sessionId) {
@@ -52,7 +51,7 @@ export class ChatService {
         }
 
         const historyTokens = historyMessages.reduce((acc, m) => acc + Math.ceil(m.content.length / CHARS_PER_TOKEN), 0);
-        
+
         const reservedTokens = systemTokens + userWrapperTokens + historyTokens;
         const chunkBudget = INPUT_BUDGET - reservedTokens;
 
@@ -72,7 +71,7 @@ export class ChatService {
         console.log(`[Budget Guard] Using ${budgetedChunks.length}/${chunks.length} chunks (${usedTokens}/${chunkBudget} token budget)`);
 
         const contextText = budgetedChunks.join('\n\n');
-        
+
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
             : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: You MUST start your response with <think> to show your reasoning process!`;
