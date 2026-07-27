@@ -72,3 +72,39 @@ export async function loginService(formData: LoginRequest): Promise<LoginRespons
         throw error;
     }
 }
+
+export async function forgotPasswordService(email: string): Promise<{ message: string }> {
+    try {
+        const response = await fetch(baseURL + '/auth/forgot-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error('Network error. Please check your connection.');
+        }
+        throw error;
+    }
+}
+
+export async function resetPasswordService(token: string, password: string): Promise<{ message: string }> {
+    try {
+        const response = await fetch(baseURL + '/auth/reset-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token, password }),
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        if (error instanceof TypeError) {
+            throw new Error('Network error. Please check your connection.');
+        }
+        throw error;
+    }
+}

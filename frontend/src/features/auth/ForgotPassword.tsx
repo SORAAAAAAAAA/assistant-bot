@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import EmailInput from '@/components/ui/EmailInput';
 import Button from '@/components/ui/Button'; // 
+import { forgotPasswordService } from '@/services/authService';
 
 interface ForgotPasswordProps {
   onBackToLogin: () => void;
+  onShowToast: (message: string, type: 'success' | 'error') => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
-export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
+export default function ForgotPassword({ onBackToLogin, onShowToast, setIsLoading }: ForgotPasswordProps) {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Password reset requested for:', email);
-    setIsSubmitted(true);
+    setIsLoading(true);
+    try {
+        const response = await forgotPasswordService(email);
+        onShowToast(response.message, 'success');
+        setIsSubmitted(true);
+    } catch (error: any) {
+        onShowToast(error.message || 'Failed to send reset link', 'error');
+    } finally {
+        setIsLoading(false);
+    }
   };
 
   const inputClasses = "w-full rounded-xl border border-white/20 bg-black/20 px-4 py-3 text-[13px] text-white placeholder-white/40 outline-none focus:bg-black/40 focus:border-white/50 focus:ring-2 focus:ring-white/20 transition-all";

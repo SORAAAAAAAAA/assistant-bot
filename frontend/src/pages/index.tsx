@@ -72,6 +72,8 @@ export default function IndexPage() {
         {currentView === 'forgotPassword' && (
           <ForgotPassword
             onBackToLogin={() => setCurrentView('login')}
+            onShowToast={showToast}
+            setIsLoading={setIsLoading}
           />
         )}
 

@@ -7,6 +7,8 @@ import { RagModule } from '@/rag/rag.module';
 import { IntentModule } from '@/intent/intent.module';
 import { AppController } from '@/app.controller';
 import { LlmModule } from '@/llm/llm.module';
+import { EmailModule } from '@/email/email.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -16,6 +18,7 @@ import { LlmModule } from '@/llm/llm.module';
     IntentModule,
     ChatModule,
     LlmModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [],

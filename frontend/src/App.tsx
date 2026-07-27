@@ -3,6 +3,7 @@ import IndexPage from '@/pages/index';
 import ChatPage from '@/pages/chat';
 import HistoryPage from '@/pages/history';
 import AuthenticatedLayout from '@/components/Layout/AuthenticatedLayout';
+import ResetPassword from '@/features/auth/ResetPassword';
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <Routes>
         {/* Public Route */}
         <Route path="/login" element={<IndexPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected Routes wrapped in the Layout */}
         <Route element={<AuthenticatedLayout />}>
