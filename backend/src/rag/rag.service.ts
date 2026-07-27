@@ -81,6 +81,14 @@ export class RagService {
     }
     async addDocument(docId: string, text: string, source: string) {
         const collection = await this.getCollection();
+        
+        // Delete any existing chunks for this source to ensure a clean overwrite
+        try {
+            await collection.delete({ where: { source } });
+        } catch (e) {
+            // Ignore if nothing to delete
+        }
+
         const chunks = this.chunkText(text);
         const batchSize = 5;
         for (let i = 0; i < chunks.length; i += batchSize) {
@@ -88,7 +96,8 @@ export class RagService {
             await Promise.all(batch.map(async (chunk, idx) => {
                 const globalIdx = i + idx;
                 const embedding = await this.getEmbedding(chunk);
-                await collection.add({
+                // Use upsert to safely overwrite if IDs collide
+                await collection.upsert({
                     ids: [`${docId}-${globalIdx}`],
                     embeddings: [embedding],
                     documents: [chunk],
