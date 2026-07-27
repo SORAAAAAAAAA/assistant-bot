@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button';
 import Toast from '@/components/ui/Toast';
 import LoadingOverlay from '@/features/auth/LoadingOverlay';
 import { resetPasswordService } from '@/services/authService';
+import Modal from '@/components/ui/Modal';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -72,7 +73,8 @@ export default function ResetPassword() {
         onClose={() => setToastConfig(prev => ({ ...prev, isVisible: false }))}
       />
       {isLoading && <LoadingOverlay />}
-      <div className="bg-black/60 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl w-full max-w-[400px]">
+      
+      <Modal isOpen={true} onClose={() => {}}>
         <div className="flex flex-col animate-view-change">
           <div className="text-left mb-5">
             <h2 className="text-2xl font-extrabold tracking-wide text-white">Create New Password</h2>
@@ -116,7 +118,7 @@ export default function ResetPassword() {
             </button>
           </div>
         </div>
-      </div>
+      </Modal>
     </div>
   );
 }
