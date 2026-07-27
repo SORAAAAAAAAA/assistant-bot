@@ -5,7 +5,7 @@ dotenv.config();
 import { RagService } from './rag/rag.service';
 import { PDFParse } from 'pdf-parse';
 
-const DOCS_DIR = path.join(__dirname, '../../documents');
+const DOCS_DIR = path.join(__dirname, '../../documents/staged');
 async function run() {
     const rag = new RagService();
     const files = fs
