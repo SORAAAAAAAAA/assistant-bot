@@ -5,6 +5,7 @@ import { OllamaService } from '@/llm/ollama.service';
 import { RagService } from '@/rag/rag.service';
 import { IntentRouterService } from '@/intent/intent.service';
 import { ChitChatSystemPrompt, RagSystemPrompt } from "@/chat/chat.prompt";
+import { LlmConfig, INPUT_BUDGET } from '@/llm/llm.config';
 @Injectable()
 export class ChatService {
     constructor(
@@ -32,12 +33,8 @@ export class ChatService {
         }
         // --- Context Budget Guard ---
         // Prevents context window overflow by trimming chunks that won't fit.
-        const NUM_CTX = 8192;
-        const NUM_PREDICT = 2048;
-        const CHARS_PER_TOKEN = 4;
-        const INPUT_BUDGET = NUM_CTX - NUM_PREDICT;
-        const systemTokens = Math.ceil(RagSystemPrompt.length / CHARS_PER_TOKEN);
-        const userWrapperTokens = Math.ceil((message.length + 120) / CHARS_PER_TOKEN);
+        const systemTokens = Math.ceil(RagSystemPrompt.length / LlmConfig.CHARS_PER_TOKEN);
+        const userWrapperTokens = Math.ceil((message.length + 120) / LlmConfig.CHARS_PER_TOKEN);
 
         // Let's fetch history if sessionId exists
         let historyMessages: any[] = [];
@@ -50,7 +47,7 @@ export class ChatService {
             historyMessages = previousMessages.map(m => ({ role: m.role, content: m.content }));
         }
 
-        const historyTokens = historyMessages.reduce((acc, m) => acc + Math.ceil(m.content.length / CHARS_PER_TOKEN), 0);
+        const historyTokens = historyMessages.reduce((acc, m) => acc + Math.ceil(m.content.length / LlmConfig.CHARS_PER_TOKEN), 0);
 
         const reservedTokens = systemTokens + userWrapperTokens + historyTokens;
         const chunkBudget = INPUT_BUDGET - reservedTokens;
@@ -59,7 +56,7 @@ export class ChatService {
         const budgetedChunks: string[] = [];
         if (chunkBudget > 0) {
             for (const chunk of chunks) {
-                const chunkTokens = Math.ceil(chunk.length / CHARS_PER_TOKEN);
+                const chunkTokens = Math.ceil(chunk.length / LlmConfig.CHARS_PER_TOKEN);
                 if (usedTokens + chunkTokens > chunkBudget) {
                     console.log(`[Budget Guard] Dropping chunk (${chunkTokens} tokens) — would exceed budget (${usedTokens}/${chunkBudget} used)`);
                     continue;
@@ -74,7 +71,7 @@ export class ChatService {
 
         const userContent = isChitChat
             ? `<employee_inquiry>\n${message}\n</employee_inquiry>`
-            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: You MUST start your response with <think> to show your reasoning process!`;
+            : `Here are the standard operating procedures:\n<standard_operating_procedures>\n${contextText}\n</standard_operating_procedures>\n\nBased ONLY on the procedures above, please answer the following inquiry:\n<employee_inquiry>\n${message}\n</employee_inquiry>\n\nIMPORTANT: Before answering, you must first think step-by-step about how to answer the inquiry based on the procedures. Write your internal thinking process inside <think>...</think> tags. Only after closing the </think> tag, provide your final response.`;
 
         const systemPromptToUse = isChitChat ? ChitChatSystemPrompt : RagSystemPrompt;
 

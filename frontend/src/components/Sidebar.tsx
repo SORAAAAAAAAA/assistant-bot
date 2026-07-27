@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSquare, History, HelpCircle } from 'lucide-react';
+import { MessageSquare, History } from 'lucide-react';
 
 import { SidebarBackground } from './SidebarBackground';
 import { SidebarHeader } from './SidebarHeader';
@@ -15,7 +15,6 @@ export default function Sidebar() {
     const topItems = [
         { icon: <MessageSquare className={iconClass} />, label: 'New chat', path: '/chat', onClick: () => window.dispatchEvent(new Event('reset-chat')) },
         { icon: <History className={iconClass} />, label: 'Search chats', path: '/history' },
-        { icon: <HelpCircle className={iconClass} />, label: 'FAQs', path: '/faqs' },
     ];
 
     return (
