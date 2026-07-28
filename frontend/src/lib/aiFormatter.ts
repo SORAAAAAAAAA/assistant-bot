@@ -20,7 +20,6 @@ export const parseMessageContent = (content: string): ParsedMessage => {
     const reasoningLines: string[] = [];
     const answerLines: string[] = [];
 
-    let isReasoningPhase = true;
     let inThinkTag = false;
     let hasSeenThinkStart = false;
     let hasSeenThinkEnd = false;
@@ -29,7 +28,6 @@ export const parseMessageContent = (content: string): ParsedMessage => {
         if (line.includes('<think>')) {
             hasSeenThinkStart = true;
             inThinkTag = true;
-            isReasoningPhase = true;
             const parts = line.split('<think>');
             if (parts[0].trim()) answerLines.push(parts[0]);
             line = parts.slice(1).join('<think>');
@@ -38,7 +36,6 @@ export const parseMessageContent = (content: string): ParsedMessage => {
         if (line.includes('</think>')) {
             hasSeenThinkEnd = true;
             inThinkTag = false;
-            isReasoningPhase = false;
             const parts = line.split('</think>');
             if (parts[0].trim()) reasoningLines.push(parts[0]);
             line = parts.slice(1).join('</think>');
@@ -53,14 +50,9 @@ export const parseMessageContent = (content: string): ParsedMessage => {
 
         const isQuote = /^(\s*)>\s*(.*)/.exec(line);
         if (isQuote) {
-            isReasoningPhase = true;
             reasoningLines.push(isQuote[2]);
             continue;
         } else {
-            const cleanLine = line.trim().toLowerCase();
-            if (cleanLine !== '' && !cleanLine.startsWith('thinking process') && !cleanLine.startsWith('here is the thought') && !cleanLine.startsWith('okay') && !cleanLine.startsWith('let me')) {
-                isReasoningPhase = false;
-            }
             answerLines.push(line);
         }
     }

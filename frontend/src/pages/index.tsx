@@ -33,14 +33,10 @@ export default function IndexPage() {
   }
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      fontFamily: 'sans-serif'
-    }}>
+    <div className="flex flex-col justify-center items-center min-h-[100dvh] w-full font-sans bg-[#E5E7EB] relative overflow-hidden">
+      {/* Adding the background to match other pages */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-50" />
+      <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1C1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
       <Toast
         isVisible={toastConfig.isVisible}
         message={toastConfig.message}

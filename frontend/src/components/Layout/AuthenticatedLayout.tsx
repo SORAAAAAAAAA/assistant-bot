@@ -12,7 +12,7 @@ export default function AuthenticatedLayout() {
 
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-[100dvh]">
             <Sidebar />
             <main className="flex-grow relative overflow-hidden">
                 <Outlet />

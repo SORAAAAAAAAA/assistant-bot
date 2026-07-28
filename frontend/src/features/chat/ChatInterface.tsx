@@ -18,7 +18,7 @@ export default function ChatInterface() {
     const [isThinking, setIsThinking] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const userProfile = getLocalUserProfile();
-    const greetingName = userProfile.firstName;
+    const greetingName = userProfile?.firstName;
     const [greeting] = useState(() => getRandomGreeting(greetingName));
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -111,7 +111,7 @@ export default function ChatInterface() {
                 if (chunkRes.sources && chunkRes.sources.length > 0) {
                     sources = chunkRes.sources;
                 }
-                
+
                 // If this is a new chat and we receive the newly created database ID,
                 // quietly update the URL without remounting the component
                 const newId = chunkRes.sessionId || chunkRes.chatId;
@@ -152,7 +152,7 @@ export default function ChatInterface() {
     };
 
     return (
-        <div className="h-screen w-screen bg-[#E5E7EB] fixed top-0 left-0 overflow-hidden font-['Inter',system-ui,sans-serif]">
+        <div className="h-[100dvh] w-full bg-[#E5E7EB] relative overflow-hidden font-['Inter',system-ui,sans-serif]">
             {/* Base Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#F3F4F6] via-[#D1D5DB] to-[#9CA3AF] opacity-50" />
 
@@ -180,13 +180,13 @@ export default function ChatInterface() {
       `}</style>
 
             {/* Main Container - single column, full-height chat feed */}
-            <div className="flex flex-col h-full w-full max-w-[790px] mx-auto px-6 pt-8 pb-8 relative z-[1] box-border">
+            <div className="flex flex-col h-full w-full max-w-[790px] mx-auto px-4 md:px-6 pt-16 md:pt-8 pb-4 md:pb-8 relative z-[1] box-border">
 
                 {/* SCROLLABLE MESSAGE FEED */}
                 <div className={`flex flex-col transition-all duration-700 ease-in-out ${messages.length === 0 ? 'flex-1 min-h-0' : 'flex-1 min-h-0'}`}>
                     {messages.length === 0 ? (
                         <div className="flex-1 flex flex-col items-center mb-3 justify-end animate-[popIn_0.6s_ease-out_forwards]">
-                            <p className="text-[35px] font-black text-[#1A1C1E] mt-3 tracking-tighter uppercase">{greeting}</p>
+                            <p className="text-2xl md:text-[35px] font-black text-[#1A1C1E] mt-3 tracking-tighter uppercase text-center px-4 md:px-0">{greeting}</p>
                         </div>
                     ) : (
                         <>

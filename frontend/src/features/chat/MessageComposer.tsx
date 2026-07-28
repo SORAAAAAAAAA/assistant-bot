@@ -44,7 +44,7 @@ export const MessageComposer: FC<MessageComposerProps> = ({
           }}
           disabled={!canSend}
           aria-label="Send message"
-          className={`flex items-center justify-center w-6 h-6 rounded-3xl bg-[#87000d] text-white font-bold text-sm leading-none transition-all duration-200 ${canSend
+          className={`shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-[#87000d] text-white font-bold text-lg leading-none transition-all duration-200 ${canSend
             ? 'hover:bg-[#C82D3F] hover:scale-105 active:scale-95 cursor-pointer opacity-100 shadow-md'
             : 'opacity-40 cursor-not-allowed'
             }`}

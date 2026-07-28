@@ -72,9 +72,9 @@ export default function ResetPassword() {
         type={toastConfig.type}
         onClose={() => setToastConfig(prev => ({ ...prev, isVisible: false }))}
       />
-      {isLoading && <LoadingOverlay />}
-      
-      <Modal isOpen={true} onClose={() => {}}>
+      {isLoading && <LoadingOverlay message="Resetting Password..." />}
+
+      <Modal isOpen={true} onClose={() => { }}>
         <div className="flex flex-col animate-view-change">
           <div className="text-left mb-5">
             <h2 className="text-2xl font-extrabold tracking-wide text-white">Create New Password</h2>

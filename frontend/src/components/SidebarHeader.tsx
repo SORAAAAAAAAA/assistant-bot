@@ -44,7 +44,7 @@ export function SidebarHeader({ isOpen, toggle }: SidebarHeaderProps) {
             </div>
 
             {/* RIGHT SIDE: Close Button (Only visible when Open) */}
-            <div className={`overflow-hidden transition-all duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center
+            <div className={`hidden md:flex overflow-hidden transition-all duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)] items-center
                 ${isOpen ? 'max-w-[40px] opacity-100' : 'max-w-0 opacity-0'}
             `}>
                 <button
