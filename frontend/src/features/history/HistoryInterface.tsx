@@ -102,10 +102,10 @@ export default function HistoryInterface() {
       <div className="max-w-[1000px] mx-auto relative z-10 h-full flex flex-col pt-8 px-8 items-center">
 
         {/* HEADER */}
-        <header className={`w-full flex justify-between items-end mb-10 px-8 animate-[popIn_0.4s_ease-out_forwards] relative ${isSortOpen ? 'z-[200]' : 'z-[100]'}`}>
-          <div className="history-main-title">History</div>
+        <header className={`w-full flex flex-col sm:flex-row justify-between sm:items-end gap-6 sm:gap-0 mb-10 px-4 sm:px-8 animate-[popIn_0.4s_ease-out_forwards] relative ${isSortOpen ? 'z-[200]' : 'z-[100]'}`}>
+          <div className="history-main-title self-start sm:self-auto">History</div>
 
-          <div className="flex items-center gap-3 mb-1">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-1 w-full sm:w-auto">
             <HistorySortDropdown
               isOpen={isSortOpen}
               sortKey={sortKey}
@@ -121,9 +121,9 @@ export default function HistoryInterface() {
         </header>
 
         {/* TABLE LIST - Extra padding zone for scale/shadows */}
-        <div className="w-full flex-1 overflow-y-auto no-scrollbar pb-40 px-16 -mx-16">
+        <div className="w-full flex-1 overflow-y-auto no-scrollbar pb-40 px-4 sm:px-16 sm:-mx-16">
           {processedData.length > 0 && (
-            <div className="grid grid-cols-[1fr_180px_40px] px-8 mb-5 items-center opacity-60">
+            <div className="hidden sm:grid grid-cols-[1fr_180px_40px] px-8 mb-5 items-center opacity-60">
               <span className="text-[9px] font-bold text-[#6B7280] uppercase tracking-[0.25em] font-['JetBrains_Mono',monospace] text-left">Inquiry Name</span>
               <span className="text-[9px] font-bold text-[#6B7280] uppercase tracking-[0.25em] font-['JetBrains_Mono',monospace] text-right pr-4">Last Updated</span>
               <span />

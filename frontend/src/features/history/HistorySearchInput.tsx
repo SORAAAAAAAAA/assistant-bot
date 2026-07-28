@@ -7,7 +7,7 @@ interface HistorySearchInputProps {
 
 export const HistorySearchInput: FC<HistorySearchInputProps> = ({ value, onChange }) => {
   return (
-    <div className="relative w-64">
+    <div className="relative w-full sm:w-64">
       <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-[#1A1C1E] opacity-30">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
           <circle cx="11" cy="11" r="8" />
